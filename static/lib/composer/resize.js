@@ -177,7 +177,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 			containerHeight = postContainer.percentage * $(window).height() - $('#header-menu').height() - total;
 
 		postContainer
-			.find('.write-container')
+			.find('.write-preview-container')
 			.css('height', containerHeight);
 
 		$(window).trigger('action:composer.resize', {
