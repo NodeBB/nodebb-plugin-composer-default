@@ -3,10 +3,12 @@
 var SocketPlugins = require.main.require('./src/socket.io/plugins'),
 	socketMethods = require('./websockets'),
 
-	plugin = {};
+	plugin = {
+		socketMethods: socketMethods
+	};
 
 plugin.init = function(data, callback) {
-	SocketPlugins.defaultComposer = socketMethods;
+	SocketPlugins.composer = socketMethods;
 
 	callback();
 }

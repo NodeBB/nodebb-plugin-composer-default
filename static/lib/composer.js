@@ -55,7 +55,7 @@ define('composer', [
 	}
 
 	// Query server for formatting options
-	socket.emit('plugins.defaultComposer.getFormattingOptions', function(err, options) {
+	socket.emit('plugins.composer.getFormattingOptions', function(err, options) {
 		composer.formatting = options;
 	});
 
@@ -211,7 +211,7 @@ define('composer', [
 	};
 
 	composer.editPost = function(pid) {
-		socket.emit('plugins.defaultComposer.push', pid, function(err, threadData) {
+		socket.emit('plugins.composer.push', pid, function(err, threadData) {
 			if(err) {
 				return app.alertError(err.message);
 			}
@@ -245,7 +245,7 @@ define('composer', [
 
 	function startNotifyTyping(postData) {
 		function emit() {
-			socket.emit('plugins.defaultComposer.notifyTyping', {
+			socket.emit('plugins.composer.notifyTyping', {
 				tid: postData.tid,
 				uid: app.user.uid
 			});
@@ -265,7 +265,7 @@ define('composer', [
 		if (!parseInt(postData.tid, 10)) {
 			return;
 		}
-		socket.emit('plugins.defaultComposer.stopNotifyTyping', {
+		socket.emit('plugins.composer.stopNotifyTyping', {
 			tid: postData.tid,
 			uid: app.user.uid
 		});
@@ -341,7 +341,6 @@ define('composer', [
 				categoryList.init(postContainer, composer.posts[post_uuid]);
 
 				activate(post_uuid);
-				resize.reposition(postContainer);
 
 				if (config.allowFileUploads || config.hasImageUploadPlugin) {
 					uploads.initialize(post_uuid);
@@ -430,6 +429,7 @@ define('composer', [
 					composerData: composer.posts[post_uuid]
 				});
 
+				resize.reposition(postContainer);
 				formatting.addComposerButtons();
 				focusElements(postContainer);
 			});
@@ -444,7 +444,7 @@ define('composer', [
 
 	function handleHelp(postContainer) {
 		var helpBtn = postContainer.find('.help');
-		socket.emit('plugins.defaultComposer.renderHelp', function(err, html) {
+		socket.emit('plugins.composer.renderHelp', function(err, html) {
 			if (!err && html && html.length > 0) {
 				helpBtn.removeClass('hidden');
 				helpBtn.on('click', function() {

@@ -173,10 +173,17 @@ define('composer/resize', ['autosize'], function(autosize) {
 	}
 
 	function resizeWritePreview(postContainer) {
-		var total = getFormattingHeight(postContainer);
+		var total = getFormattingHeight(postContainer),
+			containerHeight = postContainer.percentage * $(window).height() - $('#header-menu').height() - total;
+
 		postContainer
-			.find('.write-preview-container')
-			.css('height', postContainer.percentage * $(window).height() - $('#header-menu').height() - total);
+			.find('.write-container')
+			.css('height', containerHeight);
+
+		$(window).trigger('action:composer.resize', {
+			formattingHeight: total,
+			containerHeight: containerHeight
+		});
 	}
 
 	function getFormattingHeight(postContainer) {

@@ -16,7 +16,7 @@ define('composer/preview', function() {
 		var textarea = postContainer.find('textarea');
 
 		timeoutId = setTimeout(function() {
-			socket.emit('plugins.defaultComposer.renderPreview', textarea.val(), function(err, preview) {
+			socket.emit('plugins.composer.renderPreview', textarea.val(), function(err, preview) {
 				timeoutId = 0;
 				if (err) {
 					return;
@@ -33,15 +33,18 @@ define('composer/preview', function() {
 	preview.matchScroll = function(postContainer) {
 		var textarea = postContainer.find('textarea');
 		var preview = postContainer.find('.preview');
-		var diff = textarea[0].scrollHeight - textarea.height();
 
-		if (diff === 0) {
-			return;
+		if (textarea.length && preview.length) {
+			var diff = textarea[0].scrollHeight - textarea.height();
+
+			if (diff === 0) {
+				return;
+			}
+
+			var scrollPercent = textarea.scrollTop() / diff;
+
+			preview.scrollTop(Math.max(preview[0].scrollHeight - preview.height(), 0) * scrollPercent);
 		}
-
-		var scrollPercent = textarea.scrollTop() / diff;
-
-		preview.scrollTop(Math.max(preview[0].scrollHeight - preview.height(), 0) * scrollPercent);
 	};
 
 	preview.handleToggler = function(postContainer) {
