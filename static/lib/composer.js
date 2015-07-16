@@ -424,6 +424,16 @@ define('composer', [
 
 				handleHelp(postContainer);
 
+				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+					var submitBtns = postContainer.find('.composer-submit'),
+						mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit'),
+						textareaEl = postContainer.find('.write'),
+						idx = textareaEl.attr('tabindex');
+
+					submitBtns.removeAttr('tabindex');
+					mobileSubmitBtn.attr('tabindex', parseInt(idx, 10)+1);
+				}
+
 				$(window).trigger('action:composer.loaded', {
 					post_uuid: post_uuid,
 					composerData: composer.posts[post_uuid]
