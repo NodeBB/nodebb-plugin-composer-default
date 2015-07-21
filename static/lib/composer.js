@@ -200,7 +200,7 @@ define('composer', [
 				push({
 					tid: tid,
 					toPid: pid,
-					title: $('<div/>').text(title).html(),
+					title: title,
 					body: translated,
 					modified: false,
 					isMain: false,
