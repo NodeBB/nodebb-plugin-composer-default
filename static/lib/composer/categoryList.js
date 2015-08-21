@@ -19,11 +19,11 @@ define('composer/categoryList', function() {
 
 			// Remove categories that are just external links
 			categories = categories.filter(function(category) {
-				return !category.link;
+				return !category.link && !parseInt(category.parentCid, 10);
 			});
 
 			categories.forEach(function(category) {
-				$('<option value="' + category.cid + '">' + category.name + '</option>').appendTo(listEl);
+				recursive(category, listEl, '');
 			});
 
 			if (postData.cid) {
@@ -39,6 +39,17 @@ define('composer/categoryList', function() {
 			$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
 		});
 	};
+
+	function recursive(category, listEl, level) {
+		if (category.link) {
+			return;
+		}
+		$('<option value="' + category.cid + '">' + level + ' ' + category.name + '</option>').appendTo(listEl);
+
+		category.children.forEach(function(child) {
+			recursive(child, listEl, '--' + level);
+		});
+	}
 
 	return categoryList;
 });
