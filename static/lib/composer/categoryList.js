@@ -44,10 +44,11 @@ define('composer/categoryList', function() {
 		if (category.link) {
 			return;
 		}
-		$('<option value="' + category.cid + '">' + level + ' ' + category.name + '</option>').appendTo(listEl);
+		var bullet = level ? '&bull; ' : '';
+		$('<option value="' + category.cid + '">' + level + bullet + category.name + '</option>').appendTo(listEl);
 
 		category.children.forEach(function(child) {
-			recursive(child, listEl, '--' + level);
+			recursive(child, listEl, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
 		});
 	}
 
