@@ -165,6 +165,10 @@ define('composer', [
 	composer.addQuote = function(tid, topicSlug, postIndex, pid, title, username, text, uuid) {
 		uuid = uuid || composer.active;
 
+		if (text) {
+			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
+		}
+
 		if (uuid === undefined) {
 			composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
 			return;
