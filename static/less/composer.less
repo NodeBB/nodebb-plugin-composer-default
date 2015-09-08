@@ -1,5 +1,10 @@
 @topbarHeight: 50px;
+@shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
 
+.box-shadow(@shadow) {
+	-webkit-box-shadow: @shadow;
+			box-shadow: @shadow;
+}
 
 html.composing {
 	&.mobile {
@@ -59,8 +64,8 @@ html.composing {
 		}
 
 		.mobile-navbar {
-			background: @btn-primary-bg;
-			color: @btn-primary-color;
+			background: #337ab7;
+			color: #fff;
 			position: absolute;
 
 			button {
@@ -220,7 +225,7 @@ html.composing {
 		.spacer {
 			&:before {
 				content: ' | ';
-				color: @gray-light;
+				color: #777;
 			}
 		}
 	}
