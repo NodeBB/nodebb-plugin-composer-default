@@ -61,7 +61,18 @@ define('composer', [
 
 	function onWindowResize() {
 		if (composer.active !== undefined) {
+			var env = utils.findBootstrapEnvironment();
+
 			resize.reposition($('#cmp-uuid-' + composer.active));
+
+			if ((env === 'md' || env === 'lg') && ajaxify.currentPage.indexOf('compose') === 0) {
+				/**
+				 *	If this conditional is met, we're no longer in mobile/tablet
+				 *	resolution but we've somehow managed to have a mobile
+				 *	composer load, so let's go back to the topic
+				 */
+				history.back();
+			}
 		}
 	}
 
