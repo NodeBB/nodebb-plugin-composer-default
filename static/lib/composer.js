@@ -74,6 +74,7 @@ define('composer', [
 				history.back();
 			}
 		}
+		composer.bsEnvironment = utils.findBootstrapEnvironment();
 	}
 
 	function alreadyOpen(post) {
@@ -578,6 +579,10 @@ define('composer', [
 
 			if (action === 'topics.post') {
 				ajaxify.go('topic/' + data.slug);
+			} else if (action === 'posts.reply') {
+				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+					ajaxify.go('topic/' + data.topic.slug + '/' + (data.index + 1));
+				}
 			} else {
 				removeComposerHistory();
 			}
@@ -599,9 +604,7 @@ define('composer', [
 			$('body').css({'margin-bottom': 0});
 			$('[data-action="post"]').removeAttr('disabled');
 
-
 			$('html').removeClass('composing mobile');
-
 		}
 	}
 
