@@ -507,7 +507,7 @@ define('composer', [
 		options = options || {};
 
 		titleEl.val(titleEl.val().trim());
-		bodyEl.val(bodyEl.val().trim());
+		bodyEl.val(bodyEl.val().rtrim());
 		if (thumbEl.length) {
 			thumbEl.val(thumbEl.val().trim());
 		}
