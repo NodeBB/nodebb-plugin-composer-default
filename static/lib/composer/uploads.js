@@ -21,6 +21,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 		postContainer.find('#files').on('change', function(e) {
 			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null);
+				
 			if(files) {
 				uploadContentFiles({files: files, post_uuid: post_uuid, route: '/api/post/upload'});
 			}
@@ -164,7 +165,6 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 				fd;
 
 			if(items && items.length) {
-
 				var blob = items[0].getAsFile();
 				if(blob) {
 					blob.name = 'upload-' + utils.generateUUID();
@@ -213,12 +213,21 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 			text = textarea.val(),
 			uploadForm = postContainer.find('#fileForm');
 
+		var fileNameMapping = [];
+
+		for(var i = 0; i < files.length; ++i) {
+			var newName = i + "_" + new Date().getTime() + "_" + files[i].name;
+			fileNameMapping.push(newName);
+		}
+
+		console.log(fileNameMapping);
+
 		uploadForm.attr('action', config.relative_path + params.route);
 
 		for(var i = 0; i < files.length; ++i) {
 			var isImage = files[i].type.match(/image./);
 
-			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + files[i].name + '](uploading...) ');
+			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + fileNameMapping[i] + '](uploading...) ');
 
 			if(files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
@@ -250,7 +259,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 				uploadProgress: function(event, position, total, percent) {
 					for(var i=0; i < files.length; ++i) {
-						updateTextArea(files[i].name, 'uploading ' + percent + '%');
+						updateTextArea(fileNameMapping[i], 'uploading ' + percent + '%');
 					}
 				},
 
@@ -259,7 +268,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 					if(uploads && uploads.length) {
 						for(var i=0; i<uploads.length; ++i) {
-							updateTextArea(uploads[i].name, uploads[i].url);
+							updateTextArea(fileNameMapping[i], uploads[i].url);
 						}
 					}
 					preview.render(postContainer);
