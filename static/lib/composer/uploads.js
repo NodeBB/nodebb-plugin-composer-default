@@ -7,6 +7,8 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 		inProgress: {}
 	};
 
+	var uploadingText = 'uploading 0%';
+
 	uploads.initialize = function(post_uuid) {
 
 		initializeDragAndDrop(post_uuid);
@@ -14,6 +16,9 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 		addChangeHandlers(post_uuid);
 		addTopicThumbHandlers(post_uuid);
+		translator.translate('[[modules:composer.uploading, ' + 0 + '%]]', function(translated) {
+			uploadingText = translated;
+		});
 	};
 
 	function addChangeHandlers(post_uuid) {
@@ -21,7 +26,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 		postContainer.find('#files').on('change', function(e) {
 			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null);
-			if(files) {
+			if (files) {
 				uploadContentFiles({files: files, post_uuid: post_uuid, route: '/api/post/upload'});
 			}
 		});
@@ -90,7 +95,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 	function initializeDragAndDrop(post_uuid) {
 
 		function onDragEnter() {
-			if(draggingDocument) {
+			if (draggingDocument) {
 				return;
 			}
 			drop.css('top', postContainer.find('.write-preview-container').position().top + 'px');
@@ -109,7 +114,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 			var files = e.files || (e.dataTransfer || {}).files || (e.target.value ? [e.target.value] : []),
 				fd;
 
-			if(files.length) {
+			if (files.length) {
 				if (window.FormData) {
 					fd = new FormData();
 					for (var i = 0; i < files.length; ++i) {
@@ -207,7 +212,6 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 	function uploadContentFiles(params) {
 		var files = params.files,
 			post_uuid = params.post_uuid,
-			formData = params.formData,
 			postContainer = $('#cmp-uuid-' + post_uuid),
 			textarea = postContainer.find('textarea'),
 			text = textarea.val(),
@@ -215,15 +219,18 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 		uploadForm.attr('action', config.relative_path + params.route);
 
-		for(var i = 0; i < files.length; ++i) {
+		var filenameMapping = [];
+
+		for (var i = 0; i < files.length; ++i) {
+			filenameMapping.push(i + '_' + Date.now() + '_' + files[i].name);
 			var isImage = files[i].type.match(/image./);
 
-			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + files[i].name + '](uploading...) ');
-
-			if(files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
+			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
 				return app.alertError('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
+
+			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
 		}
 
 		textarea.val(text);
@@ -244,14 +251,16 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 				},
 				resetForm: true,
 				clearForm: true,
-				formData: formData,
+				formData: params.formData,
 
 				error: onUploadError,
 
 				uploadProgress: function(event, position, total, percent) {
-					for(var i=0; i < files.length; ++i) {
-						updateTextArea(files[i].name, 'uploading ' + percent + '%');
-					}
+					translator.translate('[[modules:composer.uploading, ' + percent + '%]]', function(translated) {
+						for (var i=0; i < files.length; ++i) {
+							updateTextArea(filenameMapping[i], translated);
+						}
+					});
 				},
 
 				success: function(uploads) {
@@ -259,7 +268,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 					if(uploads && uploads.length) {
 						for(var i=0; i<uploads.length; ++i) {
-							updateTextArea(uploads[i].name, uploads[i].url);
+							updateTextArea(filenameMapping[i], uploads[i].url);
 						}
 					}
 					preview.render(postContainer);
@@ -280,7 +289,6 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 
 	function uploadTopicThumb(params) {
 		var post_uuid = params.post_uuid,
-			formData = params.formData,
 			postContainer = $('#cmp-uuid-' + post_uuid),
 			spinner = postContainer.find('.topic-thumb-spinner'),
 			thumbForm = postContainer.find('#thumbForm');
@@ -297,7 +305,7 @@ define('composer/uploads', ['composer/preview', 'csrf'], function(preview, csrf)
 				headers: {
 					'x-csrf-token': csrf.get()
 				},
-				formData: formData,
+				formData: params.formData,
 				error: onUploadError,
 				success: function(uploads) {
 					uploads = maybeParse(uploads);
