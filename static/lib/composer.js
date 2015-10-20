@@ -18,7 +18,7 @@ define('composer', [
 		active: undefined,
 		posts: {},
 		bsEnvironment: undefined,
-		formatting: []
+		formatting: undefined
 	};
 
 	$(window).off('resize', onWindowResize).on('resize', onWindowResize);
@@ -53,11 +53,6 @@ define('composer', [
 			history.back();
 		}
 	}
-
-	// Query server for formatting options
-	socket.emit('plugins.composer.getFormattingOptions', function(err, options) {
-		composer.formatting = options;
-	});
 
 	function onWindowResize() {
 		if (composer.active !== undefined) {
@@ -253,7 +248,14 @@ define('composer', [
 			resize.reposition(postContainer);
 			focusElements(postContainer);
 		} else {
-			createNewComposer(post_uuid);
+			if (composer.formatting) {
+				createNewComposer(post_uuid);
+			} else {
+				socket.emit('plugins.composer.getFormattingOptions', function(err, options) {
+					composer.formatting = options;
+					createNewComposer(post_uuid);
+				});
+			}
 		}
 
 		startNotifyTyping(composer.posts[post_uuid]);

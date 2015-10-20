@@ -7,7 +7,7 @@ var async = require.main.require('async'),
 	posts = require.main.require('./src/posts'),
 	topics = require.main.require('./src/topics'),
 	plugins = require.main.require('./src/plugins'),
-	
+
 	server = require.main.require('./src/socket.io'),
 	Sockets = {};
 
@@ -103,7 +103,7 @@ Sockets.getFormattingOptions = function(socket, data, callback) {
 			{ name: 'tags', className: 'fa fa-tags', mobile: true }
 		]
 	}, function(err, payload) {
-		callback(err, payload.options);
+		callback(err, payload ? payload.options : null);
 	});
 };
 
