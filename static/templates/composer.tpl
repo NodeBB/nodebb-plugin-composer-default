@@ -80,7 +80,7 @@
 							</div>
 						</form>
 					</div>
-					<!--  ENDIF allowTopicsThumbnail -->
+					<!-- ENDIF allowTopicsThumbnail -->
 
 					<form id="fileForm" method="post" enctype="multipart/form-data">
 						<!--[if gte IE 9]><!-->
