@@ -47,8 +47,6 @@ define('composer/resize', ['autosize'], function(autosize) {
 
 			var windowHeight = $window.height();
 
-			console.log(percentage);
-
 			if (percentage < minimumPercentage) {
 				percentage = minimumPercentage;
 			} else if (percentage >= 1) {
