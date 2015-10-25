@@ -25,7 +25,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 		doResize(postContainer, percentage);
 	};
 
-	function doResize(postContainer, percentage) {
+	function doResize(postContainer, percentage, realPercentage) {
 		var env = utils.findBootstrapEnvironment();
 
 
@@ -54,8 +54,14 @@ define('composer/resize', ['autosize'], function(autosize) {
 			}
 
 			if (env === 'md' || env === 'lg') {
-				var top = percentage * (windowHeight - upperBound) / windowHeight;
+				var top;
+				if (realPercentage) {
+					top = realPercentage;
+				} else {
+					top = percentage * (windowHeight - upperBound) / windowHeight;
+				}
 				top = (Math.abs(1-top) * 100) + '%';
+
 				postContainer.css({
 					'top': top
 				});
@@ -79,7 +85,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 		postContainer.css('visibility', 'visible');
 
 		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
-		$body.css({ 'margin-bottom': postContainer.outerHeight() });
+		$body.css({ 'margin-bottom': postContainer.height() + 20 });
 
 		resizeWritePreview(postContainer);
 	}
@@ -166,7 +172,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 					newHeight = windowHeight - position,
 					ratio = newHeight / (windowHeight - upperBound);
 
-				resizeIt(postContainer, ratio);
+				resizeIt(postContainer, ratio, newHeight / windowHeight);
 
 				resizeWritePreview(postContainer);
 
@@ -206,30 +212,20 @@ define('composer/resize', ['autosize'], function(autosize) {
 	}
 
 	function resizeWritePreview(postContainer) {
-		var total = getFormattingHeight(postContainer),
-			containerHeight = postContainer.height() + 20 - total;
+		var container = postContainer
+			.find('.write-preview-container');
+		var contBox = container[0].getBoundingClientRect();
+		var outerBox = container.parent().parent()[0].getBoundingClientRect();
 
-		postContainer
-			.find('.write-preview-container')
-			.css('height', containerHeight);
+		var newHeight = (contBox.bottom - contBox.top) +
+			(outerBox.bottom - 30 - contBox.bottom );
+
+		container.css('height', newHeight);
 
 		$window.trigger('action:composer.resize', {
-			formattingHeight: total,
-			containerHeight: containerHeight
+			containerHeight: newHeight
 		});
 	}
-
-	function getFormattingHeight(postContainer) {
-		return [
-			postContainer.find('.title-container').outerHeight(true),
-			postContainer.find('.formatting-bar').outerHeight(true),
-			postContainer.find('.topic-thumb-container').outerHeight(true),
-			$('.taskbar').height()
-		].reduce(function(a, b) {
-			return a + b;
-		});
-	}
-
 
 	return resize;
 });
