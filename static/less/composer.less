@@ -65,7 +65,7 @@ html.composing {
 
 			button {
 				font-size: 20px;
-			}	
+			}
 		}
 	}
 
@@ -78,11 +78,11 @@ html.composing {
 	.no-select;
 
 	position: fixed;
-	bottom: 0px;
-
-	right: 0px;
-	width: 100%;
-	height: 100%;
+	bottom: 0;
+	top: 0;
+	right: 0;
+	left: 0;
+	
 	z-index: 10000;
 
 	padding-top: 20px;
@@ -230,7 +230,7 @@ html.composing {
 		width: 100%;
 		top: 10px;
 		height: 0px;
-		
+
 		.pointer;
 
 		.trigger {
@@ -261,7 +261,7 @@ html.composing {
 	}
 
 	&.maximized {
-		.resizer .trigger i {		
+		.resizer .trigger i {
 			&:before {
 				content: @fa-var-chevron-down;
 			}
