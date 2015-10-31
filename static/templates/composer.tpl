@@ -1,6 +1,5 @@
 <div class="composer">
-
-	<div class="composer-container">
+	<div class="composer-container <!-- IF isTopicOrMain -->topic-main<!-- ENDIF isTopicOrMain -->">
 		<nav class="navbar navbar-fixed-top mobile-navbar visible-xs visible-sm">
 			<span class="pull-left">
 				<button class="btn btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
@@ -8,6 +7,9 @@
 			<span class="pull-right">
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</span>
+			<!-- IF !isTopicOrMain -->
+			<h3 class="title">[[topic:composer.replying_to, "{title}"]]</h3>
+			<!-- ENDIF !isTopicOrMain -->
 		</nav>
 		<div class="title-container row">
 			<!-- IF showHandleInput -->
@@ -18,7 +20,7 @@
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
-				<span class="title form-control">[[topic:composer.replying_to, "{title}"]]</span>
+				<span class="title form-control hidden-xs hidden-sm">[[topic:composer.replying_to, "{title}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 			</div>
 			<!-- ELSE -->
@@ -26,7 +28,7 @@
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
-				<span class="title form-control">[[topic:composer.replying_to, "{title}"]]</span>
+				<span class="title form-control hidden-xs hidden-sm">[[topic:composer.replying_to, "{title}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 			</div>
 			<!-- IF isTopic -->

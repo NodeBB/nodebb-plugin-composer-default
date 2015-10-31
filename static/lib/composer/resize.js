@@ -14,7 +14,6 @@ define('composer/resize', ['autosize'], function(autosize) {
 		$window = $(window),
 		$headerMenu = $('#header-menu');
 
-
 	resize.reposition = function(postContainer) {
 		var	percentage = localStorage.getItem('composer:resizePercentage') || 0.5;
 
@@ -40,20 +39,18 @@ define('composer/resize', ['autosize'], function(autosize) {
 			percentage = 1;
 		} else {
 			$html.removeClass('composing mobile');
-		}
 
-		if (percentage) {
-			var upperBound = getUpperBound();
+			if (percentage) {
+				var upperBound = getUpperBound();
 
-			var windowHeight = $window.height();
+				var windowHeight = window.innerHeight;
 
-			if (percentage < minimumPercentage) {
-				percentage = minimumPercentage;
-			} else if (percentage >= 1) {
-				percentage = 1;
-			}
+				if (percentage < minimumPercentage) {
+					percentage = minimumPercentage;
+				} else if (percentage >= 1) {
+					percentage = 1;
+				}
 
-			if (env === 'md' || env === 'lg') {
 				var top;
 				if (realPercentage) {
 					top = realPercentage;
@@ -62,12 +59,12 @@ define('composer/resize', ['autosize'], function(autosize) {
 				}
 				top = (Math.abs(1-top) * 100) + '%';
 
-				postContainer.css({
-					'top': top
-				});
-			} else {
-				postContainer.removeAttr('style');
+				postContainer[0].style.top = top;
+
+				// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
+				$body[0].style.marginBottom = postContainer.height() + 20 + 'px';
 			}
+
 		}
 
 		postContainer.percentage = percentage;
@@ -82,12 +79,9 @@ define('composer/resize', ['autosize'], function(autosize) {
 			postContainer.find('#files.lt-ie9').removeClass('hide');
 		}
 
-		postContainer.css('visibility', 'visible');
+		postContainer[0].style.visibility = 'visible';
 
-		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
-		$body.css({ 'margin-bottom': postContainer.height() + 20 });
-
-		resizeWritePreview(postContainer);
+		$window.trigger('action:composer.resize');
 	}
 
 	var resizeIt = doResize;
@@ -128,18 +122,18 @@ define('composer/resize', ['autosize'], function(autosize) {
 			$body.off('touchmove', resizeTouchAction);
 
 			var position = (e.clientY - resizeOffset),
-				windowHeight = $window.height(),
+				windowHeight = window.innerHeight,
 				upperBound = getUpperBound(),
 				newHeight = windowHeight - position,
-				ratio = newHeight / (windowHeight - upperBound);
+				percentage = newHeight / (windowHeight - upperBound);
 
-			if (ratio >= 1 - snapMargin) {
+			if (percentage >= 1 - snapMargin) {
 				snapToTop = true;
 			} else {
 				snapToTop = false;
 			}
 
-			resizeSavePosition(ratio);
+			resizeSavePosition(percentage);
 
 			toggleMaximize(e);
 		}
@@ -167,14 +161,12 @@ define('composer/resize', ['autosize'], function(autosize) {
 		function resizeAction(e) {
 			if (resizeActive) {
 				var position = (e.clientY - resizeOffset),
-					windowHeight = $window.height(),
+					windowHeight = window.innerHeight,
 					upperBound = getUpperBound(),
 					newHeight = windowHeight - position,
-					ratio = newHeight / (windowHeight - upperBound);
+					percentage = newHeight / (windowHeight - upperBound);
 
-				resizeIt(postContainer, ratio, newHeight / windowHeight);
-
-				resizeWritePreview(postContainer);
+				resizeIt(postContainer, percentage, newHeight / windowHeight);
 
 				if (Math.abs(e.clientY - resizeDown) > 0) {
 					postContainer.removeClass('maximized');
@@ -208,23 +200,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 	};
 
 	function getUpperBound() {
-		return $headerMenu.height() + 1;
-	}
-
-	function resizeWritePreview(postContainer) {
-		var container = postContainer
-			.find('.write-preview-container');
-		var contBox = container[0].getBoundingClientRect();
-		var outerBox = container.parent().parent()[0].getBoundingClientRect();
-
-		var newHeight = (contBox.bottom - contBox.top) +
-			(outerBox.bottom - 30 - contBox.bottom );
-
-		container.css('height', newHeight);
-
-		$window.trigger('action:composer.resize', {
-			containerHeight: newHeight
-		});
+		return $headerMenu[0].getBoundingClientRect().bottom;
 	}
 
 	return resize;
