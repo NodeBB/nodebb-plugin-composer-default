@@ -25,25 +25,16 @@ define('composer/resize', ['autosize'], function(autosize) {
 	};
 
 	function doResize(postContainer, percentage, realPercentage) {
-		var env = utils.findBootstrapEnvironment();
 
-
-		// todo, lump in browsers that don't support transform (ie8) here
-		// at this point we should use modernizr
-
-		// done, just use `top` instead of `translate`
-
-		if (env === 'sm' || env === 'xs' || window.innerHeight < 480) {
+		if (window.innerWidth < 768 || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
 			autosize(postContainer.find('textarea')[0]);
 			percentage = 1;
 		} else {
-			$html.removeClass('composing mobile');
+			$html[0].className = $html[0].className.replace('composing mobile', '');
 
 			if (percentage) {
-				var upperBound = getUpperBound();
-
-				var windowHeight = window.innerHeight;
+				var upperBound, top, windowHeight = window.innerHeight;
 
 				if (percentage < minimumPercentage) {
 					percentage = minimumPercentage;
@@ -51,18 +42,18 @@ define('composer/resize', ['autosize'], function(autosize) {
 					percentage = 1;
 				}
 
-				var top;
 				if (realPercentage) {
 					top = realPercentage;
 				} else {
-					top = percentage * (windowHeight - upperBound) / windowHeight;
+					upperBound = getUpperBound();
+					realPercentage = top = percentage * (windowHeight - upperBound) / windowHeight;
 				}
 				top = (Math.abs(1-top) * 100) + '%';
 
 				postContainer[0].style.top = top;
 
 				// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
-				$body[0].style.marginBottom = postContainer.height() + 20 + 'px';
+				$body[0].style.marginBottom = (realPercentage * windowHeight + 20) + 'px';
 			}
 
 		}
@@ -91,9 +82,9 @@ define('composer/resize', ['autosize'], function(autosize) {
 					window.mozRequestAnimationFrame;
 
 	if (raf) {
-		resizeIt = function(postContainer, percentage) {
+		resizeIt = function(postContainer, percentage, realPercentage) {
 			raf(function() {
-				doResize(postContainer, percentage);
+				doResize(postContainer, percentage, realPercentage);
 			});
 		};
 	}
@@ -163,7 +154,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 				var position = (e.clientY - resizeOffset),
 					windowHeight = window.innerHeight,
 					upperBound = getUpperBound(),
-					newHeight = windowHeight - position,
+					newHeight = windowHeight - (position > upperBound ? position : upperBound),
 					percentage = newHeight / (windowHeight - upperBound);
 
 				resizeIt(postContainer, percentage, newHeight / windowHeight);
