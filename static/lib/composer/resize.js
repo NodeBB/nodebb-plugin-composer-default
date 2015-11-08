@@ -3,7 +3,7 @@
 
 /* globals app, define, config, utils*/
 
-define('composer/resize', ['autosize'], function(autosize) {
+define('composer/resize', function () {
 	var resize = {},
 		oldPercentage = 0,
 		minimumPercentage = 0.3,
@@ -26,10 +26,8 @@ define('composer/resize', ['autosize'], function(autosize) {
 
 	function doResize(postContainer, percentage, realPercentage) {
 
-		if (window.innerWidth < 768 || window.innerHeight < 480) {
+		if (window.innerWidth < 992 || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
-			autosize(postContainer.find('textarea')[0]);
-			percentage = 1;
 		} else {
 			$html[0].className = $html[0].className.replace('composing mobile', '');
 
@@ -48,7 +46,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 					upperBound = getUpperBound();
 					realPercentage = top = percentage * (windowHeight - upperBound) / windowHeight;
 				}
-				top = (Math.abs(1-top) * 100) + '%';
+				top = (Math.abs(1 - top) * 100) + '%';
 
 				postContainer[0].style.top = top;
 
@@ -134,13 +132,15 @@ define('composer/resize', ['autosize'], function(autosize) {
 				var newPercentage = 1;
 
 				if (!postContainer.hasClass('maximized') || !snapToTop) {
+					resizeSavePosition(postContainer.percentage);
 					oldPercentage = postContainer.percentage;
-					resizeIt(postContainer, newPercentage);
 					postContainer.addClass('maximized');
 				} else {
-					resizeIt(postContainer, (oldPercentage >= 1 - snapMargin) ? 0.5 : oldPercentage);
+					newPercentage = (oldPercentage && (oldPercentage < 1 - snapMargin)) ? oldPercentage : 0.5;
+					resizeIt(postContainer, newPercentage);
 					postContainer.removeClass('maximized');
 				}
+				postContainer.percentage = newPercentage;
 			}
 		}
 

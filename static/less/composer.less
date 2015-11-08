@@ -1,112 +1,127 @@
-@topbarHeight: 50px;
+@topbarHeight: 51px;
 
-html.composing {
 
-	@media (max-width: @screen-sm-max) {
+@formattingRowHeight: 62px;
+@titleContainerRowHeight: 47px;
+@categorySelectHeight: 42px;
+@tagsContainerHeight: 36px;
+
+
+@media (max-width: @screen-sm-max), (max-height: 480px) {
+	html.composing {
+
+		@mobileNavHeight: 51px;
+		@formattingRowHeight: 52px;
+
 		& {
 			overflow: hidden;
 		}
 
+		.resizer {
+			visibility: hidden;
+		}
+
+		body {
+			height: 0 !important;
+		}
+
 		.composer {
+			padding: 0;
+			width: 100%;
+			background: rgba(224, 224, 224, 1);
 			position: absolute;
 			box-shadow: none;
 			top: 0 !important;
-		}
 
-		.composer-container {
-			.write {
-				padding-bottom: 25px;
-			}
+			.composer-container {
+				overflow-y: visible;
+				overflow-x: hidden;
+				padding: 0;
+				padding-top: 50px;
+				height: 100%;
+				background: white;
 
-			.write-preview-container {
-				left: 0;
-				right: 0;
-				height: auto;
-				bottom: 0;
-				overflow: scroll;
+				.write {
+					padding-bottom: 25px;
+			    overflow-y: scroll;
+			    height: 100%;
+				}
 
-				top: 103px;
-			}
-
-			&.topic-main {
 				.write-preview-container {
-					top: 226px;
+					left: 0;
+					right: 0;
+					height: auto;
+					bottom: 0;
+					overflow: hidden;
+
+					top: (@mobileNavHeight + @formattingRowHeight);
+				}
+
+				&.topic-main {
+					.write-preview-container {
+						top: (@mobileNavHeight + @formattingRowHeight +
+							@titleContainerRowHeight + @categorySelectHeight);
+					}
+				}
+			}
+
+			.title-container {
+				margin: 0;
+				padding: 0;
+
+				.title {
+					padding-left: 8px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					width: 100%;
+				}
+			}
+
+			.write, .preview {
+				border-bottom: 0;
+				min-height: 100%;
+				outline: none;
+				padding: 25px 10px;
+				margin-bottom: 0px;
+				padding-bottom: 0px;
+				font-size: 18px;
+			}
+
+			.form-control {
+				box-shadow: none;
+			}
+
+			.formatting-bar {
+				margin: 0;
+				padding: 0;
+			}
+
+			.mobile-navbar {
+				background: @btn-primary-bg;
+				color: @btn-primary-color;
+				position: absolute;
+
+				button {
+					font-size: 20px;
+				}
+
+				.title {
+					margin: 0px;
+					line-height: 50px;
+					padding: 0px 10px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					font-size: 22px;
+					font-weight: normal;
 				}
 			}
 		}
-	}
 
-	body {
-		height: 0px !important;
-	}
-
-	.composer {
-		padding: 0;
-
-		.composer-container {
-			overflow-y: visible;
-			overflow-x: hidden;
-			padding: 0;
-			padding-top: 50px;
-			height: 100%;
-			background: white;
-		}
-
-		.title-container {
-			margin-top: 0px;
-
-			.title {
-				padding-left: 8px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				width: 100%;
-			}
-		}
-
-		.write, .preview {
-			border-bottom: 0;
-			min-height: 100%;
-			outline: none;
-			padding: 25px 10px;
-			margin-bottom: 0px;
-			padding-bottom: 0px;
-			font-size: 18px;
-		}
-
-		.form-control {
-			box-shadow: none;
-		}
-
-		.formatting-bar {
-			margin: 0;
+		.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
 			padding: 0;
 		}
-
-		.mobile-navbar {
-			background: @btn-primary-bg;
-			color: @btn-primary-color;
-			position: absolute;
-
-			button {
-				font-size: 20px;
-			}
-
-			.title {
-				margin: 0px;
-				line-height: 50px;
-				padding: 0px 10px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				font-size: 22px;
-				font-weight: normal;
-			}
-		}
-	}
-
-	.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
-		padding: 0;
 	}
 }
 
@@ -132,6 +147,19 @@ html.composing {
 		min-height: 50px;
 		padding-left: 10px;
 		padding-right: 10px;
+
+		&.topic-main {
+			.write-preview-container {
+				top: (@formattingRowHeight + @titleContainerRowHeight +
+					@categorySelectHeight + 35px);
+			}
+
+			@media (min-width: @screen-lg-min) {
+				.write-preview-container {
+					top: (@formattingRowHeight + @titleContainerRowHeight + 35px);
+				}
+			}
+		}
 	}
 
 	.title-container {
@@ -165,8 +193,9 @@ html.composing {
 				box-shadow: none;
 
 				input {
-					height:28px;
+					height: 28px;
 					padding: 4px 6px;
+					max-width: 25em;
 				}
 
 				.label {
@@ -178,8 +207,7 @@ html.composing {
 	}
 
 	.write-preview-container {
-		// height: 100%;
-		margin: 0 0;
+		margin: 0;
 		min-height: 200px;
 
 		position: absolute;
@@ -187,11 +215,7 @@ html.composing {
 		right: 10px;
 		height: auto;
 		bottom: 80px;
-		top: 140px;
-
-		@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-			top: 217px;
-		}
+		top: (@formattingRowHeight + @titleContainerRowHeight + 35px);
 
 		> div {
 			height: 100%;
@@ -210,9 +234,9 @@ html.composing {
 		height: 100%;
 		margin: 0 auto;
 		font-size: 14px;
-		-webkit-border-radius: 0px;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
 		resize: none;
 		overflow: auto;
 		padding: 20px;
@@ -314,6 +338,7 @@ html.composing {
 			}
 		}
 
+		top: @topbarHeight !important;
 		box-shadow: none;
 	}
 
@@ -345,22 +370,11 @@ html.composing {
 		width: auto;
 		height: auto;
 		max-width: 100px;
-		max-height: 100px
+		max-height: 100px;
 	}
 
 	.topic-thumb-ctrl.form-group {
 		display: inline-block;
 		vertical-align: -50% !important;
-	}
-}
-
-@media (max-width: 767px), (max-height: 480px) {
-	.composer {
-		width: 100%;
-		background: rgba(224, 224, 224, 1);
-	}
-
-	.resizer {
-		visibility: hidden;
 	}
 }
