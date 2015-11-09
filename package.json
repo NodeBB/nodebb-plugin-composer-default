@@ -23,6 +23,6 @@
   },
   "readmeFilename": "README.md",
   "nbbpm": {
-    "compatibility": "^0.7.1 || ^0.8.0"
+    "compatibility": "^0.7.1 || ^0.8.0 || ^0.9.0"
   }
 }
