@@ -2,7 +2,12 @@ $(document).ready(function() {
 	$(window).on('action:app.load', function() {
 		require(['composer'], function(composer) {
 			$(window).on('action:composer.topic.new', function(ev, data) {
-				composer.newTopic(data.cid);
+				console.log(data);
+				composer.newTopic({
+					cid: data.cid,
+					title: data.title || '',
+					body: data.body || ''
+				});
 			});
 
 			$(window).on('action:composer.post.edit', function(ev, data) {

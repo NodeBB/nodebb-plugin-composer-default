@@ -153,15 +153,15 @@ define('composer', [
 		formatting.addButton(iconClass, onClick);
 	};
 
-	composer.newTopic = function(cid) {
-		socket.emit('categories.isModerator', cid, function(err, isMod) {
+	composer.newTopic = function(data) {
+		socket.emit('categories.isModerator', data.cid, function(err, isMod) {
 			if (err) {
 				return app.alertError(err.message);
 			}
 			push({
-				cid: cid,
-				title: '',
-				body: '',
+				cid: data.cid,
+				title: data.title || '',
+				body: data.body || '',
 				modified: false,
 				isMain: true,
 				isMod: isMod
