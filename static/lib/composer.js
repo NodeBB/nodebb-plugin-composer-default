@@ -579,11 +579,12 @@ define('composer', [
 			discard(post_uuid);
 			drafts.removeDraft(postData.save_id);
 
+			console.log(data);
 			if (action === 'topics.post') {
-				ajaxify.go('topic/' + data.slug);
+				ajaxify.go('topic/' + data.slug, undefined, (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
 			} else if (action === 'posts.reply') {
 				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-					ajaxify.go('topic/' + data.topic.slug + '/' + (data.index + 1));
+					window.history.back();
 				}
 			} else {
 				removeComposerHistory();
