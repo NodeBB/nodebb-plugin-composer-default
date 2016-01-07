@@ -3,7 +3,7 @@
 
 /* globals app, define, config, utils*/
 
-define('composer/resize', ['autosize'], function(autosize) {
+define('composer/resize', function () {
 	var resize = {},
 		oldPercentage = 0,
 		minimumPercentage = 0.3,
@@ -13,7 +13,6 @@ define('composer/resize', ['autosize'], function(autosize) {
 		$html = $('html'),
 		$window = $(window),
 		$headerMenu = $('#header-menu');
-
 
 	resize.reposition = function(postContainer) {
 		var	percentage = localStorage.getItem('composer:resizePercentage') || 0.5;
@@ -25,43 +24,36 @@ define('composer/resize', ['autosize'], function(autosize) {
 		doResize(postContainer, percentage);
 	};
 
-	function doResize(postContainer, percentage) {
-		var env = utils.findBootstrapEnvironment();
+	function doResize(postContainer, percentage, realPercentage) {
 
-
-		// todo, lump in browsers that don't support transform (ie8) here
-		// at this point we should use modernizr
-
-		// done, just use `top` instead of `translate`
-
-		if (env === 'sm' || env === 'xs' || window.innerHeight < 480) {
+		if (window.innerWidth < 992 || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
-			autosize(postContainer.find('textarea')[0]);
-			percentage = 1;
 		} else {
-			$html.removeClass('composing mobile');
-		}
+			$html[0].className = $html[0].className.replace('composing mobile', '');
 
-		if (percentage) {
-			var upperBound = getUpperBound();
+			if (percentage) {
+				var upperBound, top, windowHeight = window.innerHeight;
 
-			var windowHeight = $window.height();
+				if (percentage < minimumPercentage) {
+					percentage = minimumPercentage;
+				} else if (percentage >= 1) {
+					percentage = 1;
+				}
 
-			if (percentage < minimumPercentage) {
-				percentage = minimumPercentage;
-			} else if (percentage >= 1) {
-				percentage = 1;
+				if (realPercentage) {
+					top = realPercentage;
+				} else {
+					upperBound = getUpperBound();
+					realPercentage = top = percentage * (windowHeight - upperBound) / windowHeight;
+				}
+				top = (Math.abs(1 - top) * 100) + '%';
+
+				postContainer[0].style.top = top;
+
+				// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
+				$body[0].style.marginBottom = (realPercentage * windowHeight + 20) + 'px';
 			}
 
-			if (env === 'md' || env === 'lg') {
-				var top = percentage * (windowHeight - upperBound) / windowHeight;
-				top = (Math.abs(1-top) * 100) + '%';
-				postContainer.css({
-					'top': top
-				});
-			} else {
-				postContainer.removeAttr('style');
-			}
 		}
 
 		postContainer.percentage = percentage;
@@ -76,12 +68,9 @@ define('composer/resize', ['autosize'], function(autosize) {
 			postContainer.find('#files.lt-ie9').removeClass('hide');
 		}
 
-		postContainer.css('visibility', 'visible');
+		postContainer[0].style.visibility = 'visible';
 
-		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
-		$body.css({ 'margin-bottom': postContainer.outerHeight() });
-
-		resizeWritePreview(postContainer);
+		$window.trigger('action:composer.resize');
 	}
 
 	var resizeIt = doResize;
@@ -91,9 +80,9 @@ define('composer/resize', ['autosize'], function(autosize) {
 					window.mozRequestAnimationFrame;
 
 	if (raf) {
-		resizeIt = function(postContainer, percentage) {
+		resizeIt = function(postContainer, percentage, realPercentage) {
 			raf(function() {
-				doResize(postContainer, percentage);
+				doResize(postContainer, percentage, realPercentage);
 			});
 		};
 	}
@@ -122,18 +111,18 @@ define('composer/resize', ['autosize'], function(autosize) {
 			$body.off('touchmove', resizeTouchAction);
 
 			var position = (e.clientY - resizeOffset),
-				windowHeight = $window.height(),
+				windowHeight = window.innerHeight,
 				upperBound = getUpperBound(),
 				newHeight = windowHeight - position,
-				ratio = newHeight / (windowHeight - upperBound);
+				percentage = newHeight / (windowHeight - upperBound);
 
-			if (ratio >= 1 - snapMargin) {
+			if (percentage >= 1 - snapMargin) {
 				snapToTop = true;
 			} else {
 				snapToTop = false;
 			}
 
-			resizeSavePosition(ratio);
+			resizeSavePosition(percentage);
 
 			toggleMaximize(e);
 		}
@@ -143,13 +132,15 @@ define('composer/resize', ['autosize'], function(autosize) {
 				var newPercentage = 1;
 
 				if (!postContainer.hasClass('maximized') || !snapToTop) {
+					resizeSavePosition(postContainer.percentage);
 					oldPercentage = postContainer.percentage;
-					resizeIt(postContainer, newPercentage);
 					postContainer.addClass('maximized');
 				} else {
-					resizeIt(postContainer, (oldPercentage >= 1 - snapMargin) ? 0.5 : oldPercentage);
+					newPercentage = (oldPercentage && (oldPercentage < 1 - snapMargin)) ? oldPercentage : 0.5;
+					resizeIt(postContainer, newPercentage);
 					postContainer.removeClass('maximized');
 				}
+				postContainer.percentage = newPercentage;
 			}
 		}
 
@@ -161,14 +152,12 @@ define('composer/resize', ['autosize'], function(autosize) {
 		function resizeAction(e) {
 			if (resizeActive) {
 				var position = (e.clientY - resizeOffset),
-					windowHeight = $window.height(),
+					windowHeight = window.innerHeight,
 					upperBound = getUpperBound(),
-					newHeight = windowHeight - position,
-					ratio = newHeight / (windowHeight - upperBound);
+					newHeight = windowHeight - (position > upperBound ? position : upperBound),
+					percentage = newHeight / (windowHeight - upperBound);
 
-				resizeIt(postContainer, ratio);
-
-				resizeWritePreview(postContainer);
+				resizeIt(postContainer, percentage, newHeight / windowHeight);
 
 				if (Math.abs(e.clientY - resizeDown) > 0) {
 					postContainer.removeClass('maximized');
@@ -202,34 +191,8 @@ define('composer/resize', ['autosize'], function(autosize) {
 	};
 
 	function getUpperBound() {
-		return $headerMenu.height() + 1;
+		return $headerMenu[0].getBoundingClientRect().bottom;
 	}
-
-	function resizeWritePreview(postContainer) {
-		var total = getFormattingHeight(postContainer),
-			containerHeight = postContainer.height() + 20 - total;
-
-		postContainer
-			.find('.write-preview-container')
-			.css('height', containerHeight);
-
-		$window.trigger('action:composer.resize', {
-			formattingHeight: total,
-			containerHeight: containerHeight
-		});
-	}
-
-	function getFormattingHeight(postContainer) {
-		return [
-			postContainer.find('.title-container').outerHeight(true),
-			postContainer.find('.formatting-bar').outerHeight(true),
-			postContainer.find('.topic-thumb-container').outerHeight(true),
-			$('.taskbar').height()
-		].reduce(function(a, b) {
-			return a + b;
-		});
-	}
-
 
 	return resize;
 });
