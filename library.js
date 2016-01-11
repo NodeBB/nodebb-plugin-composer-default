@@ -17,10 +17,35 @@ var plugins = module.parent.require('./plugins'),
 	};
 
 plugin.init = function(data, callback) {
+	var controllers = require('./controllers');
 	SocketPlugins.composer = socketMethods;
 
+	data.router.get('/admin/plugins/composer-default', data.middleware.admin.buildHeader, controllers.renderAdminPage);
+	data.router.get('/api/admin/plugins/composer-default', controllers.renderAdminPage);
+
 	callback();
-}
+};
+
+plugin.appendConfig = function(config, callback) {
+	meta.settings.get('composer-default', function(err, settings) {
+		if (err) {
+			return callback(null, config);
+		}
+
+		config['composer-default'] = settings;
+		callback(null, config);
+	});
+};
+
+plugin.addAdminNavigation = function(header, callback) {
+	header.plugins.push({
+		route: '/plugins/composer-default',
+		icon: 'fa-edit',
+		name: 'Composer (Default)'
+	});
+
+	callback(null, header);
+};
 
 plugin.getFormattingOptions = function(callback) {
 	plugins.fireHook('filter:composer.formatting', {
@@ -113,7 +138,7 @@ plugin.build = function(data, callback) {
 			req: req,
 			res: res,
 			templateData: {
-				disabled: !req.query.pid && !req.query.tid && !req.query.cid ? 1 : 0,
+				disabled: !req.query.pid && !req.query.tid && !req.query.cid,
 				pid: req.query.pid,
 				tid: req.query.tid,
 				cid: req.query.cid,

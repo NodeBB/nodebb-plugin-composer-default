@@ -4,13 +4,16 @@
 	"library": "library.js",
 	"hooks": [
 		{ "hook": "static:app.load", "method": "init" },
-		{ "hook": "filter:composer.build", "method": "build" }
+		{ "hook": "filter:config.get", "method": "appendConfig" },
+		{ "hook": "filter:composer.build", "method": "build" },
+		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
 	],
 	"less": [
 		"./static/less/composer.less"
 	],
 	"scripts": [
 		"./static/lib/client.js",
+		"./static/lib/admin.js",
 		"./static/lib/composer.js",
 		"./static/lib/composer/categoryList.js",
 		"./static/lib/composer/controls.js",

@@ -84,7 +84,7 @@
 					</form>
 				</div>
 
-				<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
+				<div class="btn-group pull-right action-bar">
 					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
