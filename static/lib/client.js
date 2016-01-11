@@ -4,7 +4,7 @@ $(document).ready(function() {
 			$(window).on('action:composer.topic.new', function(ev, data) {
 				var env = utils.findBootstrapEnvironment();
 
-				if (config['composer-default'].composeRouteEnabled === 'off') {
+				if (config['composer-default'].composeRouteEnabled !== 'on') {
 					composer.newTopic({
 						cid: data.cid,
 						title: data.title || '',
@@ -20,7 +20,7 @@ $(document).ready(function() {
 			});
 
 			$(window).on('action:composer.post.edit', function(ev, data) {
-				if (config['composer-default'].composeRouteEnabled === 'off') {
+				if (config['composer-default'].composeRouteEnabled !== 'on') {
 					composer.editPost(data.pid);
 				} else {
 					ajaxify.go('compose?pid=' + data.pid);
@@ -28,7 +28,7 @@ $(document).ready(function() {
 			});
 
 			$(window).on('action:composer.post.new', function(ev, data) {
-				if (config['composer-default'].composeRouteEnabled === 'off') {
+				if (config['composer-default'].composeRouteEnabled !== 'on') {
 					composer.newReply(data.tid, data.pid, data.topicName, data.text);
 				} else {
 					ajaxify.go(
