@@ -49,7 +49,7 @@ define('composer', [
 
 	function removeComposerHistory() {
 		var env = utils.findBootstrapEnvironment();
-		if (ajaxify.data.template.compose === true || env === 'xs' || env ==='sm') {
+		if (ajaxify.data.disabled === true || env === 'xs' || env ==='sm') {
 			history.back();
 		}
 	}

@@ -1,4 +1,4 @@
-<div class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable -->" <!-- IF !disabled -->style="visibility: inherit;"<!-- ENDIF !disabled -->>
+<div class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable -->"<!-- IF !disabled --> style="visibility: inherit;"<!-- ENDIF !disabled -->>
 
 	<div class="composer-container">
 		<div class="title-container row">

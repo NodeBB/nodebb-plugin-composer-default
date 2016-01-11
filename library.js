@@ -5,6 +5,7 @@ var plugins = module.parent.require('./plugins'),
 	posts = module.parent.require('./posts'),
 	user = module.parent.require('./user'),
 	meta = module.parent.require('./meta'),
+	helpers = module.parent.require('./controllers/helpers'),
 	SocketPlugins = require.main.require('./src/socket.io/plugins'),
 	socketMethods = require('./websockets'),
 
@@ -33,13 +34,16 @@ plugin.getFormattingOptions = function(callback) {
 
 plugin.build = function(data, callback) {
 	var req = data.req,
-		res = data.res;
+		res = data.res,
+		next = data.next;
 
 	if (req.query.p && !res.locals.isAPI) {
 		if (req.query.p.startsWith(nconf.get('relative_path'))) {
 			req.query.p = req.query.p.replace(nconf.get('relative_path'), '');
 		}
 		return helpers.redirect(res, req.query.p);
+	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
+		return helpers.redirect(res, '/');
 	}
 
 	var uid = req.user ? req.user.uid : 0;
@@ -85,10 +89,6 @@ plugin.build = function(data, callback) {
 			isGuestPost = data.postData && parseInt(data.postData.uid, 10) === 0,
 			save_id, discardRoute;
 
-		if (!data.postData && !data.topicData && !req.query.cid) {
-			return next();
-		}
-
 		if (uid) {
 			if (req.query.cid) {
 				save_id = ['composer', uid, 'cid', req.query.cid].join(':');
@@ -101,15 +101,19 @@ plugin.build = function(data, callback) {
 
 		if (req.query.cid) {
 			discardRoute = nconf.get('relative_path') + '/category/' + req.query.cid;
-		} else if (req.query.tid || req.query.pid) {
-			discardRoute = nconf.get('relative_path') + '/topic/' + data.topicData.slug;
+		} else if ((req.query.tid || req.query.pid)) {
+			if (data.topicData) {
+				discardRoute = nconf.get('relative_path') + '/topic/' + data.topicData.slug;
+			} else {
+				return next();
+			}
 		}
 
 		callback(null, {
 			req: req,
 			res: res,
 			templateData: {
-				disabled: !req.query.pid && !req.query.tid && !req.query.cid,
+				disabled: !req.query.pid && !req.query.tid && !req.query.cid ? 1 : 0,
 				pid: req.query.pid,
 				tid: req.query.tid,
 				cid: req.query.cid,
