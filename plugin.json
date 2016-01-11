@@ -3,7 +3,8 @@
 	"url": "https://github.com/NodeBB/nodebb-plugin-composer-default",
 	"library": "library.js",
 	"hooks": [
-		{ "hook": "static:app.load", "method": "init" }
+		{ "hook": "static:app.load", "method": "init" },
+		{ "hook": "filter:composer.build", "method": "build" }
 	],
 	"less": [
 		"./static/less/composer.less"

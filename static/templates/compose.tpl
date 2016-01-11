@@ -1,14 +1,6 @@
-<div class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable -->">
+<div class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable -->" <!-- IF !disabled -->style="visibility: inherit;"<!-- ENDIF !disabled -->>
 
 	<div class="composer-container">
-		<nav class="navbar navbar-fixed-top mobile-navbar visible-xs visible-sm">
-			<span class="pull-left">
-				<button class="btn btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
-			</span>
-			<span class="pull-right">
-				<button class="btn btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
-			</span>
-		</nav>
 		<div class="title-container row">
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
@@ -93,7 +85,7 @@
 				</div>
 
 				<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
-					<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
+					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 					<!-- IF !isEditing -->
@@ -109,12 +101,6 @@
 					</ul>
 					<!-- ENDIF !isEditing -->
 				</div>
-
-				<!-- IF isTopicOrMain -->
-				<div class="tags-container inline-block">
-					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="4"/>
-				</div>
-				<!-- ENDIF isTopicOrMain -->
 			</div>
 		</div>
 
@@ -133,9 +119,5 @@
 				<div class="preview well"></div>
 			</div>
 		</div>
-
-		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
-
-		<div class="resizer"><div class="trigger text-center"><i class="fa"></i></div></div>
 	</div>
 </div>

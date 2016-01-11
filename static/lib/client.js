@@ -21,6 +21,10 @@ $(document).ready(function() {
 				var topicUUID = composer.findByTid(data.tid);
 				composer.addQuote(data.tid, data.slug, data.index, data.pid, data.topicName, data.username, data.text, topicUUID);
 			});
+
+			$(window).on('action:composer.enhance', function(ev, data) {
+				composer.enhance(data.container);
+			});
 		});
 	});
 });

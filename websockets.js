@@ -9,6 +9,7 @@ var async = require.main.require('async'),
 	plugins = require.main.require('./src/plugins'),
 
 	server = require.main.require('./src/socket.io'),
+
 	Sockets = {};
 
 Sockets.push = function(socket, pid, callback) {
@@ -98,13 +99,7 @@ Sockets.stopNotifyTyping = function(socket, data) {
 };
 
 Sockets.getFormattingOptions = function(socket, data, callback) {
-	plugins.fireHook('filter:composer.formatting', {
-		options: [
-			{ name: 'tags', className: 'fa fa-tags', mobile: true }
-		]
-	}, function(err, payload) {
-		callback(err, payload ? payload.options : null);
-	});
+	module.parent.exports.getFormattingOptions(callback);
 };
 
 module.exports = Sockets;
