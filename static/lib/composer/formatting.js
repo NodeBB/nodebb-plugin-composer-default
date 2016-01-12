@@ -45,7 +45,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 	formatting.addHandler = function(postContainer) {
 		postContainer.on('click', '.formatting-bar span', function () {
 			var format = $(this).attr('data-format'),
-				textarea = $(this).parents('.composer').find('textarea')[0];
+				textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 
 			if(formattingDispatchTable.hasOwnProperty(format)){
 				formattingDispatchTable[format](textarea, textarea.selectionStart, textarea.selectionEnd);
