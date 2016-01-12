@@ -351,6 +351,8 @@ define('composer', [
 		handleHelp(postContainer);
 
 		focusElements(postContainer);
+
+		$(window).trigger('action:composer.enhanced');
 	}
 
 	function startNotifyTyping(postData) {
