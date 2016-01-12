@@ -12,8 +12,9 @@ define('composer', [
 	'composer/tags',
 	'composer/categoryList',
 	'composer/preview',
-	'composer/resize'
-], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize) {
+	'composer/resize',
+	'composer/autocomplete'
+], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -280,6 +281,8 @@ define('composer', [
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
 		preview.handleToggler(postContainer);
+
+		autocomplete.init(postContainer);
 
 		postContainer.on('change', 'input, textarea', function() {
 			composer.posts[post_uuid].modified = true;
