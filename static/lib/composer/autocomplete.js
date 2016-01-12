@@ -7,7 +7,9 @@ define('composer/autocomplete', function() {
 	var autocomplete = {};
 
 	autocomplete.init = function(postContainer) {
+		var element = postContainer.find('.write');
 		var data = {
+			element: element,
 			strategies: [],
 			options: {
 				zIndex: 20000,
@@ -20,7 +22,7 @@ define('composer/autocomplete', function() {
 		};
 
 		$(window).trigger('composer:autocomplete:init', data);
-		postContainer.find('.write').textcomplete(data.strategies, data.options);
+		data.element.textcomplete(data.strategies, data.options);
 		$('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%');
 	};
 
