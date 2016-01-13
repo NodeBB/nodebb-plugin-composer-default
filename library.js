@@ -142,11 +142,12 @@ plugin.build = function(data, callback) {
 				pid: req.query.pid,
 				tid: req.query.tid,
 				cid: req.query.cid,
+				toPid: req.query.toPid,
 				discardRoute: discardRoute,
 
 				resizable: false,
 
-				title: data.topicData ? data.topicData.title : '',
+				topicTitle: data.topicData ? data.topicData.title : '',
 				isTopicOrMain: !!req.query.cid || data.isMain,
 				// minimumTagLength:
 				// maximumTagLength:

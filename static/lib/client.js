@@ -33,7 +33,7 @@ $(document).ready(function() {
 				} else {
 					ajaxify.go(
 						'compose?tid=' + data.tid +
-						(data.pid ? '&pid=' + encodeURIComponent(data.pid) : '') +
+						(data.pid ? '&toPid=' + encodeURIComponent(data.pid) : '') +
 						(data.title ? '&title=' + encodeURIComponent(data.topicName) : '') +
 						(data.body ? '&body=' + encodeURIComponent(data.text) : '')
 					);
