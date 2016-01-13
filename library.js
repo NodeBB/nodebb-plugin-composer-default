@@ -148,6 +148,7 @@ plugin.build = function(data, callback) {
 				resizable: false,
 
 				topicTitle: data.topicData ? data.topicData.title : '',
+				body: data.postData ? data.postData.content : '',
 				isTopicOrMain: !!req.query.cid || data.isMain,
 				// minimumTagLength:
 				// maximumTagLength:
