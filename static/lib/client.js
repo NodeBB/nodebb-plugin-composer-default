@@ -33,7 +33,7 @@ $(document).ready(function() {
 				} else {
 					ajaxify.go(
 						'compose?tid=' + data.tid +
-						(data.pid ? '&toPid=' + encodeURIComponent(data.pid) : '') +
+						(data.pid ? '&toPid=' + data.pid : '') +
 						(data.title ? '&title=' + encodeURIComponent(data.topicName) : '') +
 						(data.body ? '&body=' + encodeURIComponent(data.text) : '')
 					);
@@ -41,8 +41,12 @@ $(document).ready(function() {
 			});
 
 			$(window).on('action:composer.addQuote', function(ev, data) {
-				var topicUUID = composer.findByTid(data.tid);
-				composer.addQuote(data.tid, data.slug, data.index, data.pid, data.topicName, data.username, data.text, topicUUID);
+				if (config['composer-default'].composeRouteEnabled !== 'on') {
+					var topicUUID = composer.findByTid(data.tid);
+					composer.addQuote(data.tid, data.slug, data.index, data.pid, data.topicName, data.username, data.text, topicUUID);
+				} else {
+					ajaxify.go('compose?tid=' + data.tid + '&toPid=' + data.pid + '&quoted=1&username=' + data.username);
+				}
 			});
 
 			$(window).on('action:composer.enhance', function(ev, data) {

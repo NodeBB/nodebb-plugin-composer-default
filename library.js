@@ -5,6 +5,7 @@ var plugins = module.parent.require('./plugins'),
 	posts = module.parent.require('./posts'),
 	user = module.parent.require('./user'),
 	meta = module.parent.require('./meta'),
+	translator = module.parent.require('../public/src/modules/translator'),
 	helpers = module.parent.require('./controllers/helpers'),
 	SocketPlugins = require.main.require('./src/socket.io/plugins'),
 	socketMethods = require('./websockets'),
@@ -76,11 +77,11 @@ plugin.build = function(data, callback) {
 	async.parallel({
 		isMain: async.apply(posts.isMain, req.query.pid),
 		postData: function(next) {
-			if (!req.query.pid) {
+			if (!req.query.pid && !req.query.toPid) {
 				return next();
 			}
 
-			posts.getPostData(req.query.pid, next);
+			posts.getPostData(req.query.pid || req.query.toPid, next);
 		},
 		topicData: function(next) {
 			if (req.query.tid) {
@@ -112,7 +113,7 @@ plugin.build = function(data, callback) {
 	}, function(err, data) {
 		var isEditing = !!req.query.pid,
 			isGuestPost = data.postData && parseInt(data.postData.uid, 10) === 0,
-			save_id, discardRoute;
+			save_id, discardRoute, body;
 
 		if (uid) {
 			if (req.query.cid) {
@@ -134,33 +135,49 @@ plugin.build = function(data, callback) {
 			}
 		}
 
-		callback(null, {
-			req: req,
-			res: res,
-			templateData: {
-				disabled: !req.query.pid && !req.query.tid && !req.query.cid,
-				pid: req.query.pid,
-				tid: req.query.tid,
-				cid: req.query.cid,
-				toPid: req.query.toPid,
-				discardRoute: discardRoute,
+		// Quoted reply
+		if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && data.postData) {
+			user.getUserField(data.postData.uid, 'username', function(err, username) {
+				translator.translate('[[modules:composer.user_said, ' + username + ']]', function(translated) {
+					body = '> ' + (data.postData ? data.postData.content.replace(/\n/g, '\n> ') + '\n\n' : '');
+					body = translated + '\n' + body;
+					ready();
+				});
+			});
+		} else {
+			body = data.postData ? data.postData.content : '';
+			ready();
+		}
 
-				resizable: false,
+		function ready() {
+			callback(null, {
+				req: req,
+				res: res,
+				templateData: {
+					disabled: !req.query.pid && !req.query.tid && !req.query.cid,
+					pid: parseInt(req.query.pid, 10),
+					tid: parseInt(req.query.tid, 10),
+					cid: parseInt(req.query.cid, 10),
+					toPid: parseInt(req.query.toPid, 10),
+					discardRoute: discardRoute,
 
-				topicTitle: data.topicData ? data.topicData.title : '',
-				body: data.postData ? data.postData.content : '',
-				isTopicOrMain: !!req.query.cid || data.isMain,
-				// minimumTagLength:
-				// maximumTagLength:
-				isTopic: !!req.query.cid,
-				isEditing: isEditing,
-				showHandleInput: meta.config.allowGuestHandles && (req.user.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
-				handle: data.postData ? data.postData.handle || '' : undefined,
-				formatting: data.formatting,
-				isAdminOrMod: data.isAdmin || data.isMod,
-				save_id: save_id
-			}
-		});
+					resizable: false,
+
+					topicTitle: data.topicData ? data.topicData.title : '',
+					body: body,
+					isTopicOrMain: !!req.query.cid || data.isMain,
+					// minimumTagLength:
+					// maximumTagLength:
+					isTopic: !!req.query.cid,
+					isEditing: isEditing,
+					showHandleInput: meta.config.allowGuestHandles && (req.user.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
+					handle: data.postData ? data.postData.handle || '' : undefined,
+					formatting: data.formatting,
+					isAdminOrMod: data.isAdmin || data.isMod,
+					save_id: save_id
+				}
+			});
+		}
 	});
 }
 
