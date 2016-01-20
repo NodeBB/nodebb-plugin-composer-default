@@ -163,7 +163,7 @@ plugin.build = function(data, callback) {
 
 					resizable: false,
 
-					topicTitle: data.topicData ? data.topicData.title : '',
+					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
 					body: body,
 					isTopicOrMain: !!req.query.cid || data.isMain,
 					// minimumTagLength:
