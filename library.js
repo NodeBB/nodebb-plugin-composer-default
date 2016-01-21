@@ -63,11 +63,16 @@ plugin.build = function(data, callback) {
 		res = data.res,
 		next = data.next;
 
-	if (req.query.p && !res.locals.isAPI) {
-		if (req.query.p.startsWith(nconf.get('relative_path'))) {
-			req.query.p = req.query.p.replace(nconf.get('relative_path'), '');
+	if (req.query.p) {
+		if (!res.locals.isAPI) {
+			if (req.query.p.startsWith(nconf.get('relative_path'))) {
+				req.query.p = req.query.p.replace(nconf.get('relative_path'), '');
+			}
+
+			return helpers.redirect(res, req.query.p);
+		} else {
+			return res.render('', {});
 		}
-		return helpers.redirect(res, req.query.p);
 	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
 		return helpers.redirect(res, '/');
 	}
