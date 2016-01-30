@@ -7,18 +7,19 @@ define('composer/resize', ['autosize'], function(autosize) {
 	var resize = {},
 		oldPercentage = 0,
 		minimumPercentage = 0.3,
-		snapMargin = 1/15;
+		snapMargin = $('[component="navbar"]').height() / $(window).height();
 
 	var $body = $('body'),
 		$html = $('html'),
 		$window = $(window),
-		$headerMenu = $('#header-menu');
+		$headerMenu = $('[component="navbar"]');
 
 
 	resize.reposition = function(postContainer) {
 		var	percentage = localStorage.getItem('composer:resizePercentage') || 0.5;
 
 		if (percentage >= 1 - snapMargin) {
+			percentage = 1;
 			postContainer.addClass('maximized');
 		}
 
@@ -147,7 +148,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 					resizeIt(postContainer, newPercentage);
 					postContainer.addClass('maximized');
 				} else {
-					resizeIt(postContainer, (oldPercentage >= 1 - snapMargin) ? 0.5 : oldPercentage);
+					resizeIt(postContainer, (oldPercentage >= 1 - snapMargin || oldPercentage == 0) ? 0.5 : oldPercentage);
 					postContainer.removeClass('maximized');
 				}
 			}
