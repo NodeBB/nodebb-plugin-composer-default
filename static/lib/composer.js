@@ -492,6 +492,7 @@ define('composer', [
 				});
 
 				resize.reposition(postContainer);
+				focusElements(postContainer);
 			});
 		}
 	}
@@ -524,6 +525,7 @@ define('composer', [
 
 	function focusElements(postContainer) {
 		var title = postContainer.find('input.title');
+
 		if (title.length) {
 			title.focus();
 		} else {
