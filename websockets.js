@@ -46,7 +46,7 @@ Sockets.push = function(socket, pid, callback) {
 					uid: postData.uid,
 					handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
 					body: postData.content,
-					title: results.topic.title,
+					title: results.topic.titleEscaped,
 					topic_thumb: results.topic.thumb,
 					tags: results.tags,
 					isMain: results.isMain
