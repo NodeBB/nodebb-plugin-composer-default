@@ -29,7 +29,7 @@ define('composer', [
 		localStorage.removeItem('category:' + data.data.cid + ':bookmark:clicked');
 	});
 
-	$(window).on('popstate', function(ev, data) {
+	$(window).on('popstate', function() {
 		var env = utils.findBootstrapEnvironment();
 
 		if (composer.active && (env === 'xs' || env ==='sm')) {
@@ -258,8 +258,6 @@ define('composer', [
 				});
 			}
 		}
-
-		startNotifyTyping(composer.posts[post_uuid]);
 	};
 
 	composer.enhance = function(postContainer, post_uuid, postData) {
@@ -353,42 +351,7 @@ define('composer', [
 		focusElements(postContainer);
 
 		$(window).trigger('action:composer.enhanced');
-	}
-
-	function startNotifyTyping(postData) {
-		function emit() {
-			socket.emit('plugins.composer.notifyTyping', {
-				tid: postData.tid,
-				uid: app.user.uid
-			});
-		}
-
-		if (!parseInt(postData.tid, 10)) {
-			return;
-		}
-
-		stopNotifyInterval(postData);
-
-		emit();
-		postData.notifyTypingIntervalId = setInterval(emit, 5000);
-	}
-
-	function stopNotifyTyping(postData) {
-		if (!parseInt(postData.tid, 10)) {
-			return;
-		}
-		socket.emit('plugins.composer.stopNotifyTyping', {
-			tid: postData.tid,
-			uid: app.user.uid
-		});
-	}
-
-	function stopNotifyInterval(postData) {
-		if (postData.notifyTypingIntervalId) {
-			clearInterval(postData.notifyTypingIntervalId);
-			postData.notifyTypingIntervalId = 0;
-		}
-	}
+	};
 
 	function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
@@ -443,9 +406,7 @@ define('composer', [
 
 				$(document.body).append(composerTemplate);
 
-				var postContainer = $(composerTemplate[0]),
-					bodyEl = postContainer.find('textarea'),
-					draft = drafts.getDraft(postData.save_id);
+				var postContainer = $(composerTemplate[0]);
 
 				composer.enhance(postContainer, post_uuid, postData);
 				/*
@@ -634,10 +595,6 @@ define('composer', [
 			$('#cmp-uuid-' + post_uuid).remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
 
-			// This stuff got removed a long time ago, TODO: remove
-			stopNotifyInterval(composer.posts[post_uuid]);
-			stopNotifyTyping(composer.posts[post_uuid]);
-
 			delete composer.posts[post_uuid];
 			composer.active = undefined;
 			taskbar.discard('composer', post_uuid);
@@ -653,9 +610,6 @@ define('composer', [
 		postContainer.css('visibility', 'hidden');
 		composer.active = undefined;
 		taskbar.minimize('composer', post_uuid);
-
-		stopNotifyInterval(composer.posts[post_uuid]);
-		stopNotifyTyping(composer.posts[post_uuid]);
 
 		$('body').css({'margin-bottom': '0px'});
 	};

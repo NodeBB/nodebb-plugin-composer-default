@@ -84,20 +84,6 @@ Sockets.renderHelp = function(socket, data, callback) {
 	});
 };
 
-Sockets.notifyTyping = function(socket, data) {
-	if (!socket.uid || !parseInt(data.tid, 10)) {
-		return;
-	}
-	server.in('topic_' + data.tid).emit('event:topic.notifyTyping', data);
-};
-
-Sockets.stopNotifyTyping = function(socket, data) {
-	if (!socket.uid || !parseInt(data.tid, 10)) {
-		return;
-	}
-	server.in('topic_' + data.tid).emit('event:topic.stopNotifyTyping', data);
-};
-
 Sockets.getFormattingOptions = function(socket, data, callback) {
 	module.parent.exports.getFormattingOptions(callback);
 };
