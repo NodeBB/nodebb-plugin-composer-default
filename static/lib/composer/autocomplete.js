@@ -2,7 +2,7 @@
 
 /* globals define */
 
-define('composer/autocomplete', function() {
+define('composer/autocomplete', ['composer/preview'], function(preview) {
 
 	var autocomplete = {};
 
@@ -24,6 +24,10 @@ define('composer/autocomplete', function() {
 		$(window).trigger('composer:autocomplete:init', data);
 		data.element.textcomplete(data.strategies, data.options);
 		$('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%');
+
+		data.element.on('textComplete:select', function() {
+			preview.render(postContainer);
+		});
 	};
 
 	return autocomplete;
