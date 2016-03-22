@@ -20,11 +20,16 @@ define('composer/tags', function() {
 		});
 
 		tagEl.on('beforeItemAdd', function(event) {
-			event.cancel = event.item.length < config.minimumTagLength || event.item.length > config.maximumTagLength;
+			var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
+			var different = cleanTag !== event.item;
+			event.cancel = different || event.item.length < config.minimumTagLength || event.item.length > config.maximumTagLength;
 			if (event.item.length < config.minimumTagLength) {
-				app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
+				return app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
 			} else if (event.item.length > config.maximumTagLength) {
-				app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
+				return app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
+			}
+			if (different) {
+				tagEl.tagsinput('add', cleanTag);
 			}
 		});
 
