@@ -35,7 +35,7 @@ define('composer/uploads', ['composer/preview', 'csrf', 'translator'], function(
 			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null),
 				fd;
 
-			if(files) {
+			if (files) {
 				if (window.FormData) {
 					fd = new FormData();
 					for (var i = 0; i < files.length; ++i) {

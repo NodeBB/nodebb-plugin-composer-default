@@ -356,7 +356,7 @@ define('composer', [
 	function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
-		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain && (config.hasImageUploadPlugin || config.allowFileUploads),
+		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain,
 			isTopic = postData ? !!postData.cid : false,
 			isMain = postData ? !!postData.isMain : false,
 			isEditing = postData ? !!postData.pid : false,
@@ -432,7 +432,7 @@ define('composer', [
 
 				activate(post_uuid);
 
-				if (config.allowFileUploads || config.hasImageUploadPlugin) {
+				if (config.allowFileUploads || config.hasImageUploadPlugin || config.allowTopicsThumbnail) {
 					uploads.initialize(post_uuid);
 				}
 
