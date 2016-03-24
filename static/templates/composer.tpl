@@ -9,7 +9,7 @@
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</span>
 		</nav>
-		<div class="title-container row">
+		<div class="row title-container">
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
@@ -110,11 +110,7 @@
 					<!-- ENDIF !isEditing -->
 				</div>
 
-				<!-- IF isTopicOrMain -->
-				<div class="tags-container inline-block">
-					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="4"/>
-				</div>
-				<!-- ENDIF isTopicOrMain -->
+
 			</div>
 		</div>
 
@@ -133,6 +129,16 @@
 				<div class="preview well"></div>
 			</div>
 		</div>
+
+		<!-- IF isTopicOrMain -->
+		<div class="row tag-row">
+			<div class="col-md-12">
+				<div class="tags-container inline-block">
+					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="4"/>
+				</div>
+			</div>
+		</div>
+		<!-- ENDIF isTopicOrMain -->
 
 		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
 

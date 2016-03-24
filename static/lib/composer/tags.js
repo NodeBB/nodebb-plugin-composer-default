@@ -44,6 +44,7 @@ define('composer/tags', function() {
 		app.loadJQueryUI(function() {
 			input.autocomplete({
 				delay: 100,
+				position: { my: "left bottom", at: "left top", collision: "flip" },
 				open: function() {
 					$(this).autocomplete('widget').css('z-index', 20000);
 				},
@@ -66,6 +67,7 @@ define('composer/tags', function() {
 		});
 
 		input.attr('tabIndex', tagEl.attr('tabIndex'));
+		input.attr('size', tagEl.attr('placeholder').length);
 		input.on('blur', function() {
 			triggerEnter(input);
 		});
