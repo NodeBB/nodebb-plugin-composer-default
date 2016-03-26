@@ -174,7 +174,7 @@ define('composer', [
 		uuid = uuid || composer.active;
 
 		if (title) {
-			title = title.replace('[', '&#91;').replace(']', '&#93;');
+			title = title.replace(/\[/g, '&#91;').replace(/\]/g, '&#93;');
 		}
 
 		if (text) {
