@@ -173,8 +173,8 @@ define('composer', [
 	composer.addQuote = function(tid, topicSlug, postIndex, pid, title, username, text, uuid) {
 		uuid = uuid || composer.active;
 
-		if (topicSlug) {
-			topicSlug = topicSlug.replace('[', '&#91;').replace(']', '&#93;');
+		if (title) {
+			title = title.replace('[', '&#91;').replace(']', '&#93;');
 		}
 
 		if (text) {
