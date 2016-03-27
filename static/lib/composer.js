@@ -173,9 +173,7 @@ define('composer', [
 	composer.addQuote = function(tid, topicSlug, postIndex, pid, title, username, text, uuid) {
 		uuid = uuid || composer.active;
 
-		if (title) {
-			title = title.replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1').replace(/\[/g, '&#91;').replace(/\]/g, '&#93;').replace(/%/g, '&#37;').replace(/,/g, '&#44;')
-		}
+		var escapedTitle = (title || '').replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1').replace(/\[/g, '&#91;').replace(/\]/g, '&#93;').replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 
 		if (text) {
 			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
@@ -183,7 +181,7 @@ define('composer', [
 
 		if (uuid === undefined) {
 			if (title && topicSlug && postIndex) {
-				var link = '[' + title + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+				var link = '[' + escapedTitle + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
@@ -198,7 +196,7 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && topicSlug && postIndex) {
-			var link = '[' + title + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+			var link = '[' + escapedTitle + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
