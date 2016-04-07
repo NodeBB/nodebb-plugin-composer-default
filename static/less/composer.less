@@ -13,6 +13,26 @@
 html.composing {
 	&.mobile {
 		overflow: hidden;
+
+		.composer {
+			.composer-container {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.write, .preview {
+				min-height: auto;
+				flex-grow: 1;
+				height: auto !important;
+			}
+
+			.write-preview-container, .write-preview-container > div {
+				min-height: auto;
+				flex-grow: 1;
+				height: auto !important;
+				display: flex;
+			}
+		}
 	}
 
 	body {
