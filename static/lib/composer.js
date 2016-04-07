@@ -179,7 +179,7 @@ define('composer', [
 
 		if (uuid === undefined) {
 			if (title && topicSlug && postIndex) {
-				var link = '[' + title.replace(/^\[/, '&#8203;[') + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+				var link = '[' + title + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
@@ -194,14 +194,13 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && topicSlug && postIndex) {
-			var link = '[' + title.replace(/^\[/, '&#8203;[') + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+			var link = '[' + title + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
 		}
 
 		function onTranslated(translated) {
-			translated = translated.replace('​', '');	// there's a zero-width space here
 			composer.posts[uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + text;
 			bodyEl.val(composer.posts[uuid].body);
 			focusElements(postContainer);
@@ -215,8 +214,6 @@ define('composer', [
 				return app.alertError(err.message);
 			}
 			translator.translate(text, config.defaultLang, function(translated) {
-				translated = translated.replace('​', '');	// there's a zero-width space here
-
 				push({
 					tid: tid,
 					toPid: pid,
