@@ -20,18 +20,27 @@ define('composer/controls', function() {
 	};
 
 	controls.wrapSelectionInTextareaWith = function(textarea, leading, trailing){
-		if(trailing === undefined){
+		if (trailing === undefined) {
 			trailing = leading;
 		}
 
 		var $textarea = $(textarea);
 		var currentVal = $textarea.val();
 
+		var matches = /^(\s*)([\s\S]*?)(\s*)$/m.exec(currentVal.slice(textarea.selectionStart, textarea.selectionEnd));
+
+		if (!matches[2]) {
+			// selection is entirely whitespace
+			matches = [null, '', currentVal.slice(textarea.selectionStart, textarea.selectionEnd), ''];
+		}
+
 		$textarea.val(
 			currentVal.slice(0, textarea.selectionStart) +
+			matches[1] +
 			leading +
-			currentVal.slice(textarea.selectionStart, textarea.selectionEnd) +
+			matches[2] +
 			trailing +
+			matches[3] +
 			currentVal.slice(textarea.selectionEnd)
 		);
 	};
