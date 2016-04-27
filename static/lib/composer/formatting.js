@@ -2,10 +2,7 @@
 
 /* globals define */
 
-define('plugins/nodebb-plugin-composer-default/js/composer/formatting', [
-	'plugins/nodebb-plugin-composer-default/js/composer/controls',
-	'plugins/nodebb-plugin-composer-default/js/composer/preview'
-], function(controls, preview) {
+define('composer/formatting', ['composer/controls', 'composer/preview'], function(controls, preview) {
 
 	var formatting = {};
 

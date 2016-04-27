@@ -2,7 +2,7 @@
 
 /* globals define */
 
-define('plugins/nodebb-plugin-composer-default/js/composer/drafts', function() {
+define('composer/drafts', function() {
 
 	var drafts = {};
 	var	saveThrottleId;

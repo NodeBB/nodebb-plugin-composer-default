@@ -7,7 +7,7 @@ $(document).ready(function() {
 
 		$(window).on('action:composer.topic.new', function(ev, data) {
 			if (config['composer-default'].composeRouteEnabled !== 'on') {
-				require(['plugins/nodebb-plugin-composer-default/js/composer'], function(composer) {
+				require(['composer'], function(composer) {
 					composer.newTopic({
 						cid: data.cid,
 						title: data.title || '',
@@ -25,7 +25,7 @@ $(document).ready(function() {
 
 		$(window).on('action:composer.post.edit', function(ev, data) {
 			if (config['composer-default'].composeRouteEnabled !== 'on') {
-				require(['plugins/nodebb-plugin-composer-default/js/composer'], function(composer) {
+				require(['composer'], function(composer) {
 					composer.editPost(data.pid);
 				});
 			} else {
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
 		$(window).on('action:composer.post.new', function(ev, data) {
 			if (config['composer-default'].composeRouteEnabled !== 'on') {
-				require(['plugins/nodebb-plugin-composer-default/js/composer'], function(composer) {
+				require(['composer'], function(composer) {
 					composer.newReply(data.tid, data.pid, data.topicName, data.text);
 				});
 			} else {
@@ -50,7 +50,7 @@ $(document).ready(function() {
 
 		$(window).on('action:composer.addQuote', function(ev, data) {
 			if (config['composer-default'].composeRouteEnabled !== 'on') {
-				require(['plugins/nodebb-plugin-composer-default/js/composer'], function(composer) {
+				require(['composer'], function(composer) {
 					var topicUUID = composer.findByTid(data.tid);
 					composer.addQuote(data.tid, data.slug, data.index, data.pid, data.topicName, data.username, data.text, topicUUID);
 				});
@@ -60,7 +60,7 @@ $(document).ready(function() {
 		});
 
 		$(window).on('action:composer.enhance', function(ev, data) {
-			require(['plugins/nodebb-plugin-composer-default/js/composer'], function(composer) {
+			require(['composer'], function(composer) {
 				composer.enhance(data.container);
 			});
 		});

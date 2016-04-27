@@ -2,8 +2,8 @@
 
 /* globals define, utils, config, app */
 
-define('plugins/nodebb-plugin-composer-default/js/composer/uploads', [
-	'plugins/nodebb-plugin-composer-default/js/composer/preview',
+define('composer/uploads', [
+	'composer/preview',
 	'csrf',
 	'translator'
 ], function(preview, csrf, translator) {

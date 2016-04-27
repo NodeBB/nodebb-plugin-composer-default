@@ -2,18 +2,18 @@
 
 /* globals define, socket, app, config, ajaxify, utils, templates, bootbox */
 
-define('plugins/nodebb-plugin-composer-default/js/composer', [
+define('composer', [
 	'taskbar',
 	'translator',
-	'plugins/nodebb-plugin-composer-default/js/composer/controls',
-	'plugins/nodebb-plugin-composer-default/js/composer/uploads',
-	'plugins/nodebb-plugin-composer-default/js/composer/formatting',
-	'plugins/nodebb-plugin-composer-default/js/composer/drafts',
-	'plugins/nodebb-plugin-composer-default/js/composer/tags',
-	'plugins/nodebb-plugin-composer-default/js/composer/categoryList',
-	'plugins/nodebb-plugin-composer-default/js/composer/preview',
-	'plugins/nodebb-plugin-composer-default/js/composer/resize',
-	'plugins/nodebb-plugin-composer-default/js/composer/autocomplete'
+	'composer/controls',
+	'composer/uploads',
+	'composer/formatting',
+	'composer/drafts',
+	'composer/tags',
+	'composer/categoryList',
+	'composer/preview',
+	'composer/resize',
+	'composer/autocomplete'
 ], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete) {
 	var composer = {
 		active: undefined,
