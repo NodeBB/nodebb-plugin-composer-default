@@ -364,7 +364,7 @@ define('plugins/nodebb-plugin-composer-default/js/composer', [
 		var postData = composer.posts[post_uuid];
 
 		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain,
-			isTopic = postData ? !!postData.cid : false,
+			isTopic = postData ? postData.hasOwnProperty('cid') : false,
 			isMain = postData ? !!postData.isMain : false,
 			isEditing = postData ? !!postData.pid : false,
 			isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
@@ -513,13 +513,14 @@ define('plugins/nodebb-plugin-composer-default/js/composer', [
 	}
 
 	function post(post_uuid, options) {
-		var postData = composer.posts[post_uuid],
-			postContainer = $('#cmp-uuid-' + post_uuid),
-			handleEl = postContainer.find('.handle'),
-			titleEl = postContainer.find('.title'),
-			bodyEl = postContainer.find('textarea'),
-			thumbEl = postContainer.find('input#topic-thumb-url'),
-			onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
+		var postData = composer.posts[post_uuid];
+		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var handleEl = postContainer.find('.handle');
+		var titleEl = postContainer.find('.title');
+		var bodyEl = postContainer.find('textarea');
+		var categoryEl = postContainer.find('.category-list');
+		var thumbEl = postContainer.find('input#topic-thumb-url');
+		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 
 		options = options || {};
 
@@ -529,7 +530,7 @@ define('plugins/nodebb-plugin-composer-default/js/composer', [
 			thumbEl.val(thumbEl.val().trim());
 		}
 
-		var checkTitle = (parseInt(postData.cid, 10) || parseInt(postData.pid, 10)) && postContainer.find('input.title').length;
+		var checkTitle = (postData.hasOwnProperty('cid') || parseInt(postData.pid, 10)) && postContainer.find('input.title').length;
 
 		if (uploads.inProgress[post_uuid] && uploads.inProgress[post_uuid].length) {
 			return composerAlert(post_uuid, '[[error:still-uploading]]');
@@ -547,14 +548,14 @@ define('plugins/nodebb-plugin-composer-default/js/composer', [
 
 		var composerData = {}, action;
 
-		if (parseInt(postData.cid, 10) > 0) {
+		if (postData.hasOwnProperty('cid')) {
 			action = 'topics.post';
 			composerData = {
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
 				content: bodyEl.val(),
 				topic_thumb: thumbEl.val() || '',
-				category_id: postData.cid,
+				category_id: categoryEl.val(),
 				tags: tags.getTags(post_uuid),
 				lock: options.lock || false
 			};
