@@ -45,16 +45,16 @@
 						<span class="btn spacer"></span>
 						<!-- ELSE -->
 						<!-- IF !formatting.mobile -->
-						<span class="btn btn-link" tabindex="-1" data-format="{formatting.name}"><i class="{formatting.className}"></i></span>
+						<span class="btn btn-link" tabindex="-1" data-format="{formatting.name}" title="{formatting.title}"><i class="{formatting.className}"></i></span>
 						<!-- ENDIF !formatting.mobile -->
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
 
 					<!--[if gte IE 9]><!-->
-						<span class="btn btn-link img-upload-btn hide" data-format="picture" tabindex="-1">
+						<span class="btn btn-link img-upload-btn hide" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
 							<i class="fa fa-cloud-upload"></i>
 						</span>
-						<span class="btn btn-link file-upload-btn hide" data-format="upload" tabindex="-1">
+						<span class="btn btn-link file-upload-btn hide" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
 							<i class="fa fa-upload"></i>
 						</span>
 					<!--<![endif]-->
