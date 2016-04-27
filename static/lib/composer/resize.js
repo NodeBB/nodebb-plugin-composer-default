@@ -3,7 +3,7 @@
 
 /* globals app, define, config, utils*/
 
-define('composer/resize', ['autosize'], function(autosize) {
+define('plugins/nodebb-plugin-composer-default/js/composer/resize', ['autosize'], function(autosize) {
 	var resize = {},
 		oldPercentage = 0,
 		minimumPercentage = 0.3,

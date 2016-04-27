@@ -3,7 +3,7 @@
 
 /*globals define, config, socket, app*/
 
-define('composer/tags', function() {
+define('plugins/nodebb-plugin-composer-default/js/composer/tags', function() {
 	var tags = {};
 
 	tags.init = function(postContainer, postData) {

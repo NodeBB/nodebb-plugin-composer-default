@@ -2,7 +2,7 @@
 
 /* globals define, socket*/
 
-define('composer/preview', function() {
+define('plugins/nodebb-plugin-composer-default/js/composer/preview', function() {
 	var preview = {};
 
 	var timeoutId = 0;

@@ -3,7 +3,7 @@
 
 /*globals define, config, socket, app*/
 
-define('composer/categoryList', function() {
+define('plugins/nodebb-plugin-composer-default/js/composer/categoryList', function() {
 	var categoryList = {};
 
 	categoryList.init = function(postContainer, postData) {

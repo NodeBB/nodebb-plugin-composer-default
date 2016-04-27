@@ -2,7 +2,7 @@
 
 /*global define*/
 
-define('composer/controls', function() {
+define('plugins/nodebb-plugin-composer-default/js/composer/controls', function() {
 	var controls = {};
 
 	/*************************************************/

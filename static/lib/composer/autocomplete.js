@@ -2,7 +2,9 @@
 
 /* globals define */
 
-define('composer/autocomplete', ['composer/preview'], function(preview) {
+define('plugins/nodebb-plugin-composer-default/js/composer/autocomplete', [
+	'plugins/nodebb-plugin-composer-default/js/composer/preview'
+], function(preview) {
 
 	var autocomplete = {};
 

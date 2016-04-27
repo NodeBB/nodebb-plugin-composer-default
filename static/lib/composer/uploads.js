@@ -2,7 +2,11 @@
 
 /* globals define, utils, config, app */
 
-define('composer/uploads', ['composer/preview', 'csrf', 'translator'], function(preview, csrf, translator) {
+define('plugins/nodebb-plugin-composer-default/js/composer/uploads', [
+	'plugins/nodebb-plugin-composer-default/js/composer/preview',
+	'csrf',
+	'translator'
+], function(preview, csrf, translator) {
 	var uploads = {
 		inProgress: {}
 	};
