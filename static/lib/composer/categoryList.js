@@ -1,7 +1,7 @@
 
 'use strict';
 
-/*globals define, config, socket, app*/
+/*globals define, socket, app*/
 
 define('plugins/nodebb-plugin-composer-default/js/composer/categoryList', function() {
 	var categoryList = {};
@@ -19,7 +19,32 @@ define('plugins/nodebb-plugin-composer-default/js/composer/categoryList', functi
 
 			// Remove categories that are just external links
 			categories = categories.filter(function(category) {
-				return !category.link && !parseInt(category.parentCid, 10);
+				return !category.link;
+			});
+
+			var categoryMap = {};
+			categories.forEach(function(category) {
+				category.children = [];
+				categoryMap[category.cid] = category;
+			});
+
+			categories.forEach(function(category) {
+				if (category.parent) {
+					var cid = category.parent.cid;
+					if (!categoryMap[cid]) {
+						categoryMap[cid] = category.parent;
+						categoryMap[cid].noPrivilege = true;
+					}
+					categoryMap[cid].children = categoryMap[cid].children || [];
+					categoryMap[cid].children.push(category);
+				}
+			});
+
+			categories.length = 0;
+			Object.keys(categoryMap).forEach(function(key) {
+				if (!categoryMap[key].parent) {
+					categories.push(categoryMap[key]);
+				}
 			});
 
 			categories.forEach(function(category) {
@@ -28,11 +53,13 @@ define('plugins/nodebb-plugin-composer-default/js/composer/categoryList', functi
 
 			if (postData.cid) {
 				listEl.find('option[value="' + postData.cid + '"]').prop('selected', true);
+			} else if (postData.hasOwnProperty('cid')) {
+				postData.cid = listEl.val();
 			}
 		});
 
 		listEl.on('change', function() {
-			if (postData.cid) {
+			if (postData.hasOwnProperty('cid')) {
 				postData.cid = this.value;
 			}
 
@@ -45,7 +72,7 @@ define('plugins/nodebb-plugin-composer-default/js/composer/categoryList', functi
 			return;
 		}
 		var bullet = level ? '&bull; ' : '';
-		$('<option value="' + category.cid + '">' + level + bullet + category.name + '</option>').appendTo(listEl);
+		$('<option value="' + category.cid + '" ' + (category.noPrivilege ? 'disabled' : '') + '>' + level + bullet + category.name + '</option>').appendTo(listEl);
 
 		category.children.forEach(function(child) {
 			recursive(child, listEl, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
