@@ -15,8 +15,8 @@
 		"./static/lib/client.js"
 	],
 	"staticDirs": {
-        "js": "static/lib"
-    },
+		"js": "static/lib"
+	},
 	"acpScripts": [
 		"./static/lib/admin.js"
 	],
