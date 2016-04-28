@@ -24,17 +24,18 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 
 	formatting.addComposerButtons = function() {
 		for(var x=0,numButtons=buttons.length;x<numButtons;x++) {
-			$('.formatting-bar .btn-group form').before('<span class="btn btn-link" tabindex="-1" data-format="' + buttons[x].name + '"><i class="' + buttons[x].iconClass + '"></i></span>');
+			$('.formatting-bar .btn-group form').before('<span class="btn btn-link" tabindex="-1" data-format="' + buttons[x].name + '" title="' + (buttons[x].title || '') + '"><i class="' + buttons[x].iconClass + '"></i></span>');
 		}
 	};
 
-	formatting.addButton = function(iconClass, onClick) {
+	formatting.addButton = function(iconClass, onClick, title) {
 		var name = iconClass.replace('fa fa-', '');
 
 		formattingDispatchTable[name] = onClick;
 		buttons.push({
 			name: name,
-			iconClass: iconClass
+			iconClass: iconClass,
+			title: title
 		});
 	};
 

@@ -150,8 +150,8 @@ define('composer', [
 		return null;
 	};
 
-	composer.addButton = function(iconClass, onClick) {
-		formatting.addButton(iconClass, onClick);
+	composer.addButton = function(iconClass, onClick, title) {
+		formatting.addButton(iconClass, onClick, title);
 	};
 
 	composer.newTopic = function(data) {
