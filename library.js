@@ -175,7 +175,7 @@ plugin.build = function(data, callback) {
 					// maximumTagLength:
 					isTopic: !!req.query.cid,
 					isEditing: isEditing,
-					showHandleInput: meta.config.allowGuestHandles && (req.user.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
+					showHandleInput: meta.config.allowGuestHandles && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
 					handle: data.postData ? data.postData.handle || '' : undefined,
 					formatting: data.formatting,
 					isAdminOrMod: data.isAdmin || data.isMod,
