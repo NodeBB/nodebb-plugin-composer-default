@@ -225,6 +225,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 			postContainer.find('.title-container').outerHeight(true),
 			postContainer.find('.formatting-bar').outerHeight(true),
 			postContainer.find('.topic-thumb-container').outerHeight(true),
+			postContainer.find('.tag-row').outerHeight(true),
 			$('.taskbar').height() || 50
 		].reduce(function(a, b) {
 			return a + b;
