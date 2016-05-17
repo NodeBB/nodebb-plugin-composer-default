@@ -208,7 +208,7 @@ define('composer/resize', ['autosize'], function(autosize) {
 
 	function resizeWritePreview(postContainer) {
 		var total = getFormattingHeight(postContainer),
-			containerHeight = postContainer.height()  - total;
+			containerHeight = postContainer.height() + 20 - total;
 
 		postContainer
 			.find('.write-preview-container')
