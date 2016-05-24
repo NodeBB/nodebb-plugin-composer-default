@@ -14,7 +14,7 @@
 			<div class="col-sm-3 col-md-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 			</div>
-			<div class="col-sm-9 col-md-12">
+			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
@@ -29,12 +29,12 @@
 				<span class="title form-control">[[topic:composer.replying_to, "{title}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 			</div>
+			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
 			<div class="category-list-container col-lg-3 col-md-12">
 				<select tabindex="3" class="form-control category-list"></select>
 			</div>
 			<!-- ENDIF isTopic -->
-			<!-- ENDIF showHandleInput -->
 		</div>
 
 		<div class="row category-tag-row">
