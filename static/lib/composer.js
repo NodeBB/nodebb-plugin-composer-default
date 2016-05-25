@@ -155,19 +155,13 @@ define('composer', [
 	};
 
 	composer.newTopic = function(data) {
-		socket.emit('categories.isModerator', data.cid, function(err, isMod) {
-			if (err) {
-				return app.alertError(err.message);
-			}
-			push({
-				action: 'topics.post',
-				cid: data.cid,
-				title: data.title || '',
-				body: data.body || '',
-				modified: false,
-				isMain: true,
-				isMod: isMod
-			});
+		push({
+			action: 'topics.post',
+			cid: data.cid,
+			title: data.title || '',
+			body: data.body || '',
+			modified: false,
+			isMain: true
 		});
 	};
 
@@ -212,21 +206,15 @@ define('composer', [
 	};
 
 	composer.newReply = function(tid, pid, title, text) {
-		socket.emit('topics.isModerator', tid, function(err, isMod) {
-			if (err) {
-				return app.alertError(err.message);
-			}
-			translator.translate(text, config.defaultLang, function(translated) {
-				push({
-					action: 'posts.reply',
-					tid: tid,
-					toPid: pid,
-					title: title,
-					body: translated,
-					modified: false,
-					isMain: false,
-					isMod: isMod
-				});
+		translator.translate(text, config.defaultLang, function(translated) {
+			push({
+				action: 'posts.reply',
+				tid: tid,
+				toPid: pid,
+				title: title,
+				body: translated,
+				modified: false,
+				isMain: false
 			});
 		});
 	};
@@ -393,8 +381,7 @@ define('composer', [
 			isEditing: isEditing,
 			showHandleInput:  config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
-			formatting: composer.formatting,
-			isAdminOrMod: app.user.isAdmin || postData.isMod
+			formatting: composer.formatting
 		};
 
 		if (data.mobile) {
