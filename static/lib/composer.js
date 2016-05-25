@@ -596,6 +596,13 @@ define('composer', [
 			} else if (action === 'posts.reply') {
 				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
 					window.history.back();
+				} else if (ajaxify.data.template.topic) {
+					if (postData.tid !== ajaxify.data.tid) {
+						ajaxify.go('post/' + data.pid);
+					}
+					// else, we're in the same topic, no nav required
+				} else {
+					ajaxify.go('post/' + data.pid);
 				}
 			} else {
 				removeComposerHistory();
