@@ -160,6 +160,8 @@ plugin.build = function(data, callback) {
 				action = 'posts.reply';
 			} else if (!!req.query.pid) {
 				action = 'posts.edit';
+			} else {
+				data.isMain = true;
 			}
 
 			callback(null, {
@@ -175,9 +177,12 @@ plugin.build = function(data, callback) {
 					discardRoute: discardRoute,
 
 					resizable: false,
+					allowTopicsThumbnail: meta.config.allowTopicsThumbnail && data.isMain,
 
 					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
 					body: body,
+
+					isMain: data.isMain,
 					isTopicOrMain: !!req.query.cid || data.isMain,
 					// minimumTagLength:
 					// maximumTagLength:

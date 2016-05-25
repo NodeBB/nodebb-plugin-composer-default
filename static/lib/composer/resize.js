@@ -66,17 +66,6 @@ define('composer/resize', ['autosize'], function(autosize) {
 		}
 
 		postContainer.percentage = percentage;
-
-		if (config.hasImageUploadPlugin) {
-			postContainer.find('.img-upload-btn').removeClass('hide');
-			postContainer.find('#files.lt-ie9').removeClass('hide');
-		}
-
-		if (config.allowFileUploads) {
-			postContainer.find('.file-upload-btn').removeClass('hide');
-			postContainer.find('#files.lt-ie9').removeClass('hide');
-		}
-
 		postContainer.css('visibility', 'visible');
 
 		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open

@@ -278,6 +278,24 @@ define('composer', [
 		formatting.addComposerButtons();
 		preview.handleToggler(postContainer);
 
+		if (config.hasImageUploadPlugin) {
+			postContainer.find('.img-upload-btn').removeClass('hide');
+			postContainer.find('#files.lt-ie9').removeClass('hide');
+		}
+
+		if (config.allowFileUploads) {
+			postContainer.find('.file-upload-btn').removeClass('hide');
+			postContainer.find('#files.lt-ie9').removeClass('hide');
+		}
+
+		if (config.allowFileUploads || config.hasImageUploadPlugin || config.allowTopicsThumbnail) {
+			uploads.initialize(post_uuid);
+		}
+
+		if (config.allowTopicsThumbnail && postData.isMain) {
+			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].topic_thumb || '');
+		}
+
 		autocomplete.init(postContainer);
 
 		postContainer.on('change', 'input, textarea', function() {
@@ -428,14 +446,6 @@ define('composer', [
 				tags.init(postContainer, composer.posts[post_uuid]);
 
 				activate(post_uuid);
-
-				if (config.allowFileUploads || config.hasImageUploadPlugin || config.allowTopicsThumbnail) {
-					uploads.initialize(post_uuid);
-				}
-
-				if (allowTopicsThumbnail) {
-					uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].topic_thumb || '');
-				}
 
 				postContainer.on('click', function() {
 					if (!taskbar.isActive(post_uuid)) {
