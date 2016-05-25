@@ -56,7 +56,7 @@ plugin.getFormattingOptions = function(callback) {
 	}, function(err, payload) {
 		callback(err, payload ? payload.options : null);
 	});
-}
+};
 
 plugin.build = function(data, callback) {
 	var req = data.req,
@@ -155,6 +155,13 @@ plugin.build = function(data, callback) {
 		}
 
 		function ready() {
+			var action = 'topics.post';
+			if (!!req.query.tid) {
+				action = 'posts.reply';
+			} else if (!!req.query.pid) {
+				action = 'posts.edit';
+			}
+
 			callback(null, {
 				req: req,
 				res: res,
@@ -163,6 +170,7 @@ plugin.build = function(data, callback) {
 					pid: parseInt(req.query.pid, 10),
 					tid: parseInt(req.query.tid, 10),
 					cid: parseInt(req.query.cid, 10),
+					action: action,
 					toPid: parseInt(req.query.toPid, 10),
 					discardRoute: discardRoute,
 
@@ -184,6 +192,6 @@ plugin.build = function(data, callback) {
 			});
 		}
 	});
-}
+};
 
 module.exports = plugin;

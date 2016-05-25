@@ -160,6 +160,7 @@ define('composer', [
 				return app.alertError(err.message);
 			}
 			push({
+				action: 'topics.post',
 				cid: data.cid,
 				title: data.title || '',
 				body: data.body || '',
@@ -217,6 +218,7 @@ define('composer', [
 			}
 			translator.translate(text, config.defaultLang, function(translated) {
 				push({
+					action: 'posts.reply',
 					tid: tid,
 					toPid: pid,
 					title: title,
@@ -236,6 +238,7 @@ define('composer', [
 			}
 
 			push({
+				action: 'posts.edit',
 				pid: pid,
 				uid: threadData.uid,
 				handle: threadData.handle,
@@ -546,10 +549,10 @@ define('composer', [
 			return composerAlert(post_uuid, '[[error:content-too-long, ' + config.maximumPostLength + ']]');
 		}
 
-		var composerData = {}, action;
+		var composerData = {};
+		var action = postData.action;
 
-		if (postData.hasOwnProperty('cid')) {
-			action = 'topics.post';
+		if (action === 'topics.post') {
 			composerData = {
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
@@ -559,8 +562,7 @@ define('composer', [
 				tags: tags.getTags(post_uuid),
 				lock: options.lock || false
 			};
-		} else if (parseInt(postData.tid, 10) > 0) {
-			action = 'posts.reply';
+		} else if (action === 'posts.reply') {
 			composerData = {
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
@@ -568,8 +570,7 @@ define('composer', [
 				toPid: postData.toPid,
 				lock: options.lock || false
 			};
-		} else if (parseInt(postData.pid, 10) > 0) {
-			action = 'posts.edit';
+		} else if (action === 'posts.edit') {
 			composerData = {
 				pid: postData.pid,
 				handle: handleEl ? handleEl.val() : undefined,
