@@ -20,6 +20,27 @@ html.composing {
 				flex-direction: column;
 			}
 
+			.formatting-bar {
+				.formatting-group {
+					overflow-x: scroll;
+    				white-space: nowrap;
+    				display: block;
+				}
+			}
+			
+			.title-container {
+				margin-top: 0px;
+				border-bottom: 1px solid #eee;
+
+				.title {
+					font-size: 18px;
+				}
+				
+				input.title {
+					height: 45px;
+				}
+			}
+			
 			.write, .preview {
 				min-height: auto;
 				flex-grow: 1;
@@ -31,6 +52,43 @@ html.composing {
 				flex-grow: 1;
 				height: auto !important;
 				display: flex;
+			}
+			
+			.category-selector {
+			    margin: 0;
+			    position: fixed;
+			    left: 0 !important;
+			    right: 0 !important;
+			    width: auto !important;
+			    bottom: 0;
+			    top: auto;
+			    padding: 0px 5px;
+			    display: block;
+			    max-height: 350px;
+			    border-radius: 0;
+			    background: #fff;
+			    -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+			    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+			    visibility: hidden;
+			    overflow: auto;
+			    -webkit-overflow-scrolling: touch;
+			    -webkit-transform: translate3d(0, 350px, 0);
+			    transform: translate3d(0, 350px, 0);
+			    -webkit-transition: -webkit-transform 0.3s, visibility 0s 0.3s;
+			    -moz-transition: -moz-transform 0.3s, visibility 0s 0.3s;
+			    -o-transition: -o-transform 0.3s, visibility 0s 0.3s;
+			    transition: transform 0.3s, visibility 0s 0.3s;
+			    
+			    &.open {
+			    	-webkit-transform: none;
+				    transform: none;
+				    visibility: visible;
+				    transition-delay: 0s;
+			    }
+			    
+			    li {
+			    	padding: 10px;
+			    }
 			}
 		}
 	}
@@ -46,7 +104,7 @@ html.composing {
 			overflow-y: visible;
 			overflow-x: hidden;
 			padding: 0;
-			padding-top: 50px;
+			padding-top: 40px;
 			height: 100%;
 			background: white;
 		}
@@ -86,9 +144,23 @@ html.composing {
 			background: @btn-primary-bg;
 			color: @btn-primary-color;
 			position: absolute;
+			margin-bottom: 0px;
+			min-height: 40px;
 
 			button {
 				font-size: 20px;
+			}
+			
+			.category-name-container {
+				font-size: 16px;
+			    padding: 10px 5px;
+			    vertical-align: middle;
+			    display: inline-block;
+			    text-align: center;
+			    width: ~"calc(100% - 75px)";
+		    	white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 	}
@@ -127,8 +199,6 @@ html.composing {
 		padding-left: 10px;
 		padding-right: 10px;
 	}
-
-
 
 	.title-container {
 		margin-top: 10px;
@@ -209,7 +279,7 @@ html.composing {
 		border-radius: 0px;
 		resize:none;
 		overflow: auto;
-		padding: 20px;
+		padding: 20px 20px 0px;
 	}
 
 	.preview-container {
@@ -269,6 +339,23 @@ html.composing {
 			&:before {
 				content: ' | ';
 				color: @gray-light;
+			}
+		}
+		
+		.formatting-group {
+			display: inline-block;
+			list-style: none;
+			padding: 0px;
+			margin-bottom: 0px;
+			
+			li {
+				display: inline-block;
+				padding: 10px 15px;
+				cursor: pointer;
+				
+				&:focus {
+					outline: none;
+				}
 			}
 		}
 	}

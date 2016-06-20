@@ -31,30 +31,30 @@
 
 		<div class="row category-tag-row">
 			<div class="btn-toolbar formatting-bar">
-				<div class="btn-group">
+				<ul class="formatting-group">
 					<!-- BEGIN formatting -->
 						<!-- IF formatting.spacer -->
-						<span class="btn spacer"></span>
+						<li class="spacer"></li>
 						<!-- ELSE -->
 						<!-- IF !formatting.mobile -->
-						<span class="btn btn-link" tabindex="-1" data-format="{formatting.name}"><i class="{formatting.className}"></i></span>
+						<li tabindex="-1" data-format="{formatting.name}"><i class="{formatting.className}"></i></li>
 						<!-- ENDIF !formatting.mobile -->
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
 
 					<!--[if gte IE 9]><!-->
-						<span class="btn btn-link img-upload-btn hide" data-format="picture" tabindex="-1">
+						<li class="img-upload-btn hide" data-format="picture" tabindex="-1">
 							<i class="fa fa-cloud-upload"></i>
-						</span>
-						<span class="btn btn-link file-upload-btn hide" data-format="upload" tabindex="-1">
+						</li>
+						<li class="file-upload-btn hide" data-format="upload" tabindex="-1">
 							<i class="fa fa-upload"></i>
-						</span>
+						</li>
 					<!--<![endif]-->
 
 					<!-- IF allowTopicsThumbnail -->
-					<span class="btn btn-link" tabindex="-1">
+					<li tabindex="-1">
 						<i class="fa fa-th-large topic-thumb-btn topic-thumb-toggle-btn hide" title="[[topic:composer.thumb_title]]"></i>
-					</span>
+					</li>
 					<div class="topic-thumb-container center-block hide">
 						<form id="thumbForm" method="post" class="topic-thumb-form form-inline" enctype="multipart/form-data">
 							<img class="topic-thumb-preview"></img>
@@ -82,7 +82,7 @@
 							<input type="file" id="files" name="files[]" class="lt-ie9 hide" value="Upload"/>
 						<![endif]-->
 					</form>
-				</div>
+				</ul>
 
 				<div class="btn-group pull-right action-bar">
 					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
