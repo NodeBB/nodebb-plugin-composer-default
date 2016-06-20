@@ -54,6 +54,7 @@ define('composer/categoryList', function() {
 			if (postData.cid) {
 				listEl.find('option[value="' + postData.cid + '"]').prop('selected', true);
 				$('.category-name').text(listEl.find('option[value="' + postData.cid + '"]').text());
+				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 			} else if (postData.hasOwnProperty('cid')) {
 				postData.cid = listEl.val();
 			}
@@ -70,6 +71,8 @@ define('composer/categoryList', function() {
 		$('.category-selector').on('click', 'li', function() {
 			$('.category-name').text($(this).text());
 			$('.category-selector').removeClass('open');
+			$('.category-selector li').removeClass('active');
+			$(this).addClass('active');
 			$('.category-list').val($(this).attr('data-cid'));
 		});
 		
