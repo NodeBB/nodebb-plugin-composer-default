@@ -137,9 +137,12 @@ define('composer/resize', ['autosize'], function(autosize) {
 					resizeIt(postContainer, newPercentage);
 					postContainer.addClass('maximized');
 				} else {
-					resizeIt(postContainer, (oldPercentage >= 1 - snapMargin || oldPercentage == 0) ? 0.5 : oldPercentage);
+					newPercentage = (oldPercentage >= 1 - snapMargin || oldPercentage == 0) ? 0.5 : oldPercentage;
+					resizeIt(postContainer, newPercentage);
 					postContainer.removeClass('maximized');
 				}
+				
+				resizeSavePosition(newPercentage);
 			}
 		}
 
