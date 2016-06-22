@@ -69,7 +69,10 @@ define('composer/resize', ['autosize'], function(autosize) {
 		postContainer.css('visibility', 'visible');
 
 		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
-		$body.css({ 'margin-bottom': postContainer.outerHeight() });
+		// thanks but don't do it on mobile
+		if (env === 'md' || env === 'lg') {
+			$body.css({ 'margin-bottom': postContainer.outerHeight() });
+		}
 
 		resizeWritePreview(postContainer);
 	}

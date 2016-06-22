@@ -53,6 +53,8 @@ define('composer/categoryList', function() {
 
 			if (postData.cid) {
 				listEl.find('option[value="' + postData.cid + '"]').prop('selected', true);
+				$('.category-name').text(listEl.find('option[value="' + postData.cid + '"]').text());
+				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 			} else if (postData.hasOwnProperty('cid')) {
 				postData.cid = listEl.val();
 			}
@@ -65,6 +67,15 @@ define('composer/categoryList', function() {
 
 			$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
 		});
+		
+		$('.category-selector').on('click', 'li', function() {
+			$('.category-name').text($(this).text());
+			$('.category-selector').removeClass('open');
+			$('.category-selector li').removeClass('active');
+			$(this).addClass('active');
+			$('.category-list').val($(this).attr('data-cid'));
+		});
+		
 	};
 
 	function recursive(category, listEl, level) {
@@ -73,6 +84,8 @@ define('composer/categoryList', function() {
 		}
 		var bullet = level ? '&bull; ' : '';
 		$('<option value="' + category.cid + '" ' + (category.noPrivilege ? 'disabled' : '') + '>' + level + bullet + category.name + '</option>').appendTo(listEl);
+		
+		$('<li data-cid="' + category.cid + '">' + category.name + '</li>').appendTo($('.category-selector'));
 
 		category.children.forEach(function(child) {
 			recursive(child, listEl, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);

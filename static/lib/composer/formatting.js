@@ -24,7 +24,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 
 	formatting.addComposerButtons = function() {
 		for(var x=0,numButtons=buttons.length;x<numButtons;x++) {
-			$('.formatting-bar .btn-group form').before('<span class="btn btn-link" tabindex="-1" data-format="' + buttons[x].name + '" title="' + (buttons[x].title || '') + '"><i class="' + buttons[x].iconClass + '"></i></span>');
+			$('.formatting-bar .formatting-group #fileForm').before('<li tabindex="-1" data-format="' + buttons[x].name + '" title="' + (buttons[x].title || '') + '"><i class="' + buttons[x].iconClass + '"></i></li>');
 		}
 	};
 
@@ -44,7 +44,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 	};
 
 	formatting.addHandler = function(postContainer) {
-		postContainer.on('click', '.formatting-bar span', function () {
+		postContainer.on('click', '.formatting-bar li', function () {
 			var format = $(this).attr('data-format'),
 				textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 
