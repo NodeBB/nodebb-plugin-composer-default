@@ -53,11 +53,12 @@ define('composer/categoryList', function() {
 
 			if (postData.cid) {
 				listEl.find('option[value="' + postData.cid + '"]').prop('selected', true);
-				$('.category-name').text(listEl.find('option[value="' + postData.cid + '"]').text());
-				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 			} else if (postData.hasOwnProperty('cid')) {
 				postData.cid = listEl.val();
 			}
+			
+			$('.category-name').text(listEl.find('option[value="' + postData.cid + '"]').text());
+			$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 		});
 
 		listEl.on('change', function() {
