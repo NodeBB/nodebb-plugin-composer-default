@@ -46,6 +46,9 @@ define('composer/categoryList', function() {
 					categories.push(categoryMap[key]);
 				}
 			});
+			categories = categories.sort(function(a, b) {
+				return a.order - b.order;
+			});
 
 			categories.forEach(function(category) {
 				recursive(category, listEl, '');
@@ -88,7 +91,9 @@ define('composer/categoryList', function() {
 		
 		$('<li data-cid="' + category.cid + '">' + category.name + '</li>').appendTo($('.category-selector'));
 
-		category.children.forEach(function(child) {
+		category.children.sort(function(a, b) {
+			return a.order - b.order;
+		}).forEach(function(child) {
 			recursive(child, listEl, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
 		});
 	}
