@@ -3,7 +3,7 @@
 
 /* globals app, define, config, utils*/
 
-define('composer/resize', ['autosize'], function(autosize) {
+define('composer/resize', [], function() {
 	var resize = {},
 		oldPercentage = 0,
 		minimumPercentage = 0.3,
@@ -37,7 +37,6 @@ define('composer/resize', ['autosize'], function(autosize) {
 
 		if (env === 'sm' || env === 'xs' || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
-			autosize(postContainer.find('textarea')[0]);
 			percentage = 1;
 		} else {
 			$html.removeClass('composing mobile');
