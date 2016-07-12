@@ -278,19 +278,15 @@ define('composer', [
 		formatting.addComposerButtons();
 		preview.handleToggler(postContainer);
 
-		if (config.hasImageUploadPlugin) {
-			postContainer.find('.img-upload-btn').removeClass('hide');
-			postContainer.find('#files.lt-ie9').removeClass('hide');
-		}
+		postContainer.find('.img-upload-btn').removeClass('hide');
+		postContainer.find('#files.lt-ie9').removeClass('hide');
 
 		if (config.allowFileUploads) {
 			postContainer.find('.file-upload-btn').removeClass('hide');
 			postContainer.find('#files.lt-ie9').removeClass('hide');
 		}
 
-		if (config.allowFileUploads || config.hasImageUploadPlugin || config.allowTopicsThumbnail) {
-			uploads.initialize(post_uuid);
-		}
+		uploads.initialize(post_uuid, ajaxify.data.cid);
 
 		if (config.allowTopicsThumbnail && postData.isMain) {
 			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].topic_thumb || '');
@@ -463,9 +459,9 @@ define('composer', [
 
 					submitBtns.removeAttr('tabindex');
 					mobileSubmitBtn.attr('tabindex', parseInt(idx, 10)+1);
-					
+
 					$('.category-name-container').on('click', function() {
-						$('.category-selector').toggleClass('open'); 
+						$('.category-selector').toggleClass('open');
 					});
 				}
 

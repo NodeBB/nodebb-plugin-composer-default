@@ -11,10 +11,12 @@ define('composer/uploads', [
 		inProgress: {}
 	};
 
+	var cid;
+
 	var uploadingText = 'uploading 0%';
 
-	uploads.initialize = function(post_uuid) {
-
+	uploads.initialize = function(post_uuid, _cid) {
+		cid = _cid;
 		initializeDragAndDrop(post_uuid);
 		initializePaste(post_uuid);
 
@@ -218,14 +220,16 @@ define('composer/uploads', [
 	}
 
 	function uploadContentFiles(params) {
-		var files = params.files,
-			post_uuid = params.post_uuid,
-			postContainer = $('#cmp-uuid-' + post_uuid),
-			textarea = postContainer.find('textarea'),
-			text = textarea.val(),
-			uploadForm = postContainer.find('#fileForm');
-
+		var files = params.files;
+		var post_uuid = params.post_uuid;
+		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var textarea = postContainer.find('textarea');
+		var text = textarea.val();
+		var uploadForm = postContainer.find('#fileForm');
 		uploadForm.attr('action', config.relative_path + params.route);
+
+		var categoryList = postContainer.find('.category-list');
+		cid = categoryList.length ? categoryList.val() : cid;
 
 		var filenameMapping = [];
 
@@ -260,6 +264,7 @@ define('composer/uploads', [
 				resetForm: true,
 				clearForm: true,
 				formData: params.formData,
+				data: {cid: cid},
 
 				error: onUploadError,
 
@@ -274,7 +279,7 @@ define('composer/uploads', [
 				success: function(uploads) {
 					uploads = maybeParse(uploads);
 
-					if(uploads && uploads.length) {
+					if (uploads && uploads.length) {
 						for(var i=0; i<uploads.length; ++i) {
 							updateTextArea(filenameMapping[i], uploads[i].url);
 						}
