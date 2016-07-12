@@ -257,6 +257,10 @@ define('composer/uploads', [
 			uploads.inProgress[post_uuid] = uploads.inProgress[post_uuid] || [];
 			uploads.inProgress[post_uuid].push(1);
 
+			if (params.formData) {
+				params.formData.append('cid', cid);
+			}
+
 			$(this).ajaxSubmit({
 				headers: {
 					'x-csrf-token': csrf.get()
