@@ -180,16 +180,17 @@ define('composer/uploads', [
 					return false;
 				}
 
-				blob.name = 'upload-' + utils.generateUUID();
+				var blobName = 'upload-' + utils.generateUUID();
 
 				var fd = null;
 				if (window.FormData) {
 					fd = new FormData();
-					fd.append('files[]', blob, blob.name);
+					fd.append('files[]', blob, blobName);
 				}
 
 				uploadContentFiles({
 					files: [blob],
+					fileNames: [blobName],
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
 					formData: fd
@@ -234,7 +235,7 @@ define('composer/uploads', [
 		var filenameMapping = [];
 
 		for (var i = 0; i < files.length; ++i) {
-			filenameMapping.push(i + '_' + Date.now() + '_' + files[i].name);
+			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
 			var isImage = files[i].type.match(/image./);
 
 			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
