@@ -4,9 +4,8 @@
 
 define('composer/uploads', [
 	'composer/preview',
-	'csrf',
 	'translator'
-], function(preview, csrf, translator) {
+], function(preview, translator) {
 	var uploads = {
 		inProgress: {}
 	};
@@ -264,7 +263,7 @@ define('composer/uploads', [
 
 			$(this).ajaxSubmit({
 				headers: {
-					'x-csrf-token': csrf.get()
+					'x-csrf-token': config.csrf_token
 				},
 				resetForm: true,
 				clearForm: true,
@@ -321,7 +320,7 @@ define('composer/uploads', [
 
 			$(this).ajaxSubmit({
 				headers: {
-					'x-csrf-token': csrf.get()
+					'x-csrf-token': config.csrf_token
 				},
 				formData: params.formData,
 				error: onUploadError,
