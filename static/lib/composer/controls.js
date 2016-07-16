@@ -27,7 +27,7 @@ define('composer/controls', function() {
 		var $textarea = $(textarea);
 		var currentVal = $textarea.val();
 
-		var matches = /^(\s*)([\s\S]*?)(\s*)$/m.exec(currentVal.slice(textarea.selectionStart, textarea.selectionEnd));
+		var matches = /^(\s*)([\s\S]*?)(\s*)$/.exec(currentVal.slice(textarea.selectionStart, textarea.selectionEnd));
 
 		if (!matches[2]) {
 			// selection is entirely whitespace
