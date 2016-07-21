@@ -171,7 +171,7 @@ plugin.build = function(data, callback) {
 					disabled: !req.query.pid && !req.query.tid && !req.query.cid,
 					pid: parseInt(req.query.pid, 10),
 					tid: parseInt(req.query.tid, 10),
-					cid: parseInt(req.query.cid, 10),
+					cid: parseInt(req.query.cid, 10) || (data.topicData ? data.topicData.cid : null),
 					action: action,
 					toPid: parseInt(req.query.toPid, 10),
 					discardRoute: discardRoute,
