@@ -61,13 +61,19 @@ define('composer', [
 
 			resize.reposition($('#cmp-uuid-' + composer.active));
 
-			if ((env === 'md' || env === 'lg') && ajaxify.currentPage.indexOf('compose') === 0) {
-				/**
+			if ((env === 'md' || env === 'lg') && window.location.pathname.startsWith('/compose')) {
+				/*
 				 *	If this conditional is met, we're no longer in mobile/tablet
 				 *	resolution but we've somehow managed to have a mobile
 				 *	composer load, so let's go back to the topic
 				 */
 				history.back();
+			} else if ((env === 'xs' || env === 'sm') && !window.location.pathname.startsWith('/compose')) {
+				/*
+				 *	In this case, we're in mobile/tablet resolution but the composer
+				 *	that loaded was a regular composer, so let's fix the address bar
+				 */
+				mobileHistoryAppend();
 			}
 		}
 		composer.bsEnvironment = utils.findBootstrapEnvironment();
@@ -399,19 +405,7 @@ define('composer', [
 		};
 
 		if (data.mobile) {
-			var path = 'compose?p=' + window.location.pathname,
-				returnPath = window.location.pathname.slice(1);
-
-			// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
-			window.history.replaceState({
-				url: null,
-				returnPath: returnPath
-			}, returnPath, config.relative_path + '/' + returnPath);
-
-			// Update address bar in case f5 is pressed
-			window.history.pushState({
-				url: path
-			}, path, config.relative_path + '/' + path);
+			mobileHistoryAppend();
 			renderComposer();
 		} else {
 			renderComposer();
@@ -475,6 +469,22 @@ define('composer', [
 			});
 		}
 	}
+
+	function mobileHistoryAppend() {
+		var path = 'compose?p=' + window.location.pathname,
+			returnPath = window.location.pathname.slice(1);
+
+		// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
+		window.history.replaceState({
+			url: null,
+			returnPath: returnPath
+		}, returnPath, config.relative_path + '/' + returnPath);
+
+		// Update address bar in case f5 is pressed
+		window.history.pushState({
+			url: path
+		}, path, config.relative_path + '/' + path);
+	};
 
 	function parseAndTranslate(template, data, callback) {
 		templates.parse(template, data, function(composerTemplate) {
