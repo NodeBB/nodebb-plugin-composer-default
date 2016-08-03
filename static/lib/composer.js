@@ -424,6 +424,7 @@ define('composer', [
 
 				var postContainer = $(composerTemplate[0]);
 
+				resize.reposition(postContainer);
 				composer.enhance(postContainer, post_uuid, postData);
 				/*
 					Everything after this line is applied to the resizable composer only
@@ -464,7 +465,6 @@ define('composer', [
 					composerData: composer.posts[post_uuid]
 				});
 
-				resize.reposition(postContainer);
 				focusElements(postContainer);
 			});
 		}

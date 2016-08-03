@@ -48,6 +48,27 @@ plugin.addAdminNavigation = function(header, callback) {
 	callback(null, header);
 };
 
+plugin.addPrefetchTags = function(tags, callback) {
+	var prefetch = [
+			'/src/modules/composer.js', '/src/modules/composer/uploads.js', '/src/modules/composer/drafts.js',
+			'/src/modules/composer/tags.js', '/src/modules/composer/categoryList.js', '/src/modules/composer/resize.js',
+			'/src/modules/composer/autocomplete.js', '/templates/composer.tpl',
+			'/language/' + (meta.config.defaultLang || 'en_GB') + '/topic.json',
+			'/language/' + (meta.config.defaultLang || 'en_GB') + '/modules.json',
+			'/language/' + (meta.config.defaultLang || 'en_GB') + '/tags.json'
+		];
+
+	tags = tags.concat(prefetch.map(function(path) {
+		path = {
+			rel: 'prefetch',
+			href: nconf.get('relative_path') + path + (meta.config['cache-buster'] ? '?v=' + meta.config['cache-buster'] : '')
+		}
+		return path;
+	}));
+
+	callback(null, tags);
+};
+
 plugin.getFormattingOptions = function(callback) {
 	plugins.fireHook('filter:composer.formatting', {
 		options: [
