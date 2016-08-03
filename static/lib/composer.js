@@ -634,6 +634,7 @@ define('composer', [
 			$('[data-action="post"]').removeAttr('disabled');
 
 			$('html').removeClass('composing mobile');
+			$(window).trigger('action:composer.discard');
 		}
 	}
 

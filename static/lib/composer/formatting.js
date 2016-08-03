@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals define, screenfull */
+/* globals app, define, screenfull */
 
 define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize'], function(controls, preview, resize) {
 
@@ -21,17 +21,20 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 
 		zen: function() {
 			var postContainer = this;
-			$(window).one('resize', function(e) {
+			$(window).one('resize', function() {
 				if (screenfull.isFullscreen) {
 					app.toggleNavbar(false);
 					resize.maximize(postContainer, true);
 					postContainer.find('.resizer').hide();
+					postContainer.find('.write').focus();
 
-					$(window).one('resize', function(e) {
+					$(window).one('resize', function() {
 						app.toggleNavbar(true);
 						resize.maximize(postContainer, false);
 						postContainer.find('.resizer').show();
 					});
+
+					$(window).one('action:composer.topics.post action:composer.posts.reply action:composer.posts.edit action:composer.discard', screenfull.exit);
 				}
 			});
 
