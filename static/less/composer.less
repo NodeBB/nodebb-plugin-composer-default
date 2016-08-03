@@ -9,10 +9,11 @@
 
 @topbarHeight: 50px;
 
+@import './zen-mode.less';
 
 html.composing {
 	&.mobile {
-		
+
 		body {
 			overflow: hidden;
 		}
@@ -30,7 +31,7 @@ html.composing {
     				display: block;
 				}
 			}
-			
+
 			.title-container {
 				margin-top: 0px;
 				border-bottom: 1px solid #eee;
@@ -38,12 +39,12 @@ html.composing {
 				.title {
 					font-size: 18px;
 				}
-				
+
 				input.title {
 					height: 45px;
 				}
 			}
-			
+
 			.write, .preview {
 				min-height: auto;
 				flex-grow: 1;
@@ -56,7 +57,7 @@ html.composing {
 				height: auto !important;
 				display: flex;
 			}
-			
+
 			.category-selector {
 			    margin: 0;
 			    position: fixed;
@@ -82,18 +83,18 @@ html.composing {
 			    -o-transition: -o-transform 0.3s, visibility 0s 0.3s;
 			    transition: transform 0.3s, visibility 0s 0.3s;
 			    z-index: 2;
-			    
+
 			    &.open {
 			    	-webkit-transform: none;
 				    transform: none;
 				    visibility: visible;
 				    transition-delay: 0s;
 			    }
-			    
+
 			    li {
 			    	padding: 10px;
 			    	color: #333;
-			    	
+
 			    	&.active {
 						background-color: @btn-primary-bg;
 						color: @btn-primary-color;
@@ -160,7 +161,7 @@ html.composing {
 			button {
 				font-size: 20px;
 			}
-			
+
 			.category-name-container {
 				font-size: 16px;
 			    padding: 10px 5px;
@@ -289,7 +290,7 @@ html.composing {
 		border-radius: 0px;
 		resize:none;
 		overflow: auto;
-		padding: 20px 20px 0px;
+		padding: 20px;
 	}
 
 	.preview-container {
@@ -351,19 +352,19 @@ html.composing {
 				color: @gray-light;
 			}
 		}
-		
+
 		.formatting-group {
 			display: inline-block;
 			list-style: none;
 			padding: 0px;
 			margin-bottom: 0px;
-			
+
 			li {
 				display: inline-block;
 				padding: 10px 15px;
 				cursor: pointer;
 				color: #333;
-				
+
 				&:focus {
 					outline: none;
 				}
