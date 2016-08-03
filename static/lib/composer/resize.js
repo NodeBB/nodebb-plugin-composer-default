@@ -26,6 +26,14 @@ define('composer/resize', [], function() {
 		doResize(postContainer, percentage);
 	};
 
+	resize.maximize = function(postContainer, state) {
+		if (state) {
+			doResize(postContainer, 1);
+		} else {
+			resize.reposition(postContainer);
+		}
+	};
+
 	function doResize(postContainer, percentage) {
 		var env = utils.findBootstrapEnvironment();
 

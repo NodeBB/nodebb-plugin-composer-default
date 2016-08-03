@@ -1,8 +1,8 @@
 'use strict';
 
-/* globals define */
+/* globals define, screenfull */
 
-define('composer/formatting', ['composer/controls', 'composer/preview'], function(controls, preview) {
+define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize'], function(controls, preview, resize) {
 
 	var formatting = {};
 
@@ -17,6 +17,25 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 
 		tags: function() {
 			$('.tags-container').toggleClass('hidden');
+		},
+
+		zen: function() {
+			var postContainer = this;
+			$(window).one('resize', function(e) {
+				if (screenfull.isFullscreen) {
+					app.toggleNavbar(false);
+					resize.maximize(postContainer, true);
+					postContainer.find('.resizer').hide();
+
+					$(window).one('resize', function(e) {
+						app.toggleNavbar(true);
+						resize.maximize(postContainer, false);
+						postContainer.find('.resizer').show();
+					});
+				}
+			});
+
+			screenfull.toggle();
 		}
 	};
 
@@ -49,7 +68,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview'], functio
 				textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 
 			if(formattingDispatchTable.hasOwnProperty(format)){
-				formattingDispatchTable[format](textarea, textarea.selectionStart, textarea.selectionEnd);
+				formattingDispatchTable[format].call(postContainer, textarea, textarea.selectionStart, textarea.selectionEnd);
 				preview.render(postContainer);
 			}
 		});

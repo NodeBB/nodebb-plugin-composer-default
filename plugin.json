@@ -13,7 +13,8 @@
 		"./static/less/composer.less"
 	],
 	"scripts": [
-		"./static/lib/client.js"
+		"./static/lib/client.js",
+		"./node_modules/screenfull/dist/screenfull.js"
 	],
 	"modules": {
 		"composer.js": "./static/lib/composer.js",

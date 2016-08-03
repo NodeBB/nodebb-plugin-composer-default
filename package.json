@@ -24,5 +24,8 @@
   "readmeFilename": "README.md",
   "nbbpm": {
     "compatibility": "^1.0.0"
+  },
+  "dependencies": {
+    "screenfull": "3.0.0"
   }
 }

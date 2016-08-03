@@ -72,7 +72,8 @@ plugin.addPrefetchTags = function(tags, callback) {
 plugin.getFormattingOptions = function(callback) {
 	plugins.fireHook('filter:composer.formatting', {
 		options: [
-			{ name: 'tags', className: 'fa fa-tags', mobile: true }
+			{ name: 'tags', className: 'fa fa-tags', mobile: true },
+			{ name: 'zen', className: 'fa fa-arrows-alt', mobile: false }
 		]
 	}, function(err, payload) {
 		callback(err, payload ? payload.options : null);
