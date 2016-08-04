@@ -24,15 +24,18 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 			$(window).one('resize', function() {
 				if (screenfull.isFullscreen) {
 					app.toggleNavbar(false);
-					resize.maximize(postContainer, true);
-					postContainer.find('.resizer').hide();
+					$('html').addClass('zen-mode');
 					postContainer.find('.write').focus();
 
-					$(window).one('resize', function() {
-						app.toggleNavbar(true);
-						resize.maximize(postContainer, false);
-						postContainer.find('.resizer').show();
-					});
+					function onResize() {
+						if (!screenfull.isFullscreen) {
+							app.toggleNavbar(true);
+							$('html').removeClass('zen-mode');
+							resize.reposition(postContainer);
+							$(window).off('resize', onResize);
+						}
+					}
+					$(window).on('resize', onResize);
 
 					$(window).one('action:composer.topics.post action:composer.posts.reply action:composer.posts.edit action:composer.discard', screenfull.exit);
 				}

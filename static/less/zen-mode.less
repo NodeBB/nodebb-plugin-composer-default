@@ -1,0 +1,50 @@
+html.zen-mode {
+	overflow: hidden;
+}
+
+.zen-mode .composer {
+	padding: 0;
+	z-index: 10002;
+	top: 0 !important;
+
+	.composer-container {
+		padding: 0;
+		height: 100%;
+		width: 100%;
+	}
+
+	&.reply {
+		.title-container {
+			display: none;
+		}
+	}
+
+	.title-container {
+		margin: 0;
+		margin-top: 5px;
+		padding-left: 0;
+
+		.category-list-container {
+			margin-top: 3px;
+			padding-right: 0;
+		}
+	}
+
+	.write-preview-container {
+		min-height: ~"calc(100% - 62px)";
+
+		> div {
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.write, .preview {
+		border: none;
+		outline: none;
+	}
+
+	.resizer {
+		display: none;
+	}
+}

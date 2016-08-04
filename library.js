@@ -73,7 +73,7 @@ plugin.getFormattingOptions = function(callback) {
 	plugins.fireHook('filter:composer.formatting', {
 		options: [
 			{ name: 'tags', className: 'fa fa-tags', mobile: true },
-			{ name: 'zen', className: 'fa fa-arrows-alt', mobile: false }
+			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false }
 		]
 	}, function(err, payload) {
 		callback(err, payload ? payload.options : null);

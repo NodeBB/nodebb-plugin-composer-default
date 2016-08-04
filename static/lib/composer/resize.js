@@ -37,12 +37,6 @@ define('composer/resize', [], function() {
 	function doResize(postContainer, percentage) {
 		var env = utils.findBootstrapEnvironment();
 
-
-		// todo, lump in browsers that don't support transform (ie8) here
-		// at this point we should use modernizr
-
-		// done, just use `top` instead of `translate`
-
 		if (env === 'sm' || env === 'xs' || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
 			percentage = 1;
@@ -151,7 +145,7 @@ define('composer/resize', [], function() {
 					resizeIt(postContainer, newPercentage);
 					postContainer.removeClass('maximized');
 				}
-				
+
 				resizeSavePosition(newPercentage);
 			}
 		}
