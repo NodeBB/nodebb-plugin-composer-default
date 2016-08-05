@@ -1,0 +1,48 @@
+html,
+body.page-compose,
+.page-compose #content,
+.page-compose #panel {
+	height: 100%;
+}
+
+body.page-compose {
+	margin-bottom: 0 !important;
+}
+
+.page-compose .composer {
+	height: 100%;
+	padding: 0;
+	z-index: initial;
+	overflow: hidden;
+
+	.composer-container {
+		height: 100%;
+		position: relative;
+		padding-bottom: 10px;
+	}
+
+	.title-container {
+		margin: 0;
+	}
+
+	.write-preview-container {
+		height: auto !important;
+		position: absolute;
+		top: 110px;
+		bottom: 0;
+		right: 0;
+		left: 0;
+	}
+}
+
+.page-compose [widget-area=footer] {
+	display: none;
+}
+
+.zen-mode .page-compose .composer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}

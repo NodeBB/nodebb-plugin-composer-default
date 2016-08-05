@@ -6,10 +6,10 @@
 
 .define-if-not-set();
 
-
 @topbarHeight: 50px;
 
 @import './zen-mode.less';
+@import './page-compose.less';
 
 html.composing {
 	&.mobile {
@@ -33,7 +33,7 @@ html.composing {
 			}
 
 			.title-container {
-				margin-top: 0px;
+				margin-top: 0;
 				border-bottom: 1px solid #eee;
 
 				.title {
@@ -66,7 +66,7 @@ html.composing {
 			    width: auto !important;
 			    bottom: 0;
 			    top: auto;
-			    padding: 0px 5px;
+			    padding: 0 5px;
 			    display: block;
 			    max-height: 350px;
 			    border-radius: 0;
@@ -105,7 +105,7 @@ html.composing {
 	}
 
 	body {
-		height: 0px !important;
+		height: 0 !important;
 	}
 
 	.composer {
@@ -121,7 +121,7 @@ html.composing {
 		}
 
 		.title-container {
-			margin-top: 0px;
+			margin-top: 0;
 
 			.title {
 				padding-left: 8px;
@@ -137,8 +137,8 @@ html.composing {
 			min-height: 100%;
 			outline: none;
 			padding: 25px 10px;
-			margin-bottom: 0px;
-			padding-bottom: 0px;
+			margin-bottom: 0;
+			padding-bottom: 0;
 			font-size: 18px;
 		}
 
@@ -155,7 +155,7 @@ html.composing {
 			background: @btn-primary-bg;
 			color: @btn-primary-color;
 			position: absolute;
-			margin-bottom: 0px;
+			margin-bottom: 0;
 			min-height: 40px;
 
 			button {
@@ -240,18 +240,18 @@ html.composing {
 	}
 
 	.tag-row {
-		margin: 0px;
+		margin: 0;
 	}
 
 	.tags-container {
 		.bootstrap-tagsinput {
-			width:100%;
-			margin-bottom: 0px;
+			width: 100%;
+			margin-bottom: 0;
 			border: 0;
 			box-shadow: none;
 
 			input {
-				height:28px;
+				height: 28px;
 				padding: 4px 6px;
 			}
 
@@ -263,7 +263,7 @@ html.composing {
 	}
 
 	.write-preview-container {
-		height:100%;
+		height: 100%;
 		margin: 0 0;
 		min-height: 200px;
 
@@ -275,7 +275,7 @@ html.composing {
 	.write {
 		border: 1px solid #EDEDED;
 		.border-radius(0px);
-		.box-shadow(inset 0px 1px 1px rgba(0, 0, 0, 0.05));
+		.box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.05));
 	}
 
 	.write, .preview  {
@@ -285,10 +285,10 @@ html.composing {
 		min-height: 250px;
 		margin: 0 auto;
 		font-size: 14px;
-		-webkit-border-radius: 0px;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		resize:none;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+		resize: none;
 		overflow: auto;
 		padding: 20px;
 	}
@@ -341,7 +341,7 @@ html.composing {
 
 	.formatting-bar {
 		margin: 5px 0;
-		padding: 0px 8px;
+		padding: 0 8px;
 		span {
 			color: #000;
 		}
@@ -356,8 +356,8 @@ html.composing {
 		.formatting-group {
 			display: inline-block;
 			list-style: none;
-			padding: 0px;
-			margin-bottom: 0px;
+			padding: 0;
+			margin-bottom: 0;
 
 			li {
 				display: inline-block;
@@ -376,7 +376,7 @@ html.composing {
 		position: absolute;
 		width: 100%;
 		top: 10px;
-		height: 0px;
+		height: 0;
 
 		.pointer;
 
@@ -459,7 +459,7 @@ html.composing {
 @media (max-width: 767px), (max-height: 480px) {
 	.composer {
 		width: 100%;
-		padding-top: 0px;
+		padding-top: 0;
 	}
 
 	.resizer {

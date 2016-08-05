@@ -11,17 +11,31 @@ html.zen-mode {
 		padding: 0;
 		height: 100%;
 		width: 100%;
+		padding-top: 5px;
+
+		position: relative;
 	}
 
 	&.reply {
 		.title-container {
 			display: none;
 		}
+
+		.write-preview-container {
+			top: 62px;
+		}
+
+		.category-tag-row {
+			margin-top: 0;
+		}
+	}
+
+	.tag-row {
+		display: none;
 	}
 
 	.title-container {
 		margin: 0;
-		margin-top: 5px;
 		padding-left: 0;
 
 		.category-list-container {
@@ -31,7 +45,12 @@ html.zen-mode {
 	}
 
 	.write-preview-container {
-		min-height: ~"calc(100% - 62px)";
+		height: auto !important;
+		position: absolute;
+		top: 110px;
+		bottom: 0;
+		left: 0;
+		right: 0;
 
 		> div {
 			margin: 0;
