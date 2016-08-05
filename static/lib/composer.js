@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals define, socket, app, config, ajaxify, utils, templates, bootbox */
+/* globals define, socket, app, config, ajaxify, utils, templates, bootbox, screenfull */
 
 define('composer', [
 	'taskbar',
@@ -368,6 +368,11 @@ define('composer', [
 
 		focusElements(postContainer);
 
+		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
+		if (!screenfull.enabled) {
+			$('[data-format="zen"]').toggleClass('hidden', true);
+		}
+
 		$(window).trigger('action:composer.enhanced');
 	};
 
@@ -484,7 +489,7 @@ define('composer', [
 		window.history.pushState({
 			url: path
 		}, path, config.relative_path + '/' + path);
-	};
+	}
 
 	function parseAndTranslate(template, data, callback) {
 		templates.parse(template, data, function(composerTemplate) {
