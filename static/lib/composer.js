@@ -369,7 +369,7 @@ define('composer', [
 		focusElements(postContainer);
 
 		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
-		if (!screenfull.enabled) {
+		if (typeof screenfull !== 'undefined' && !screenfull.enabled) {
 			$('[data-format="zen"]').toggleClass('hidden', true);
 		}
 
