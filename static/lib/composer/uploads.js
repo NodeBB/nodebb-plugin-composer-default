@@ -103,9 +103,10 @@ define('composer/uploads', [
 			if (draggingDocument) {
 				return;
 			}
-			drop.css('top', postContainer.find('.write-preview-container').position().top + 'px');
-			drop.css('height', textarea.height());
-			drop.css('line-height', textarea.height() + 'px');
+
+			drop.css('top', '0px');
+			drop.css('height', postContainer.height() + 'px');
+			drop.css('line-height', postContainer.height() + 'px');
 			drop.show();
 
 			drop.on('dragleave', function() {
@@ -150,9 +151,8 @@ define('composer/uploads', [
 
 		var draggingDocument = false;
 
-		var postContainer = $('#cmp-uuid-' + post_uuid),
-			drop = postContainer.find('.imagedrop'),
-			textarea = postContainer.find('textarea');
+		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var drop = postContainer.find('.imagedrop');
 
 		$(document).off('dragstart').on('dragstart', function() {
 			draggingDocument = true;
@@ -160,7 +160,7 @@ define('composer/uploads', [
 			draggingDocument = false;
 		});
 
-		textarea.on('dragenter', onDragEnter);
+		postContainer.on('dragenter', onDragEnter);
 
 		drop.on('dragover', cancel);
 		drop.on('dragenter', cancel);
