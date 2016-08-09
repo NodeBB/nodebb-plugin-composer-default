@@ -22,19 +22,20 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 		zen: function() {
 			var postContainer = this;
 			$(window).one('resize', function() {
+				function onResize() {
+					if (!screenfull.isFullscreen) {
+						app.toggleNavbar(true);
+						$('html').removeClass('zen-mode');
+						resize.reposition(postContainer);
+						$(window).off('resize', onResize);
+					}
+				}
+
 				if (screenfull.isFullscreen) {
 					app.toggleNavbar(false);
 					$('html').addClass('zen-mode');
 					postContainer.find('.write').focus();
 
-					function onResize() {
-						if (!screenfull.isFullscreen) {
-							app.toggleNavbar(true);
-							$('html').removeClass('zen-mode');
-							resize.reposition(postContainer);
-							$(window).off('resize', onResize);
-						}
-					}
 					$(window).on('resize', onResize);
 
 					$(window).one('action:composer.topics.post action:composer.posts.reply action:composer.posts.edit action:composer.discard', screenfull.exit);
