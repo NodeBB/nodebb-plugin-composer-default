@@ -171,6 +171,9 @@ plugin.build = function(data, callback) {
 					ready();
 				});
 			});
+		} else if (req.query.body) {
+			body = req.query.body;
+			ready();
 		} else {
 			body = data.postData ? data.postData.content : '';
 			ready();

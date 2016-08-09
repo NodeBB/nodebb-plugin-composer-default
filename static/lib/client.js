@@ -42,8 +42,8 @@ $(document).ready(function() {
 				ajaxify.go(
 					'compose?tid=' + data.tid +
 					(data.pid ? '&toPid=' + data.pid : '') +
-					(data.title ? '&title=' + encodeURIComponent(data.topicName) : '') +
-					(data.body ? '&body=' + encodeURIComponent(data.text) : '')
+					(data.topicName ? '&title=' + encodeURIComponent(data.topicName) : '') +
+					(data.text ? '&body=' + encodeURIComponent(data.text) : '')
 				);
 			}
 		});
