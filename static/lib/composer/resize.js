@@ -1,7 +1,7 @@
 
 'use strict';
 
-/* globals app, define, config, utils*/
+/* globals define, utils*/
 
 define('composer/resize', [], function() {
 	var resize = {},

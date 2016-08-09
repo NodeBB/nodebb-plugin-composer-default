@@ -179,10 +179,10 @@ define('composer', [
 		if (text) {
 			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
 		}
-
+		var link = '';
 		if (uuid === undefined) {
 			if (title && topicSlug && postIndex) {
-				var link = '[' + escapedTitle + '](/post/' + pid + ')';
+				link = '[' + escapedTitle + '](/post/' + pid + ')';
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
@@ -197,7 +197,7 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && topicSlug && postIndex) {
-			var link = '[' + escapedTitle + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+			link = '[' + escapedTitle + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
@@ -305,27 +305,8 @@ define('composer', [
 		});
 
 		submitBtn.on('click', function() {
-			var action = $(this).attr('data-action');
-
-			switch(action) {
-				case 'post-lock':
-					$(this).attr('disabled', true);
-					post(post_uuid, {lock: true});
-					break;
-
-				case 'post':	// intentional fall-through
-				default:
-					$(this).attr('disabled', true);
-					post(post_uuid);
-					break;
-			}
-		});
-
-		postContainer.on('click', 'a[data-switch-action]', function() {
-			var action = $(this).attr('data-switch-action'),
-				label = $(this).html();
-
-			submitBtn.attr('data-action', action).html(label);
+			$(this).attr('disabled', true);
+			post(post_uuid);
 		});
 
 		postContainer.find('.composer-discard').on('click', function(e) {
@@ -527,7 +508,7 @@ define('composer', [
 		}
 	}
 
-	function post(post_uuid, options) {
+	function post(post_uuid) {
 		var postData = composer.posts[post_uuid];
 		var postContainer = $('#cmp-uuid-' + post_uuid);
 		var handleEl = postContainer.find('.handle');
@@ -536,8 +517,6 @@ define('composer', [
 		var categoryEl = postContainer.find('.category-list');
 		var thumbEl = postContainer.find('input#topic-thumb-url');
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
-
-		options = options || {};
 
 		titleEl.val(titleEl.val().trim());
 		bodyEl.val(bodyEl.val().rtrim());
@@ -571,16 +550,14 @@ define('composer', [
 				content: bodyEl.val(),
 				topic_thumb: thumbEl.val() || '',
 				category_id: categoryEl.val(),
-				tags: tags.getTags(post_uuid),
-				lock: options.lock || false
+				tags: tags.getTags(post_uuid)
 			};
 		} else if (action === 'posts.reply') {
 			composerData = {
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
-				toPid: postData.toPid,
-				lock: options.lock || false
+				toPid: postData.toPid
 			};
 		} else if (action === 'posts.edit') {
 			composerData = {

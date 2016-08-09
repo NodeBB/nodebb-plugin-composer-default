@@ -1,7 +1,7 @@
 
 'use strict';
 
-/*globals define, config, socket, app*/
+/*globals define, config, socket, app, utils*/
 
 define('composer/tags', function() {
 	var tags = {};
