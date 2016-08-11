@@ -14,6 +14,10 @@ define('composer/uploads', [
 
 	var uploadingText = 'uploading 0%';
 
+	uploads.getCid = function() {
+		return cid;
+	};
+
 	uploads.initialize = function(post_uuid, _cid) {
 		cid = _cid;
 		initializeDragAndDrop(post_uuid);
