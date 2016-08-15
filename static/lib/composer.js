@@ -182,7 +182,7 @@ define('composer', [
 		var link = '';
 		if (uuid === undefined) {
 			if (title && topicSlug && postIndex) {
-				link = '[' + escapedTitle + '](/post/' + pid + ')';
+				link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
@@ -197,7 +197,7 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && topicSlug && postIndex) {
-			link = '[' + escapedTitle + '](/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+			link = '[' + escapedTitle + '](' + config.relative_path + '/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
