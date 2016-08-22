@@ -32,7 +32,7 @@ define('composer', [
 	$(window).on('popstate', function() {
 		var env = utils.findBootstrapEnvironment();
 
-		if (composer.active && (env === 'xs' || env ==='sm')) {
+		if (composer.active && (env === 'xs' || env ==='sm' || env ==='md')) {
 			if (!composer.posts[composer.active].modified) {
 				discard(composer.active);
 				return;
@@ -50,7 +50,7 @@ define('composer', [
 
 	function removeComposerHistory() {
 		var env = utils.findBootstrapEnvironment();
-		if (ajaxify.data.template.compose === true || env === 'xs' || env ==='sm') {
+		if (ajaxify.data.template.compose === true || env === 'xs' || env ==='sm' || env ==='md') {
 			history.back();
 		}
 	}
@@ -61,14 +61,14 @@ define('composer', [
 
 			resize.reposition($('#cmp-uuid-' + composer.active));
 
-			if ((env === 'md' || env === 'lg') && window.location.pathname.startsWith('/compose')) {
+			if ((env === 'lg' || env === 'xl') && window.location.pathname.startsWith('/compose')) {
 				/*
 				 *	If this conditional is met, we're no longer in mobile/tablet
 				 *	resolution but we've somehow managed to have a mobile
 				 *	composer load, so let's go back to the topic
 				 */
 				history.back();
-			} else if ((env === 'xs' || env === 'sm') && !window.location.pathname.startsWith('/compose')) {
+			} else if ((env === 'xs' || env === 'sm' || env ==='md') && !window.location.pathname.startsWith('/compose')) {
 				/*
 				 *	In this case, we're in mobile/tablet resolution but the composer
 				 *	that loaded was a regular composer, so let's fix the address bar
@@ -377,7 +377,7 @@ define('composer', [
 
 		var data = {
 			title: title,
-			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
+			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm' || composer.bsEnvironment === 'md',
 			resizable: true,
 			allowTopicsThumbnail: allowTopicsThumbnail,
 			isTopicOrMain: isTopic || isMain,
@@ -432,7 +432,7 @@ define('composer', [
 
 				resize.handleResize(postContainer);
 
-				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm' || composer.bsEnvironment === 'md') {
 					var submitBtns = postContainer.find('.composer-submit'),
 						mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit'),
 						textareaEl = postContainer.find('.write'),
@@ -584,9 +584,9 @@ define('composer', [
 			drafts.removeDraft(postData.save_id);
 
 			if (action === 'topics.post') {
-				ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
+				ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm' || composer.bsEnvironment === 'md') ? true : false);
 			} else if (action === 'posts.reply') {
-				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm' || composer.bsEnvironment === 'md') {
 					window.history.back();
 				} else if (ajaxify.data.template.topic) {
 					if (postData.tid !== ajaxify.data.tid) {

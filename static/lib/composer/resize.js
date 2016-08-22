@@ -37,7 +37,7 @@ define('composer/resize', [], function() {
 	function doResize(postContainer, percentage) {
 		var env = utils.findBootstrapEnvironment();
 
-		if (env === 'sm' || env === 'xs' || window.innerHeight < 480) {
+		if (env === 'sm' || env === 'xs' || env === 'md' || window.innerHeight < 480) {
 			$html.addClass('composing mobile');
 			percentage = 1;
 		} else {
@@ -55,7 +55,7 @@ define('composer/resize', [], function() {
 				percentage = 1;
 			}
 
-			if (env === 'md' || env === 'lg') {
+			if (env === 'lg' || env === 'xl') {
 				var top = percentage * (windowHeight - upperBound) / windowHeight;
 				top = (Math.abs(1-top) * 100) + '%';
 				postContainer.css({
@@ -71,7 +71,7 @@ define('composer/resize', [], function() {
 
 		// Add some extra space at the bottom of the body so that the user can still scroll to the last post w/ composer open
 		// thanks but don't do it on mobile
-		if (env === 'md' || env === 'lg') {
+		if (env === 'lg' || env === 'xl') {
 			$body.css({ 'margin-bottom': postContainer.outerHeight() });
 		}
 
