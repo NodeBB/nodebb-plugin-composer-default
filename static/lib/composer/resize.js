@@ -199,7 +199,12 @@ define('composer/resize', [], function() {
 	};
 
 	function getUpperBound() {
-		return $headerMenu.height() + 1;
+		try {
+			var rect = $headerMenu.get(0).getBoundingClientRect();
+			return rect.height + rect.top;
+		} catch (e) {
+			return 0;
+		}
 	}
 
 	function resizeWritePreview(postContainer) {
