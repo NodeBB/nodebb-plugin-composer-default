@@ -149,9 +149,10 @@ define('composer/uploads', [
 			return false;
 		}
 
+		/* commented for jQuery 3
 		if($.event.props.indexOf('dataTransfer') === -1) {
 			$.event.props.push('dataTransfer');
-		}
+		}*/
 
 		var draggingDocument = false;
 
