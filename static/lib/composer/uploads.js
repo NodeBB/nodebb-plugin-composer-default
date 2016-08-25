@@ -121,8 +121,9 @@ define('composer/uploads', [
 
 		function onDragDrop(e) {
 			e.preventDefault();
-			var files = e.files || (e.dataTransfer || {}).files || (e.target.value ? [e.target.value] : []),
-				fd;
+			//var files = e.files || (e.dataTransfer || {}).files || (e.target.value ? [e.target.value] : []),
+			var files = e.originalEvent.dataTransfer.files;
+			var	fd;
 
 			if (files.length) {
 				if (window.FormData) {
