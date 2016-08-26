@@ -122,7 +122,7 @@ define('composer/uploads', [
 		function onDragDrop(e) {
 			e.preventDefault();
 			var files = e.originalEvent.dataTransfer.files;
-			var	fd;
+			var fd;
 
 			if (files.length) {
 				if (window.FormData) {
