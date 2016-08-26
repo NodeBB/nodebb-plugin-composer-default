@@ -1,8 +1,8 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar navbar-fixed-top mobile-navbar visible-xs visible-sm">
-			<div class="pull-left">
+		<nav class="navbar navbar-fixed-top mobile-navbar bg-primary hidden-lg-up">
+			<div class="pull-xs-left">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 			</div>
 			<!-- IF isTopic -->
@@ -10,16 +10,16 @@
 				<span class="category-name"></span> <i class="fa fa-sort"></i>
 			</div>
 			<!-- ENDIF isTopic -->
-			<div class="pull-right">
+			<div class="pull-xs-right">
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
 		<div class="row title-container">
 			<!-- IF showHandleInput -->
-			<div class="col-sm-3 col-md-12">
+			<div class="col-md-3 col-lg-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 			</div>
-			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
+			<div class="<!-- IF isTopic -->col-xl-9<!-- ELSE -->col-xl-12<!-- ENDIF isTopic --> col-lg-12">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
@@ -27,7 +27,7 @@
 				<!-- ENDIF isTopicOrMain -->
 			</div>
 			<!-- ELSE -->
-			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
+			<div class="<!-- IF isTopic -->col-xl-9<!-- ELSE -->col-xl-12<!-- ENDIF isTopic --> col-lg-12">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
@@ -36,7 +36,7 @@
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-12 hidden-sm hidden-xs">
+			<div class="category-list-container col-xl-3 col-lg-12 hidden-md-down">
 				<select tabindex="3" class="form-control category-list"></select>
 			</div>
 			<!-- ENDIF isTopic -->
@@ -97,8 +97,8 @@
 					</form>
 				</ul>
 
-				<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
-					<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
+				<div class="btn-group pull-xs-right action-bar hidden-md-down">
+					<button class="btn btn-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
 					<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 				</div>
@@ -106,25 +106,25 @@
 		</div>
 
 		<div class="row write-preview-container">
-			<div class="col-md-6 col-sm-12 write-container">
+			<div class="col-lg-6 col-md-12 write-container">
 				<div class="help-text">
-					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
+					[[modules:composer.compose]] <span class="help hidden-xs-up"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<textarea class="write" tabindex="5"></textarea>
 			</div>
-			<div class="col-md-6 hidden-sm hidden-xs preview-container">
+			<div class="col-lg-6 hidden-md-down preview-container">
 				<div class="help-text">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>
-				<div class="preview well"></div>
+				<div class="preview card"></div>
 			</div>
 		</div>
 
 		<!-- IF isTopicOrMain -->
 		<div class="row tag-row">
-			<div class="col-md-12">
-				<div class="tags-container inline-block">
+			<div class="col-lg-12">
+				<div class="tags-container d-inline-block">
 					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="4"/>
 				</div>
 			</div>
@@ -132,13 +132,13 @@
 		<!-- ENDIF isTopicOrMain -->
 
 		<!-- IF isTopic -->
-		<ul class="category-selector visible-xs visible-sm">
+		<ul class="category-selector hidden-lg-up">
 
 		</ul>
 		<!-- ENDIF isTopic -->
 
 		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
 
-		<div class="resizer"><div class="trigger text-center"><i class="fa"></i></div></div>
+		<div class="resizer"><div class="trigger text-xs-center"><i class="fa"></i></div></div>
 	</div>
 </div>

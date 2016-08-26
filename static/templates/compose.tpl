@@ -3,10 +3,10 @@
 	<div class="composer-container">
 		<div class="title-container row">
 			<!-- IF showHandleInput -->
-			<div class="col-sm-3 col-md-12">
+			<div class="col-md-3 col-lg-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 			</div>
-			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
+			<div class="<!-- IF isTopic -->col-xl-9<!-- ELSE -->col-xl-12<!-- ENDIF isTopic --> col-lg-12">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
@@ -14,7 +14,7 @@
 				<!-- ENDIF isTopicOrMain -->
 			</div>
 			<!-- ELSE -->
-			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
+			<div class="<!-- IF isTopic -->col-xl-9<!-- ELSE -->col-xl-12<!-- ENDIF isTopic --> col-lg-12">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
@@ -23,7 +23,7 @@
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-12">
+			<div class="category-list-container col-xl-3 col-lg-12">
 				<select tabindex="3" class="form-control category-list"></select>
 			</div>
 			<!-- ENDIF isTopic -->
@@ -84,8 +84,8 @@
 					</form>
 				</ul>
 
-				<div class="btn-group pull-right action-bar">
-					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
+				<div class="btn-group pull-xs-right action-bar">
+					<a href="{discardRoute}" class="btn btn-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 				</div>
@@ -93,18 +93,18 @@
 		</div>
 
 		<div class="row write-preview-container">
-			<div class="col-md-6 col-sm-12 write-container">
+			<div class="col-lg-6 col-md-12 write-container">
 				<div class="help-text">
-					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
+					[[modules:composer.compose]] <span class="help hidden-xs-up"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<textarea class="write" tabindex="5"></textarea>
 			</div>
-			<div class="col-md-6 hidden-sm hidden-xs preview-container">
+			<div class="col-lg-6 hidden-md-down preview-container">
 				<div class="help-text">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>
-				<div class="preview well"></div>
+				<div class="preview card"></div>
 			</div>
 		</div>
 	</div>
