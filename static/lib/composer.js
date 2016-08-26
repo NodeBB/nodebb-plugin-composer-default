@@ -570,6 +570,9 @@ define('composer', [
 			};
 		}
 
+		composerData.extraFields = {};
+		$(window).trigger('action:composer.submit', {action: action, composerData: composerData});
+
 		socket.emit(action, composerData, function (err, data) {
 			postContainer.find('.composer-submit').removeAttr('disabled');
 			if (err) {
