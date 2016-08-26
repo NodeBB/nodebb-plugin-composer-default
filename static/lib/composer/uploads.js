@@ -121,8 +121,8 @@ define('composer/uploads', [
 
 		function onDragDrop(e) {
 			e.preventDefault();
-			var files = e.files || (e.dataTransfer || {}).files || (e.target.value ? [e.target.value] : []),
-				fd;
+			var files = e.originalEvent.dataTransfer.files;
+			var fd;
 
 			if (files.length) {
 				if (window.FormData) {
@@ -147,10 +147,6 @@ define('composer/uploads', [
 		function cancel(e) {
 			e.preventDefault();
 			return false;
-		}
-
-		if($.event.props.indexOf('dataTransfer') === -1) {
-			$.event.props.push('dataTransfer');
 		}
 
 		var draggingDocument = false;

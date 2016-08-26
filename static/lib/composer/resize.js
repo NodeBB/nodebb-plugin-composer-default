@@ -225,8 +225,8 @@ define('composer/resize', [], function() {
 		return [
 			postContainer.find('.title-container').outerHeight(true),
 			postContainer.find('.formatting-bar').outerHeight(true),
-			postContainer.find('.topic-thumb-container').outerHeight(true),
-			postContainer.find('.tag-row').outerHeight(true),
+			postContainer.find('.topic-thumb-container').outerHeight(true) || 0,
+			postContainer.find('.tag-row').outerHeight(true) || 0,
 			$('.taskbar').height() || 50
 		].reduce(function(a, b) {
 			return a + b;
