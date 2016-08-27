@@ -240,7 +240,7 @@ define('composer', [
 				body: threadData.body,
 				modified: false,
 				isMain: threadData.isMain,
-				topic_thumb: threadData.topic_thumb,
+				thumb: threadData.thumb,
 				tags: threadData.tags
 			});
 		});
@@ -295,7 +295,7 @@ define('composer', [
 		uploads.initialize(post_uuid, ajaxify.data.cid);
 
 		if (config.allowTopicsThumbnail && postData.isMain) {
-			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].topic_thumb || '');
+			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].thumb || '');
 		}
 
 		autocomplete.init(postContainer);

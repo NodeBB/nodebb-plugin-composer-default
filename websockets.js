@@ -47,7 +47,7 @@ Sockets.push = function(socket, pid, callback) {
 					handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
 					body: postData.content,
 					title: results.topic.title,
-					topic_thumb: results.topic.thumb,
+					thumb: results.topic.thumb,
 					tags: results.tags,
 					isMain: results.isMain
 				});
