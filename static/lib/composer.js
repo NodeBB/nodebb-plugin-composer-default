@@ -548,8 +548,8 @@ define('composer', [
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
 				content: bodyEl.val(),
-				topic_thumb: thumbEl.val() || '',
-				category_id: categoryEl.val(),
+				thumb: thumbEl.val() || '',
+				cid: categoryEl.val(),
 				tags: tags.getTags(post_uuid)
 			};
 		} else if (action === 'posts.reply') {
@@ -565,12 +565,11 @@ define('composer', [
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
 				title: titleEl.val(),
-				topic_thumb: thumbEl.val() || '',
+				thumb: thumbEl.val() || '',
 				tags: tags.getTags(post_uuid)
 			};
 		}
 
-		composerData.extraFields = {};
 		$(window).trigger('action:composer.submit', {action: action, composerData: composerData});
 
 		socket.emit(action, composerData, function (err, data) {
