@@ -49,7 +49,7 @@ define('composer/tags', function() {
 					$(this).autocomplete('widget').css('z-index', 20000);
 				},
 				source: function(request, response) {
-					socket.emit('topics.searchTags', {query: request.term, cid: postData.cid}, function(err, tags) {
+					socket.emit('topics.autocompleteTags', {query: request.term, cid: postData.cid}, function(err, tags) {
 						if (err) {
 							return app.alertError(err.message);
 						}
