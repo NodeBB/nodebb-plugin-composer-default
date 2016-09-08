@@ -166,6 +166,7 @@ define('composer', [
 			cid: data.cid,
 			title: data.title || '',
 			body: data.body || '',
+			tags: data.tags || [],
 			modified: false,
 			isMain: true
 		});

@@ -10,7 +10,8 @@ $(document).ready(function() {
 				composer.newTopic({
 					cid: data.cid,
 					title: data.title || '',
-					body: data.body || ''
+					body: data.body || '',
+					tags: data.tags || []
 				});
 			});
 		} else {
