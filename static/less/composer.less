@@ -268,7 +268,7 @@ html.composing {
 		min-height: 200px;
 
 		> div {
-			height:100%;
+			height: 100%;
 		}
 	}
 
@@ -354,6 +354,8 @@ html.composing {
 		}
 
 		.formatting-group {
+			overflow-x: scroll;
+			white-space: nowrap;
 			display: inline-block;
 			list-style: none;
 			padding: 0;
@@ -460,6 +462,12 @@ html.composing {
 	.composer {
 		width: 100%;
 		padding-top: 0;
+		.formatting-bar {
+			.formatting-group {
+				display: block;
+			}
+
+		}
 	}
 
 	.resizer {
