@@ -526,6 +526,7 @@ define('composer', [
 		}
 
 		var checkTitle = (postData.hasOwnProperty('cid') || parseInt(postData.pid, 10)) && postContainer.find('input.title').length;
+		var isCategorySelected = !checkTitle || (checkTitle && parseInt(postData.cid, 10));
 
 		if (uploads.inProgress[post_uuid] && uploads.inProgress[post_uuid].length) {
 			return composerAlert(post_uuid, '[[error:still-uploading]]');
@@ -533,6 +534,8 @@ define('composer', [
 			return composerAlert(post_uuid, '[[error:title-too-short, ' + config.minimumTitleLength + ']]');
 		} else if (checkTitle && titleEl.val().length > parseInt(config.maximumTitleLength, 10)) {
 			return composerAlert(post_uuid, '[[error:title-too-long, ' + config.maximumTitleLength + ']]');
+		} else if (!isCategorySelected) {
+			return composerAlert(post_uuid, '[[error:category-not-selected]]');
 		} else if (checkTitle && tags.getTags(post_uuid) && tags.getTags(post_uuid).length < parseInt(config.minimumTagsPerTopic, 10)) {
 			return composerAlert(post_uuid, '[[error:not-enough-tags, ' + config.minimumTagsPerTopic + ']]');
 		} else if (bodyEl.val().length < parseInt(config.minimumPostLength, 10)) {

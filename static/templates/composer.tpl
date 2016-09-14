@@ -111,7 +111,7 @@
 					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
-				<textarea class="write" tabindex="5"></textarea>
+				<textarea class="write" tabindex="4"></textarea>
 			</div>
 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
 				<div class="help-text">
@@ -125,7 +125,7 @@
 		<div class="row tag-row">
 			<div class="col-md-12">
 				<div class="tags-container inline-block">
-					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="4"/>
+					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
 				</div>
 			</div>
 		</div>
