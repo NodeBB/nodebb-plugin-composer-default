@@ -50,7 +50,8 @@ define('composer/categoryList', function() {
 				return a.order - b.order;
 			});
 
-			$('<option/>').translateHtml('<option value="0">[[modules:composer.select_category]]</option>').appendTo(listEl);
+			var selectCategory = $('<option value="0">[[modules:composer.select_category]]</option>');
+			selectCategory.translateHtml('<option value="0">[[modules:composer.select_category]]</option>').appendTo(listEl);
 			categories.forEach(function(category) {
 				recursive(category, listEl, '');
 			});
@@ -61,7 +62,7 @@ define('composer/categoryList', function() {
 				postData.cid = listEl.val();
 			}
 
-			$('.category-name').text(listEl.find('option[value="' + postData.cid + '"]').text());
+			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text());
 			$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 		});
 
@@ -78,7 +79,11 @@ define('composer/categoryList', function() {
 			$('.category-selector').removeClass('open');
 			$('.category-selector li').removeClass('active');
 			$(this).addClass('active');
-			$('.category-list').val($(this).attr('data-cid'));
+			var selectedCid = $(this).attr('data-cid');
+			$('.category-list').val(selectedCid);
+			if (postData.hasOwnProperty('cid')) {
+				postData.cid = selectedCid;
+			}
 		});
 
 	};
