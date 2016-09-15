@@ -42,7 +42,7 @@
 			<!-- ENDIF isTopic -->
 		</div>
 
-		<div class="row category-tag-row">
+		<div class="category-tag-row">
 			<div class="btn-toolbar formatting-bar">
 				<ul class="formatting-group">
 					<!-- BEGIN formatting -->
@@ -122,11 +122,9 @@
 		</div>
 
 		<!-- IF isTopicOrMain -->
-		<div class="row tag-row">
-			<div class="col-md-12">
-				<div class="tags-container inline-block">
-					<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
-				</div>
+		<div class="tag-row">
+			<div class="tags-container">
+				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
 			</div>
 		</div>
 		<!-- ENDIF isTopicOrMain -->
