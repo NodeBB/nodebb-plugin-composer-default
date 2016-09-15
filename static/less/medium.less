@@ -1,0 +1,49 @@
+.composer {
+	.title-container {
+		border: 0;
+
+		.title {
+			font-size: 22px;
+			margin-left: -16px;
+			padding: @padding-large-vertical @padding-large-horizontal;
+		}
+	}
+
+	.formatting-bar .formatting-group {
+		display: inline-block;
+	}
+
+	&.resizable {
+		.box-shadow(0px 6px 12px rgba(0, 0, 0, 0.5));
+		
+		padding-top: 30px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.category-tag-row {
+		margin-top: 5px;
+		margin-bottom: 8px;
+	}
+
+	.resizer {
+		display: block;
+	}
+
+	.tags-container {
+		margin-top: 8px;
+  		margin-bottom: 8px;
+
+		.bootstrap-tagsinput {
+			padding: 0;
+
+			input {
+				margin-left: -6px;
+			}
+		}
+	}
+
+	.write, .preview {
+		padding: 20px;
+	}
+}

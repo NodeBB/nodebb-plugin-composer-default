@@ -107,13 +107,5 @@
 				<div class="preview well"></div>
 			</div>
 		</div>
-
-		<!-- IF isTopicOrMain -->
-		<div class="tag-row">
-			<div class="tags-container">
-				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
-			</div>
-		</div>
-		<!-- ENDIF isTopicOrMain -->
 	</div>
 </div>

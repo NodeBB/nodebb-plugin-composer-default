@@ -12,8 +12,10 @@ html.zen-mode {
     bottom: 0;
 
     overflow: hidden;
-    padding-left: 15px;
-    padding-right: 15px;
+
+    .mobile-navbar {
+        display: none !important;
+    }
     
     &.resizable {
         padding-top: 0;
@@ -29,11 +31,6 @@ html.zen-mode {
 
     .title-container .category-list-container {
         margin-top: 3px;
-    }
-
-    .write-preview-container > div {
-        margin: 0;
-        padding: 0;
     }
 
     .write, .preview {
@@ -54,4 +51,14 @@ html.zen-mode {
 			margin-top: 3px;
 		}
 	}
+
+    @media (min-width: @screen-md-min) {
+        & {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .write-preview-container > div {
+            padding: 0;
+        }
+    }
 }
