@@ -5,44 +5,44 @@ html.zen-mode {
 .zen-mode .composer {
 	z-index: 10002;
 
-    position: absolute;
+	position: absolute;
 	top: 0 !important;
-    right: 0;
-    left: 0;
-    bottom: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
 
-    overflow: hidden;
+	overflow: hidden;
 
-    .mobile-navbar {
-        display: none !important;
-    }
-    
-    &.resizable {
-        padding-top: 0;
-    }
+	.mobile-navbar {
+		display: none !important;
+	}
+	
+	&.resizable {
+		padding-top: 0;
+	}
 
-    .composer-container {
+	.composer-container {
 		padding-top: 5px;
 	}
 
-    .tag-row {
+	.tag-row {
 		display: none;
 	}
 
-    .title-container .category-list-container {
-        margin-top: 3px;
-    }
+	.title-container .category-list-container {
+		margin-top: 3px;
+	}
 
-    .write, .preview {
+	.write, .preview {
 		border: none;
 		outline: none;
 	}
-    
-    .resizer {
+	
+	.resizer {
 		display: none;
 	}
 
-    &.reply {
+	&.reply {
 		.title-container {
 			display: none;
 		}
@@ -52,13 +52,13 @@ html.zen-mode {
 		}
 	}
 
-    @media (min-width: @screen-md-min) {
-        & {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-        .write-preview-container > div {
-            padding: 0;
-        }
-    }
+	@media (min-width: @screen-md-min) {
+		& {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+		.write-preview-container > div {
+			padding: 0;
+		}
+	}
 }
