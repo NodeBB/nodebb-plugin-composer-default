@@ -74,6 +74,10 @@ define('composer/resize', [], function() {
 		resizeIt = function(postContainer, ratio) {
 			raf(function() {
 				doResize(postContainer, ratio);
+
+				setTimeout(function () {
+					$window.trigger('action:composer.resize');
+				}, 0);
 			});
 		};
 	}
