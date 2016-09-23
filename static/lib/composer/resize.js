@@ -55,7 +55,7 @@ define('composer/resize', [], function() {
 
 			// Add some extra space at the bottom of the body so that 
 			// the user can still scroll to the last post w/ composer open
-			body.style.marginBottom = elem.getBoundingClientRect().top;
+			body.style.marginBottom = elem.getBoundingClientRect().top + 'px';
 		} else {
 			postContainer.removeAttr('style');
 			body.style.marginBottom = 0;
@@ -125,13 +125,12 @@ define('composer/resize', [], function() {
 			var bounds = getBounds();
 			var ratio = (bounds.height - position) / (bounds.boundedHeight);
 
-			resizeEnd = e.clientY;
-
 			resizeIt(postContainer, ratio);
 		}
 
 		function resizeStop(e) {
 			e.preventDefault();
+			resizeEnd = e.clientY;
 
 			postContainer.find('textarea').focus();
 			$window.off('mousemove', resizeAction);
@@ -141,19 +140,20 @@ define('composer/resize', [], function() {
 			var position = resizeEnd - resizeOffset;
 			var bounds = getBounds();
 			var ratio = (bounds.height - position) / (bounds.boundedHeight);
-
-			saveRatio(ratio);
 			
 			if (resizeEnd - resizeBegin === 0 && postContainer.hasClass('maximized')) {
 				postContainer.removeClass('maximized');
-				var newRatio = (!oldRatio || oldRatio >= 1 - snapMargin) ? 0.5 : oldRatio;
-				resizeIt(postContainer, newRatio);
+				ratio = (!oldRatio || oldRatio >= 1 - snapMargin) ? 0.5 : oldRatio;
+				resizeIt(postContainer, ratio);
 			} else if (resizeEnd - resizeBegin === 0 || ratio >= 1 - snapMargin) {
 				resizeIt(postContainer, 1);
 				postContainer.addClass('maximized');
+				oldRatio = ratio;
 			} else {
 				postContainer.removeClass('maximized');
 			}
+			
+			saveRatio(ratio);
 		}
 
 		function resizeTouchAction(e) {
