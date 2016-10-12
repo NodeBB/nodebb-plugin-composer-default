@@ -25,7 +25,9 @@
 
 	.composer-container {
 		height: 100%;
+		display: -webkit-flex;
 		display: flex;
+		-webkit-flex-direction: column;
 		flex-direction: column;
 	}
 
@@ -50,6 +52,10 @@
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+
+		.title {
+			text-align: center;
 		}
 	}
 
@@ -108,9 +114,9 @@
 	}
 
 	.write-preview-container {
+		-webkit-flex: 2;
 		flex: 2;
 		min-height: 0;
-		margin-bottom: 15px;
 
 		> div {
 			height: 100%;
@@ -151,7 +157,9 @@
 	}
 
 	.write {
-		border: 1px solid #EDEDED;
+		border: none;
+		border-top: 1px solid #EDEDED;
+		border-bottom: 1px solid #EDEDED;
 		.box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.05));
 	}
 
@@ -174,14 +182,13 @@
 	}
 
 	.tags-container {
-		margin-top: -15px;
-
 		.bootstrap-tagsinput {
 			border: 0;
 			padding: 4px 6px;
 			box-shadow: none;
 
 			input {
+				font-size: 16px;
 				height: 28px;
 				padding: 4px 6px;
 			}
@@ -266,6 +273,12 @@
 					top: 3px;
 				}
 			}
+		}
+	}
+
+	&.reply {
+		.title-container {
+			display: none;
 		}
 	}
 

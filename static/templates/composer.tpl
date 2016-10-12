@@ -13,6 +13,9 @@
 			<div class="pull-right">
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
+			<!-- IF !isTopicOrMain -->
+			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
+			<!-- ENDIF !isTopicOrMain -->
 		</nav>
 		<div class="row title-container">
 			<!-- IF showHandleInput -->

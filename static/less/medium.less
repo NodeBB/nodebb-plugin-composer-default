@@ -1,4 +1,13 @@
 .composer {
+
+	.resizer {
+		display: block;
+	}
+
+	&.reply .title-container {
+		display: block;
+	}
+	
 	.title-container {
 		border: 0;
 
@@ -26,12 +35,20 @@
 		margin-bottom: 8px;
 	}
 
-	.resizer {
-		display: block;
+	.write-preview-container {
+		margin-bottom: 15px;
+	}
+
+	.write, .preview {
+		padding: 20px;
+	}
+
+	.write {
+		border: 1px solid #EDEDED;
 	}
 
 	.tags-container {
-		margin-top: 8px;
+		margin-top: 8px - 15px;
 		margin-bottom: 8px;
 
 		.bootstrap-tagsinput {
@@ -41,9 +58,5 @@
 				margin-left: -6px;
 			}
 		}
-	}
-
-	.write, .preview {
-		padding: 20px;
 	}
 }
