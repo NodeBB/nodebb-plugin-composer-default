@@ -109,14 +109,14 @@
 		</div>
 
 		<div class="row write-preview-container">
-			<div class="col-md-6 col-sm-12 write-container">
+			<div class="write-container">
 				<div class="help-text">
-					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
+					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<textarea class="write" tabindex="4"></textarea>
 			</div>
-			<div class="col-md-6 hidden-sm hidden-xs preview-container">
+			<div class="hidden-sm hidden-xs preview-container">
 				<div class="help-text">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>

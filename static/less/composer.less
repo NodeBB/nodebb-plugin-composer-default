@@ -25,9 +25,7 @@
 
 	.composer-container {
 		height: 100%;
-		display: -webkit-flex;
 		display: flex;
-		-webkit-flex-direction: column;
 		flex-direction: column;
 	}
 
@@ -56,6 +54,11 @@
 
 		.title {
 			text-align: center;
+			margin-right: 46px;
+			margin-left: 46px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 	}
 
@@ -114,16 +117,16 @@
 	}
 
 	.write-preview-container {
-		-webkit-flex: 2;
 		flex: 2;
-		min-height: 0;
-
-		> div {
-			height: 100%;
-		}
+		display: flex;
 	}
 
 	.write-container, .preview-container {
+		display: flex;
+		flex: 1;
+		margin: 0 15px;
+		position: relative;
+
 		.help-text {
 			text-transform: uppercase;
 			position: absolute;
@@ -146,14 +149,13 @@
 	}
 
 	.write, .preview  {
-		display: block;
 		width: 100%;
-		height: 100%;
 		font-size: 14px;
 		.border-radius(0);
 		resize: none;
 		overflow: auto;
 		padding: 25px 10px;
+		margin: 0;
 	}
 
 	.write {

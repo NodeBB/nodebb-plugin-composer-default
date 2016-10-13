@@ -28,19 +28,21 @@ define('composer/resize', [], function() {
 
 	function getBounds() {
 		var headerRect = header.getBoundingClientRect();
-		var rect = html.getBoundingClientRect();
 
-		return {
-			top: rect.top,
-			left: rect.left,
-			right: rect.right,
-			bottom: rect.bottom,
-			width: rect.right - rect.left,
-			height: rect.bottom - rect.top,
-
-			boundedTop: headerRect.bottom,
-			boundedHeight: rect.bottom - headerRect.bottom,
+		var rect = {
+			top: 0,
+			left: 0,
+			right: window.innerWidth,
+			bottom: window.innerHeight,
 		};
+
+		rect.width = rect.right;
+		rect.height = rect.bottom;
+
+		rect.boundedTop = headerRect.bottom;
+		rect.boundedHeight = rect.bottom - headerRect.bottom;
+
+		return rect;
 	}
 
 	function doResize(postContainer, ratio) {
@@ -55,10 +57,11 @@ define('composer/resize', [], function() {
 
 			// Add some extra space at the bottom of the body so that 
 			// the user can still scroll to the last post w/ composer open
-			body.style.marginBottom = elem.getBoundingClientRect().top + 'px';
+			var rect = elem.getBoundingClientRect();
+			body.style.paddingBottom = (rect.bottom - rect.top).toString() + 'px';
 		} else {
 			postContainer.removeAttr('style');
-			body.style.marginBottom = 0;
+			body.style.paddingBottom = 0;
 		}
 
 		postContainer.ratio = ratio;
