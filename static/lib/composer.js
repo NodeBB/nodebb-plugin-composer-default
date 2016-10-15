@@ -614,7 +614,7 @@ define('composer', [
 		$('body').addClass('composing');
 	}
 	function onHide() {
-		$('body').css({ 'margin-bottom': 0 }).removeClass('composing');
+		$('body').css({ paddingBottom: 0 }).removeClass('composing');
 	}
 
 	function discard(post_uuid) {
