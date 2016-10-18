@@ -595,7 +595,7 @@ define('composer', [
 				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
 					window.history.back();
 				} else if (ajaxify.data.template.topic) {
-					if (postData.tid !== ajaxify.data.tid) {
+					if (parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)) {
 						ajaxify.go('post/' + data.pid);
 					}
 					// else, we're in the same topic, no nav required

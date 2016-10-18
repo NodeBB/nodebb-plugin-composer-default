@@ -50,8 +50,8 @@ define('composer/categoryList', function() {
 				return a.order - b.order;
 			});
 
-			var selectCategory = $('<option value="0">[[modules:composer.select_category]]</option>');
-			selectCategory.translateHtml('<option value="0">[[modules:composer.select_category]]</option>').appendTo(listEl);
+			var selectCategory = $('<option value="0"></option>');
+			selectCategory.translateText('[[modules:composer.select_category]]').appendTo(listEl);
 			categories.forEach(function(category) {
 				recursive(category, listEl, '');
 			});
@@ -62,13 +62,13 @@ define('composer/categoryList', function() {
 				postData.cid = listEl.val();
 			}
 
-			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text());
+			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text() || '[[modules:composer.select_category]]');
 			$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 		});
 
 		listEl.on('change', function() {
 			if (postData.hasOwnProperty('cid')) {
-				postData.cid = this.value;
+				postData.cid = $(this).val();
 			}
 
 			$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
