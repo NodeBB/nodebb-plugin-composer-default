@@ -611,10 +611,11 @@ define('composer', [
 	}
 
 	function onShow() {
-		$('body').addClass('composing');
+		$('html').addClass('composing');
 	}
 	function onHide() {
-		$('body').css({ paddingBottom: 0 }).removeClass('composing');
+		$('body').css({ paddingBottom: 0 });
+		$('html').removeClass('composing');
 	}
 
 	function discard(post_uuid) {

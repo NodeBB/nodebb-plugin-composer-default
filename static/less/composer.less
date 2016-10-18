@@ -332,8 +332,21 @@
 }
 
 @media (max-width: @screen-sm-max) {
-	body.composing {
-		padding-bottom: 0 !important;
+	html.composing {
+		&, body {
+			height: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.composer {
+			height: 100%;
+			overflow: hidden;
+		}
+		
+		body {
+			padding-bottom: 0 !important;
+		}
 	}
 }
 
