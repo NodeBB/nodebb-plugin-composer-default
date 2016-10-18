@@ -458,7 +458,7 @@ html.composing {
 	}
 }
 
-@media (max-width: 767px), (max-height: 480px) {
+@media (max-width: @screen-sm-min), (max-height: 480px) {
 	.composer {
 		width: 100%;
 		padding-top: 0;
@@ -467,6 +467,16 @@ html.composing {
 				display: block;
 			}
 
+		}
+
+		.category-list {
+			padding: 0 2rem;
+		}
+	}
+
+	html.composing .composer {
+		.title-container input.title {
+			padding-left: 16px;
 		}
 	}
 
