@@ -62,7 +62,7 @@ define('composer/categoryList', function() {
 				postData.cid = listEl.val();
 			}
 
-			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text());
+			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text() || '[[modules:composer.select_category]]');
 			$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 		});
 
