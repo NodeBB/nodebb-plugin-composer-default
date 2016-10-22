@@ -548,14 +548,13 @@ define('composer', [
 
 		var composerData = {};
 
-
 		if (action === 'topics.post') {
 			composerData = {
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
 				content: bodyEl.val(),
 				thumb: thumbEl.val() || '',
-				cid: categoryEl.val(),
+				cid: categoryEl.get(0).value,
 				tags: tags.getTags(post_uuid)
 			};
 		} else if (action === 'posts.reply') {
