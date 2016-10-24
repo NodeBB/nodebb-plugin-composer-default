@@ -13,8 +13,9 @@ define('composer', [
 	'composer/categoryList',
 	'composer/preview',
 	'composer/resize',
-	'composer/autocomplete'
-], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete) {
+	'composer/autocomplete',
+	'scrollStop'
+], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -452,6 +453,7 @@ define('composer', [
 					composerData: composer.posts[post_uuid]
 				});
 
+				scrollStop.apply(postContainer.find('.write'));
 				focusElements(postContainer);
 			});
 		}
