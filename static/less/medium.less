@@ -1,0 +1,62 @@
+.composer {
+
+	.resizer {
+		display: block;
+	}
+
+	&.reply .title-container {
+		display: block;
+	}
+	
+	.title-container {
+		border: 0;
+
+		.title {
+			font-size: 22px;
+			margin-left: -16px;
+			padding: @padding-large-vertical @padding-large-horizontal;
+		}
+	}
+
+	.formatting-bar .formatting-group {
+		display: inline-block;
+	}
+
+	&.resizable {
+		.box-shadow(0px 6px 12px rgba(0, 0, 0, 0.5));
+		
+		padding-top: 30px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.category-tag-row {
+		margin-top: 5px;
+		margin-bottom: 8px;
+	}
+
+	.write-preview-container {
+		margin-bottom: 15px;
+	}
+
+	.write, .preview {
+		padding: 20px;
+	}
+
+	.write {
+		border: 1px solid #EDEDED;
+	}
+
+	.tags-container {
+		margin-top: 8px - 15px;
+		margin-bottom: 8px;
+
+		.bootstrap-tagsinput {
+			padding: 0;
+
+			input {
+				margin-left: -6px;
+			}
+		}
+	}
+}

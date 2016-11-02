@@ -29,7 +29,7 @@
 			<!-- ENDIF isTopic -->
 		</div>
 
-		<div class="row category-tag-row">
+		<div class="category-tag-row">
 			<div class="btn-toolbar formatting-bar">
 				<ul class="formatting-group">
 					<!-- BEGIN formatting -->
