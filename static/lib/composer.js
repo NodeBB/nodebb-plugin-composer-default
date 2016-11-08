@@ -591,17 +591,23 @@ define('composer', [
 			drafts.removeDraft(postData.save_id);
 
 			if (action === 'topics.post') {
-				ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
+				if(!ajaxify.data['action:topics.post:noredirect']) {
+					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
+				}				
 			} else if (action === 'posts.reply') {
 				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
 					window.history.back();
 				} else if (ajaxify.data.template.topic) {
 					if (parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)) {
-						ajaxify.go('post/' + data.pid);
+						if(!ajaxify.data['action:posts.reply:noredirect']) {
+							ajaxify.go('post/' + data.pid);
+						}
 					}
 					// else, we're in the same topic, no nav required
 				} else {
-					ajaxify.go('post/' + data.pid);
+					if(!ajaxify.data['action:posts.reply:noredirect']) {
+						ajaxify.go('post/' + data.pid);
+					}
 				}
 			} else {
 				removeComposerHistory();
