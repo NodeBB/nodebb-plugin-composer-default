@@ -112,6 +112,7 @@ define('composer/resize', [], function() {
 		var resizer = $resizer[0];
 
 		function resizeStart(e) {
+			e.preventDefault();
 			var resizeRect = resizer.getBoundingClientRect();
 			var resizeCenterY = (resizeRect.top + resizeRect.bottom) / 2;
 
