@@ -53,9 +53,9 @@ plugin.addPrefetchTags = function(tags, callback) {
 			'/src/modules/composer.js', '/src/modules/composer/uploads.js', '/src/modules/composer/drafts.js',
 			'/src/modules/composer/tags.js', '/src/modules/composer/categoryList.js', '/src/modules/composer/resize.js',
 			'/src/modules/composer/autocomplete.js', '/templates/composer.tpl',
-			'/language/' + (meta.config.defaultLang || 'en_GB') + '/topic.json',
-			'/language/' + (meta.config.defaultLang || 'en_GB') + '/modules.json',
-			'/language/' + (meta.config.defaultLang || 'en_GB') + '/tags.json'
+			'/language/' + (meta.config.defaultLang || 'en-GB') + '/topic.json',
+			'/language/' + (meta.config.defaultLang || 'en-GB') + '/modules.json',
+			'/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
 		];
 
 	tags = tags.concat(prefetch.map(function(path) {
