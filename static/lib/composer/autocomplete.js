@@ -15,7 +15,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 				zIndex: 20000,
 				listPosition: function(position) {
 					this.$el.css(this._applyPlacement(position));
-					this.$el.css('position', 'absolute');
+					this.$el.css('position', 'fixed');
 					return this;
 				}
 			}
