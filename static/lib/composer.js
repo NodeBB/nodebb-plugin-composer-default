@@ -500,13 +500,15 @@ define('composer', [
 	}
 
 	function focusElements(postContainer) {
-		var title = postContainer.find('input.title');
+		setTimeout(function() {
+			var title = postContainer.find('input.title');
 
-		if (title.length) {
-			title.focus();
-		} else {
-			postContainer.find('textarea').focus().putCursorAtEnd();
-		}
+			if (title.length) {
+				title.focus();
+			} else {
+				postContainer.find('textarea').focus().putCursorAtEnd();
+			}
+		}, 1);
 	}
 
 	function post(post_uuid) {
@@ -614,6 +616,7 @@ define('composer', [
 	function onShow() {
 		$('html').addClass('composing');
 	}
+	
 	function onHide() {
 		$('body').css({ paddingBottom: 0 });
 		$('html').removeClass('composing');
