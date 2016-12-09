@@ -34,7 +34,12 @@ define('composer/tags', function() {
 		});
 
 		tagEl.on('itemAdded', function(event) {
-			$(window).trigger('action:tag.added', {cid: postData.cid, tagEl: tagEl, tag: event.item});
+			socket.emit('topics.isTagAllowed', {tag: event.item, cid: postData.cid}, function(err, allowed) {
+				if (err || !allowed) {
+					return tagEl.tagsinput('remove', event.item);
+				}
+				$(window).trigger('action:tag.added', {cid: postData.cid, tagEl: tagEl, tag: event.item});
+			});
 		});
 
 		addTags(postData.tags, tagEl);
