@@ -1,7 +1,7 @@
 
 'use strict';
 
-/*globals define, config, socket, app, utils*/
+/*globals ajaxify, define, config, socket, app, utils*/
 
 define('composer/tags', function() {
 	var tags = {};
@@ -11,6 +11,8 @@ define('composer/tags', function() {
 		if (!tagEl.length) {
 			return;
 		}
+
+		var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
 
 		tagEl.tagsinput({
 			maxTags: config.maximumTagsPerTopic,
@@ -34,11 +36,11 @@ define('composer/tags', function() {
 		});
 
 		tagEl.on('itemAdded', function(event) {
-			socket.emit('topics.isTagAllowed', {tag: event.item, cid: postData.cid}, function(err, allowed) {
+			socket.emit('topics.isTagAllowed', {tag: event.item, cid: cid}, function(err, allowed) {
 				if (err || !allowed) {
 					return tagEl.tagsinput('remove', event.item);
 				}
-				$(window).trigger('action:tag.added', {cid: postData.cid, tagEl: tagEl, tag: event.item});
+				$(window).trigger('action:tag.added', {cid: cid, tagEl: tagEl, tag: event.item});
 			});
 		});
 
