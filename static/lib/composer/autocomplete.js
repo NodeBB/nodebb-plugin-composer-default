@@ -12,12 +12,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 			element: element,
 			strategies: [],
 			options: {
-				zIndex: 20000,
-				listPosition: function(position) {
-					this.$el.css(this._applyPlacement(position));
-					this.$el.css('position', 'fixed');
-					return this;
-				}
+				zIndex: 20000
 			}
 		};
 
