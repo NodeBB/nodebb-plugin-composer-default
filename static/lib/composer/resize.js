@@ -112,7 +112,6 @@ define('composer/resize', [], function() {
 		var resizer = $resizer[0];
 
 		function resizeStart(e) {
-			e.preventDefault();
 			var resizeRect = resizer.getBoundingClientRect();
 			var resizeCenterY = (resizeRect.top + resizeRect.bottom) / 2;
 
@@ -166,7 +165,10 @@ define('composer/resize', [], function() {
 		}
 
 		$resizer
-			.on('mousedown', resizeStart)
+			.on('mousedown', function(e) {
+				e.preventDefault();
+				resizeStart(e);
+			})
 			.on('touchstart', function(e) {
 				e.preventDefault();
 				resizeStart(e.touches[0]);
