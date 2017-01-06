@@ -68,7 +68,7 @@ define('composer/categoryList', function() {
 
 		listEl.on('change', function() {
 			if (postData.hasOwnProperty('cid')) {
-				postData.cid = $(this).val();
+				changeCategory(postContainer, postData, $(this).val());
 			}
 
 			$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
@@ -82,11 +82,17 @@ define('composer/categoryList', function() {
 			var selectedCid = $(this).attr('data-cid');
 			$('.category-list').val(selectedCid);
 			if (postData.hasOwnProperty('cid')) {
-				postData.cid = selectedCid;
+				changeCategory(postContainer, postData, selectedCid);
 			}
 		});
-
 	};
+
+	function changeCategory(postContainer, postData, cid) {
+		postData.cid = cid;
+		require(['composer/tags'], function (tags) {
+			tags.updateWhitelist(postContainer, cid);
+		});
+	}
 
 	function recursive(category, listEl, level) {
 		if (category.link) {

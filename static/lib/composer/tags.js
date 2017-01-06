@@ -78,6 +78,26 @@ define('composer/tags', function() {
 		input.on('blur', function() {
 			triggerEnter(input);
 		});
+
+		$('[component="composer/tag/dropdown"]').on('click', 'li', function () {
+			var tag = $(this).attr('data-tag');
+			if (tag) {
+				addTags([tag], tagEl);
+			}
+		});
+	};
+
+	tags.updateWhitelist = function (postContainer, cid) {
+		$.get('/api/category/' + cid, function (data) {
+			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
+			if (!tagDropdown.length) {
+				return;
+			}
+			tagDropdown.toggleClass('hidden', !data.tagWhitelist.length);
+			app.parseAndTranslate('composer', 'tagWhitelist', {tagWhitelist: data.tagWhitelist}, function (html) {
+				tagDropdown.find('.dropdown-menu').html(html);
+			});
+		});
 	};
 
 	function triggerEnter(input) {
@@ -92,7 +112,7 @@ define('composer/tags', function() {
 
 	function addTags(tags, tagEl) {
 		if (tags && tags.length) {
-			for(var i=0; i<tags.length; ++i) {
+			for (var i=0; i<tags.length; ++i) {
 				tagEl.tagsinput('add', tags[i]);
 			}
 		}

@@ -388,73 +388,72 @@ define('composer', [
 			isEditing: isEditing,
 			showHandleInput:  config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
-			formatting: composer.formatting
+			formatting: composer.formatting,
+			tagWhitelist: ajaxify.data.tagWhitelist
 		};
 
 		if (data.mobile) {
 			mobileHistoryAppend();
 		}
-		renderComposer();
 
-		function renderComposer() {
-			parseAndTranslate('composer', data, function(composerTemplate) {
-				if ($('#cmp-uuid-' + post_uuid).length) {
-					return;
+		parseAndTranslate('composer', data, function(composerTemplate) {
+			if ($('#cmp-uuid-' + post_uuid).length) {
+				return;
+			}
+			composerTemplate = $(composerTemplate);
+
+			composerTemplate.attr('id', 'cmp-uuid-' + post_uuid);
+
+			$(document.body).append(composerTemplate);
+
+			var postContainer = $(composerTemplate[0]);
+
+			resize.reposition(postContainer);
+			composer.enhance(postContainer, post_uuid, postData);
+			/*
+				Everything after this line is applied to the resizable composer only
+				Want something done to both resizable composer and the one in /compose?
+				Put it in composer.enhance().
+
+				Eventually, stuff after this line should be moved into composer.enhance().
+			*/
+
+			tags.init(postContainer, composer.posts[post_uuid]);
+
+			activate(post_uuid);
+
+			postContainer.on('click', function() {
+				if (!taskbar.isActive(post_uuid)) {
+					taskbar.updateActive(post_uuid);
 				}
-				composerTemplate = $(composerTemplate);
-
-				composerTemplate.attr('id', 'cmp-uuid-' + post_uuid);
-
-				$(document.body).append(composerTemplate);
-
-				var postContainer = $(composerTemplate[0]);
-
-				resize.reposition(postContainer);
-				composer.enhance(postContainer, post_uuid, postData);
-				/*
-					Everything after this line is applied to the resizable composer only
-					Want something done to both resizable composer and the one in /compose?
-					Put it in composer.enhance().
-
-					Eventually, stuff after this line should be moved into composer.enhance().
-				*/
-
-				tags.init(postContainer, composer.posts[post_uuid]);
-
-				activate(post_uuid);
-
-				postContainer.on('click', function() {
-					if (!taskbar.isActive(post_uuid)) {
-						taskbar.updateActive(post_uuid);
-					}
-				});
-
-				resize.handleResize(postContainer);
-
-				if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-					var submitBtns = postContainer.find('.composer-submit'),
-						mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit'),
-						textareaEl = postContainer.find('.write'),
-						idx = textareaEl.attr('tabindex');
-
-					submitBtns.removeAttr('tabindex');
-					mobileSubmitBtn.attr('tabindex', parseInt(idx, 10)+1);
-
-					$('.category-name-container').on('click', function() {
-						$('.category-selector').toggleClass('open');
-					});
-				}
-
-				$(window).trigger('action:composer.loaded', {
-					post_uuid: post_uuid,
-					composerData: composer.posts[post_uuid]
-				});
-
-				scrollStop.apply(postContainer.find('.write'));
-				focusElements(postContainer);
-				onShow();
 			});
-		}
+
+			resize.handleResize(postContainer);
+
+			if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+				var submitBtns = postContainer.find('.composer-submit'),
+					mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit'),
+					textareaEl = postContainer.find('.write'),
+					idx = textareaEl.attr('tabindex');
+
+				submitBtns.removeAttr('tabindex');
+				mobileSubmitBtn.attr('tabindex', parseInt(idx, 10)+1);
+
+				$('.category-name-container').on('click', function() {
+					$('.category-selector').toggleClass('open');
+				});
+			}
+
+			$(window).trigger('action:composer.loaded', {
+				post_uuid: post_uuid,
+				composerData: composer.posts[post_uuid]
+			});
+
+			scrollStop.apply(postContainer.find('.write'));
+			focusElements(postContainer);
+			onShow();
+		});
+
 	}
 
 	function mobileHistoryAppend() {
@@ -616,7 +615,7 @@ define('composer', [
 	function onShow() {
 		$('html').addClass('composing');
 	}
-	
+
 	function onHide() {
 		$('body').css({ paddingBottom: 0 });
 		$('html').removeClass('composing');
