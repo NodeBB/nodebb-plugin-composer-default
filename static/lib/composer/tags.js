@@ -12,7 +12,7 @@ define('composer/tags', function() {
 			return;
 		}
 
-		var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
+
 
 		tagEl.tagsinput({
 			maxTags: config.maximumTagsPerTopic,
@@ -36,6 +36,7 @@ define('composer/tags', function() {
 		});
 
 		tagEl.on('itemAdded', function(event) {
+			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
 			socket.emit('topics.isTagAllowed', {tag: event.item, cid: cid}, function(err, allowed) {
 				if (err || !allowed) {
 					return tagEl.tagsinput('remove', event.item);
