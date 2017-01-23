@@ -14,6 +14,9 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 			options: {
 				zIndex: 20000,
 				listPosition: function(position) {
+					// Adjust calculated position based on window scrollTop value
+					position.top -= $(window).scrollTop();
+
 					this.$el.css(this._applyPlacement(position));
 					this.$el.css('position', 'fixed');
 					return this;
