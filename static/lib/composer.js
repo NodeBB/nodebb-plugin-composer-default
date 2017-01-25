@@ -199,7 +199,7 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && topicSlug && postIndex) {
-			link = '[' + escapedTitle + '](' + config.relative_path + '/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
+			link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
