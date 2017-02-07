@@ -50,18 +50,18 @@ plugin.addAdminNavigation = function(header, callback) {
 
 plugin.addPrefetchTags = function(tags, callback) {
 	var prefetch = [
-			'/src/modules/composer.js', '/src/modules/composer/uploads.js', '/src/modules/composer/drafts.js',
-			'/src/modules/composer/tags.js', '/src/modules/composer/categoryList.js', '/src/modules/composer/resize.js',
-			'/src/modules/composer/autocomplete.js', '/templates/composer.tpl',
-			'/language/' + (meta.config.defaultLang || 'en-GB') + '/topic.json',
-			'/language/' + (meta.config.defaultLang || 'en-GB') + '/modules.json',
-			'/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
+			'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
+			'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
+			'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
+			'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/topic.json',
+			'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/modules.json',
+			'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
 		];
 
 	tags = tags.concat(prefetch.map(function(path) {
 		path = {
 			rel: 'prefetch',
-			href: nconf.get('relative_path') + path + (meta.config['cache-buster'] ? '?v=' + meta.config['cache-buster'] : '')
+			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
 		}
 		return path;
 	}));
