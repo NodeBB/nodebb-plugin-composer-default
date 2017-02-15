@@ -183,8 +183,11 @@ define('composer', [
 		}
 		var link = '';
 		if (uuid === undefined) {
-			if (title && topicSlug && postIndex) {
+			if (title && pid) {
 				link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
+				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
+			} else if (title && topicSlug && postIndex) {
+				link = '[' + escapedTitle + '](' + config.relative_path + '/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
 				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
@@ -198,8 +201,11 @@ define('composer', [
 		var postContainer = $('#cmp-uuid-' + uuid);
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
-		if (title && topicSlug && postIndex) {
+		if (title && pid) {
 			link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
+			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
+		} else if (title && topicSlug && postIndex) {
+			link = '[' + escapedTitle + '](' + config.relative_path + '/topic/' + topicSlug + '/' + (parseInt(postIndex, 10) + 1) + ')';
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
