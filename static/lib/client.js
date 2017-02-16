@@ -52,7 +52,7 @@ $(document).ready(function() {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function(composer) {
 				var topicUUID = composer.findByTid(data.tid);
-				composer.addQuote(data.tid, data.slug, data.index, data.pid, data.topicName, data.username, data.text, topicUUID);
+				composer.addQuote(data.tid, data.pid, data.selectedPid, data.topicName, data.username, data.text, topicUUID);
 			});
 		} else {
 			ajaxify.go('compose?tid=' + data.tid + '&toPid=' + data.pid + '&quoted=1&username=' + data.username);

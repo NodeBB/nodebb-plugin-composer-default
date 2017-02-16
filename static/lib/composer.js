@@ -173,7 +173,7 @@ define('composer', [
 		});
 	};
 
-	composer.addQuote = function(tid, topicSlug, postIndex, pid, title, username, text, uuid) {
+	composer.addQuote = function(tid, toPid, selectedPid, title, username, text, uuid) {
 		uuid = uuid || composer.active;
 
 		var escapedTitle = (title || '').replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1').replace(/\[/g, '&#91;').replace(/\]/g, '&#93;').replace(/%/g, '&#37;').replace(/,/g, '&#44;');
@@ -181,13 +181,12 @@ define('composer', [
 		if (text) {
 			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
 		}
-		var link = '';
+		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + (selectedPid || toPid) + ')';
 		if (uuid === undefined) {
-			if (title && topicSlug && postIndex) {
-				link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
-				composer.newReply(tid, pid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
+			if (title && (selectedPid || toPid)) {
+				composer.newReply(tid, toPid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
-				composer.newReply(tid, pid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
+				composer.newReply(tid, toPid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
 			}
 			return;
 		} else if (uuid !== composer.active) {
@@ -198,8 +197,7 @@ define('composer', [
 		var postContainer = $('#cmp-uuid-' + uuid);
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
-		if (title && topicSlug && postIndex) {
-			link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + pid + ')';
+		if (title && (selectedPid || toPid)) {
 			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
 			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
@@ -213,12 +211,12 @@ define('composer', [
 		}
 	};
 
-	composer.newReply = function(tid, pid, title, text) {
+	composer.newReply = function(tid, toPid, title, text) {
 		translator.translate(text, config.defaultLang, function(translated) {
 			push({
 				action: 'posts.reply',
 				tid: tid,
-				toPid: pid,
+				toPid: toPid,
 				title: title,
 				body: translated,
 				modified: false,
