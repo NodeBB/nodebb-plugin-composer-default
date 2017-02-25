@@ -519,7 +519,7 @@ define('composer', [
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 
 		titleEl.val(titleEl.val().trim());
-		bodyEl.val(bodyEl.val().rtrim());
+		bodyEl.val(bodyEl.val().trimRight());
 		if (thumbEl.length) {
 			thumbEl.val(thumbEl.val().trim());
 		}
