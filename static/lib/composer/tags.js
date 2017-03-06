@@ -12,8 +12,6 @@ define('composer/tags', function() {
 			return;
 		}
 
-
-
 		tagEl.tagsinput({
 			maxTags: config.maximumTagsPerTopic,
 			maxChars: config.maximumTagLength,
@@ -48,6 +46,7 @@ define('composer/tags', function() {
 		addTags(postData.tags, tagEl);
 
 		var input = postContainer.find('.bootstrap-tagsinput input');
+		toggleTagInput(postContainer, ajaxify.data.tagWhitelist);
 
 		app.loadJQueryUI(function() {
 			input.autocomplete({
@@ -85,6 +84,7 @@ define('composer/tags', function() {
 			if (tag) {
 				addTags([tag], tagEl);
 			}
+			return false;
 		});
 	};
 
@@ -94,12 +94,27 @@ define('composer/tags', function() {
 			if (!tagDropdown.length) {
 				return;
 			}
+			toggleTagInput(postContainer, data.tagWhitelist);
 			tagDropdown.toggleClass('hidden', !data.tagWhitelist.length);
 			app.parseAndTranslate('composer', 'tagWhitelist', {tagWhitelist: data.tagWhitelist}, function (html) {
 				tagDropdown.find('.dropdown-menu').html(html);
 			});
 		});
 	};
+
+	function toggleTagInput(postContainer, tagWhitelist) {
+		var input = postContainer.find('.bootstrap-tagsinput input');
+		if (!input.length) {
+			return;
+		}
+		if (tagWhitelist && tagWhitelist.length) {
+			input.attr('readonly', '');
+			input.attr('placeholder', '');
+		} else {
+			input.removeAttr('readonly');
+			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
+		}
+	}
 
 	function triggerEnter(input) {
 		// http://stackoverflow.com/a/3276819/583363
