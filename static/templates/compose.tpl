@@ -1,6 +1,20 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->"<!-- IF !disabled --> style="visibility: inherit;"<!-- ENDIF !disabled -->>
 
 	<div class="composer-container">
+		<form id="compose-form" method="post">
+			<!-- IF pid -->
+			<input type="hidden" name="pid" value="{pid}" />
+			<input type="hidden" name="thumb" value="{thumb}" />
+			<!-- ENDIF pid -->
+			<!-- IF tid -->
+			<input type="hidden" name="tid" value="{tid}" />
+			<!-- ENDIF tid -->
+			<!-- IF cid -->
+			<input type="hidden" name="cid" value="{cid}" />
+			<!-- ENDIF cid -->
+			<input type="hidden" name="_csrf" value="{config.csrf_token}" />
+		</form>
+
 		<div class="title-container row">
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
@@ -8,7 +22,7 @@
 			</div>
 			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
 				<!-- IF isTopicOrMain -->
-				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
+				<input name="title" form="compose-form" class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
 				<span class="title">[[topic:composer.replying_to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
@@ -16,14 +30,14 @@
 			<!-- ELSE -->
 			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
 				<!-- IF isTopicOrMain -->
-				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
+				<input name="title" form="compose-form" class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
 				<span class="title">[[topic:composer.replying_to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-12">
+			<div class="category-list-container col-lg-3 col-md-12 yescript">
 				<select tabindex="3" class="form-control category-list"></select>
 			</div>
 			<!-- ENDIF isTopic -->
@@ -87,7 +101,7 @@
 				<div class="btn-group pull-right action-bar">
 					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
-					<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
+					<button type="submit" form="compose-form" class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 				</div>
 			</div>
 		</div>
@@ -98,7 +112,7 @@
 					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
-				<textarea class="write" tabindex="5"></textarea>
+				<textarea name="content" form="compose-form" class="write" tabindex="5"></textarea>
 			</div>
 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
 				<div class="help-text">
