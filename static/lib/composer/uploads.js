@@ -179,7 +179,7 @@ define('composer/uploads', [
 					return false;
 				}
 
-				var blobName = 'upload-' + utils.generateUUID();
+				var blobName = utils.generateUUID() + '-' + blob.name;
 
 				var fd = null;
 				if (window.FormData) {
