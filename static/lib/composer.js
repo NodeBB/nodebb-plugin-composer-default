@@ -508,10 +508,6 @@ define('composer', [
 		}, 1);
 	}
 
-	function rtrim(str) {
-		return str.replace(/\s+$/g, '');
-	}
-
 	function post(post_uuid) {
 		var postData = composer.posts[post_uuid];
 		var postContainer = $('#cmp-uuid-' + post_uuid);
@@ -523,7 +519,7 @@ define('composer', [
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 
 		titleEl.val(titleEl.val().trim());
-		bodyEl.val(rtrim(bodyEl.val()));
+		bodyEl.val(utils.rtrim(bodyEl.val()));
 		if (thumbEl.length) {
 			thumbEl.val(thumbEl.val().trim());
 		}
