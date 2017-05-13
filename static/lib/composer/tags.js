@@ -114,6 +114,11 @@ define('composer/tags', function() {
 			input.removeAttr('readonly');
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
+		$(window).trigger('action:tag.toggleInput', {
+			postContainer: postContainer,
+			tagWhitelist: tagWhitelist,
+			tagsInput: input,
+		});
 	}
 
 	function triggerEnter(input) {
