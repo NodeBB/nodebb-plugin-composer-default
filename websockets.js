@@ -13,7 +13,7 @@ var async = require.main.require('async'),
 	Sockets = {};
 
 Sockets.push = function(socket, pid, callback) {
-	privileges.posts.can('read', pid, socket.uid, function(err, canRead) {
+	privileges.posts.can('topics:read', pid, socket.uid, function(err, canRead) {
 		if (err || !canRead) {
 			return callback(err || new Error('[[error:no-privileges]]'));
 		}

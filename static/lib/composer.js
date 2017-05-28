@@ -227,7 +227,7 @@ define('composer', [
 
 	composer.editPost = function(pid) {
 		socket.emit('plugins.composer.push', pid, function(err, threadData) {
-			if(err) {
+			if (err) {
 				return app.alertError(err.message);
 			}
 
