@@ -46,7 +46,7 @@ define('composer/tags', function() {
 		addTags(postData.tags, tagEl);
 
 		var input = postContainer.find('.bootstrap-tagsinput input');
-		toggleTagInput(postContainer, ajaxify.data.tagWhitelist);
+		toggleTagInput(postContainer, postData, ajaxify.data.tagWhitelist);
 
 		app.loadJQueryUI(function() {
 			input.autocomplete({
@@ -102,7 +102,7 @@ define('composer/tags', function() {
 		});
 	};
 
-	function toggleTagInput(postContainer, tagWhitelist) {
+	function toggleTagInput(postContainer, postData, tagWhitelist) {
 		var input = postContainer.find('.bootstrap-tagsinput input');
 		if (!input.length) {
 			return;
@@ -114,6 +114,9 @@ define('composer/tags', function() {
 			input.removeAttr('readonly');
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
+
+		postContainer.find('.tags-container').toggleClass('hidden', config.maximumTagsPerTopic === 0 && !postData.tags.length);
+
 		$(window).trigger('action:tag.toggleInput', {
 			postContainer: postContainer,
 			tagWhitelist: tagWhitelist,
