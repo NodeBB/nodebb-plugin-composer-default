@@ -277,9 +277,11 @@ define('composer', [
 			postContainer.attr('id', 'cmp-uuid-' + post_uuid);
 		}
 
-		var bodyEl = postContainer.find('textarea'),
-			draft = drafts.getDraft(postData.save_id),
-			submitBtn = postContainer.find('.composer-submit');
+		var bodyEl = postContainer.find('textarea');
+		var draft = drafts.getDraft(postData.save_id);
+		var submitBtn = postContainer.find('.composer-submit');
+
+		categoryList.init(postContainer, composer.posts[post_uuid]);
 
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
@@ -345,7 +347,6 @@ define('composer', [
 		bodyEl.val(draft ? draft : postData.body);
 		drafts.init(postContainer, postData);
 
-		categoryList.init(postContainer, composer.posts[post_uuid]);
 		handleHelp(postContainer);
 
 		focusElements(postContainer);

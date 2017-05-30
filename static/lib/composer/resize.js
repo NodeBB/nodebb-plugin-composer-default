@@ -80,6 +80,7 @@ define('composer/resize', [], function() {
 
 				setTimeout(function () {
 					$window.trigger('action:composer.resize');
+					postContainer.trigger('action:composer.resize');
 				}, 0);
 			});
 		};
