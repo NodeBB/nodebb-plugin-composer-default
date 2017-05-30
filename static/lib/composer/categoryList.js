@@ -37,7 +37,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 					var cid = category.parent.cid;
 					if (!categoryMap[cid]) {
 						categoryMap[cid] = category.parent;
-						categoryMap[cid].noPrivilege = true;
+						categoryMap[cid].disabledClass = true;
 					}
 					categoryMap[cid].children = categoryMap[cid].children || [];
 					categoryMap[cid].children.push(category);
@@ -58,7 +58,10 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 				recursive(category, categoriesData, '');
 			});
 
-			app.parseAndTranslate('partials/category-selector', { categories: categoriesData, pullRight: true }, function (html) {
+			app.parseAndTranslate('partials/category-selector', {
+				categories: categoriesData,
+				pullRight: true
+			}, function (html) {
 				listContainer.append(html);
 				categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
 					if (postData.hasOwnProperty('cid')) {
