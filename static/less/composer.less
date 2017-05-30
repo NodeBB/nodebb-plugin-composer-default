@@ -10,7 +10,7 @@
 
 .composer {
 	.no-select;
-	
+
 	z-index: 10000;
 	background: #fff;
 	visibility: hidden;
@@ -73,6 +73,12 @@
 			border: 0;
 			.box-shadow(none);
 			overflow: hidden;
+		}
+
+		.category-list-container {
+			.category-dropdown-menu {
+				max-height: 300px;
+			}
 		}
 
 		.category-list {
@@ -212,7 +218,7 @@
 	.category-selector {
 		display: block;
 		visibility: hidden;
-		
+
 		position: fixed;
 		left: 0;
 		right: 0;
@@ -350,7 +356,7 @@
 			height: 100%;
 			overflow: hidden;
 		}
-		
+
 		body {
 			padding-bottom: 0 !important;
 		}

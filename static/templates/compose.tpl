@@ -24,7 +24,7 @@
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
 			<div class="category-list-container col-lg-3 col-md-12">
-				<select tabindex="3" class="form-control category-list"></select>
+
 			</div>
 			<!-- ENDIF isTopic -->
 		</div>

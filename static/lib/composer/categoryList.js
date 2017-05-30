@@ -3,12 +3,12 @@
 
 /*globals define, socket, app*/
 
-define('composer/categoryList', function() {
+define('composer/categoryList', ['categorySelector'], function(categorySelector) {
 	var categoryList = {};
 
 	categoryList.init = function(postContainer, postData) {
-		var listEl = postContainer.find('.category-list');
-		if (!listEl.length) {
+		var listContainer = postContainer.find('.category-list-container');
+		if (!listContainer.length) {
 			return;
 		}
 
@@ -16,10 +16,10 @@ define('composer/categoryList', function() {
 			if (err) {
 				return app.alertError(err.message);
 			}
+			var categoriesData = [];
 
-			// Remove categories that are just external links
 			categories = categories.filter(function(category) {
-				return !category.link;
+				return category && !category.link;
 			});
 
 			var categoryMap = {};
@@ -40,39 +40,38 @@ define('composer/categoryList', function() {
 				}
 			});
 
-			categories.length = 0;
+			var rootCategories = [];
 			Object.keys(categoryMap).forEach(function(key) {
 				if (!categoryMap[key].parent) {
-					categories.push(categoryMap[key]);
+					rootCategories.push(categoryMap[key]);
 				}
 			});
-			categories = categories.sort(function(a, b) {
+			rootCategories = rootCategories.sort(function(a, b) {
 				return a.order - b.order;
 			});
 
-			var selectCategory = $('<option value="0"></option>');
-			selectCategory.translateText('[[modules:composer.select_category]]').appendTo(listEl);
-			categories.forEach(function(category) {
-				recursive(category, listEl, '');
+			rootCategories.forEach(function (category) {
+				recursive(category, categoriesData, '');
 			});
 
-			if (postData.cid) {
-				listEl.find('option[value="' + postData.cid + '"]').prop('selected', true);
-			} else if (postData.hasOwnProperty('cid')) {
-				postData.cid = listEl.val();
-			}
+			app.parseAndTranslate('partials/category-selector', { categories: categoriesData, pullRight: true }, function (html) {
+				listContainer.append(html);
+				categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
+					if (postData.hasOwnProperty('cid')) {
+						changeCategory(postContainer, postData, selectedCategory.cid);
+					}
 
-			$('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text() || '[[modules:composer.select_category]]');
-			$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
+					$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
+				});
+
+				if (postData.cid) {
+					categorySelector.selectCategory(postData.cid);
+				}
+				// $('.category-name').translateText(listEl.find('option[value="' + postData.cid + '"]').text() || '[[modules:composer.select_category]]');
+				// $('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
+			});
 		});
 
-		listEl.on('change', function() {
-			if (postData.hasOwnProperty('cid')) {
-				changeCategory(postContainer, postData, $(this).val());
-			}
-
-			$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
-		});
 
 		$('.category-selector').on('click', 'li', function() {
 			$('.category-name').text($(this).text());
@@ -80,11 +79,16 @@ define('composer/categoryList', function() {
 			$('.category-selector li').removeClass('active');
 			$(this).addClass('active');
 			var selectedCid = $(this).attr('data-cid');
-			$('.category-list').val(selectedCid);
+			categorySelector.selectCategory(selectedCid);
 			if (postData.hasOwnProperty('cid')) {
 				changeCategory(postContainer, postData, selectedCid);
 			}
 		});
+	};
+
+	categoryList.getSelectedCid = function () {
+		var selectedCategory = categorySelector.getSelectedCategory();
+		return selectedCategory ? selectedCategory.cid : 0;
 	};
 
 	function changeCategory(postContainer, postData, cid) {
@@ -94,19 +98,19 @@ define('composer/categoryList', function() {
 		});
 	}
 
-	function recursive(category, listEl, level) {
+	function recursive(category, categoriesData, level) {
 		if (category.link) {
 			return;
 		}
+
 		var bullet = level ? '&bull; ' : '';
-		$('<option value="' + category.cid + '" ' + (category.noPrivilege ? 'disabled' : '') + '>' + level + bullet + category.name + '</option>').appendTo(listEl);
+		category.value = category.cid;
+		category.level = level;
+		category.text = level + bullet + category.name;
+		categoriesData.push(category);
 
-		$('<li data-cid="' + category.cid + '">' + category.name + '</li>').appendTo($('.category-selector'));
-
-		category.children.sort(function(a, b) {
-			return a.order - b.order;
-		}).forEach(function(child) {
-			recursive(child, listEl, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
+		category.children.forEach(function (child) {
+			recursive(child, categoriesData, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
 		});
 	}
 
