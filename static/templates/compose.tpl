@@ -23,7 +23,7 @@
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-12">
+			<div class="category-list-container dropup col-lg-3 col-md-12">
 
 			</div>
 			<!-- ENDIF isTopic -->
