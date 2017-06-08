@@ -179,7 +179,7 @@ define('composer/uploads', [
 					return false;
 				}
 
-				var blobName = 'upload-' + utils.generateUUID();
+				var blobName = utils.generateUUID() + '-' + blob.name;
 
 				var fd = null;
 				if (window.FormData) {
@@ -202,17 +202,6 @@ define('composer/uploads', [
 
 	function escapeRegExp(text) {
 		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-	}
-
-	function maybeParse(response) {
-		if (typeof response === 'string')  {
-			try {
-				return $.parseJSON(response);
-			} catch (e) {
-				return {status: 500, message: 'Something went wrong while parsing server response'};
-			}
-		}
-		return response;
 	}
 
 	function insertText(str, index, insert) {
@@ -281,8 +270,6 @@ define('composer/uploads', [
 				},
 
 				success: function(uploads) {
-					uploads = maybeParse(uploads);
-
 					if (uploads && uploads.length) {
 						for(var i=0; i<uploads.length; ++i) {
 							updateTextArea(filenameMapping[i], uploads[i].url);
@@ -325,8 +312,6 @@ define('composer/uploads', [
 				formData: params.formData,
 				error: onUploadError,
 				success: function(uploads) {
-					uploads = maybeParse(uploads);
-
 					postContainer.find('#topic-thumb-url').val((uploads[0] || {}).url || '').trigger('change');
 				},
 				complete: function() {
@@ -340,8 +325,8 @@ define('composer/uploads', [
 	}
 
 	function onUploadError(xhr) {
-		xhr = maybeParse(xhr);
-		app.alertError(xhr.responseText);
+		var msg = (xhr.responseJSON && xhr.responseJSON.error) || '[[error:parse-error]]';
+		app.alertError(msg);
 	}
 
 	return uploads;

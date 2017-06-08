@@ -7,16 +7,19 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 	var formatting = {};
 
 	var formattingDispatchTable = {
-		'picture': function(){
-			$('#files').click();
+		picture: function () {
+			var postContainer = this;
+			postContainer.find('#files').click();
 		},
 
-		upload: function(){
-			$('#files').click();
+		upload: function () {
+			var postContainer = this;
+			postContainer.find('#files').click();
 		},
 
 		tags: function() {
-			$('.tags-container').toggleClass('hidden');
+			var postContainer = this;
+			postContainer.find('.tags-container').toggleClass('hidden');
 		},
 
 		zen: function() {

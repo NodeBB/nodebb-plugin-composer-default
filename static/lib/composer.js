@@ -227,7 +227,7 @@ define('composer', [
 
 	composer.editPost = function(pid) {
 		socket.emit('plugins.composer.push', pid, function(err, threadData) {
-			if(err) {
+			if (err) {
 				return app.alertError(err.message);
 			}
 
@@ -277,9 +277,11 @@ define('composer', [
 			postContainer.attr('id', 'cmp-uuid-' + post_uuid);
 		}
 
-		var bodyEl = postContainer.find('textarea'),
-			draft = drafts.getDraft(postData.save_id),
-			submitBtn = postContainer.find('.composer-submit');
+		var bodyEl = postContainer.find('textarea');
+		var draft = drafts.getDraft(postData.save_id);
+		var submitBtn = postContainer.find('.composer-submit');
+
+		categoryList.init(postContainer, composer.posts[post_uuid]);
 
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
@@ -346,7 +348,6 @@ define('composer', [
 		bodyEl.val(draft ? draft : postData.body);
 		drafts.init(postContainer, postData);
 
-		categoryList.init(postContainer, composer.posts[post_uuid]);
 		handleHelp(postContainer);
 
 		focusElements(postContainer);
@@ -515,12 +516,11 @@ define('composer', [
 		var handleEl = postContainer.find('.handle');
 		var titleEl = postContainer.find('.title');
 		var bodyEl = postContainer.find('textarea');
-		var categoryEl = postContainer.find('.category-list');
 		var thumbEl = postContainer.find('input#topic-thumb-url');
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 
 		titleEl.val(titleEl.val().trim());
-		bodyEl.val(bodyEl.val().rtrim());
+		bodyEl.val(utils.rtrim(bodyEl.val()));
 		if (thumbEl.length) {
 			thumbEl.val(thumbEl.val().trim());
 		}
@@ -554,7 +554,7 @@ define('composer', [
 				title: titleEl.val(),
 				content: bodyEl.val(),
 				thumb: thumbEl.val() || '',
-				cid: categoryEl.get(0).value,
+				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid)
 			};
 		} else if (action === 'posts.reply') {
