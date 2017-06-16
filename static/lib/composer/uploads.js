@@ -4,8 +4,9 @@
 
 define('composer/uploads', [
 	'composer/preview',
-	'translator'
-], function(preview, translator) {
+	'composer/categoryList',
+	'translator',
+], function(preview, categoryList, translator) {
 	var uploads = {
 		inProgress: {}
 	};
@@ -217,8 +218,7 @@ define('composer/uploads', [
 		var uploadForm = postContainer.find('#fileForm');
 		uploadForm.attr('action', config.relative_path + params.route);
 
-		var categoryList = postContainer.find('.category-list');
-		cid = categoryList.length ? categoryList.val() : cid;
+		cid = categoryList.getSelectedCid();
 
 		var filenameMapping = [];
 
