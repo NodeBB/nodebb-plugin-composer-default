@@ -46,7 +46,7 @@ define('composer/tags', function() {
 		addTags(postData.tags, tagEl);
 
 		var input = postContainer.find('.bootstrap-tagsinput input');
-		toggleTagInput(postContainer, postData, ajaxify.data.tagWhitelist);
+		toggleTagInput(postContainer, postData, ajaxify.data);
 
 		app.loadJQueryUI(function() {
 			input.autocomplete({
@@ -88,13 +88,14 @@ define('composer/tags', function() {
 		});
 	};
 
-	tags.updateWhitelist = function (postContainer, cid) {
+	tags.onChangeCategory = function (postContainer, postData, cid) {
 		$.get('/api/category/' + cid, function (data) {
 			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
 			if (!tagDropdown.length) {
 				return;
 			}
-			toggleTagInput(postContainer, data.tagWhitelist);
+
+			toggleTagInput(postContainer, postData, data);
 			tagDropdown.toggleClass('hidden', !data.tagWhitelist.length);
 			app.parseAndTranslate('composer', 'tagWhitelist', {tagWhitelist: data.tagWhitelist}, function (html) {
 				tagDropdown.find('.dropdown-menu').html(html);
@@ -102,12 +103,12 @@ define('composer/tags', function() {
 		});
 	};
 
-	function toggleTagInput(postContainer, postData, tagWhitelist) {
+	function toggleTagInput(postContainer, postData, data) {
 		var input = postContainer.find('.bootstrap-tagsinput input');
 		if (!input.length) {
 			return;
 		}
-		if (tagWhitelist && tagWhitelist.length) {
+		if (data.tagWhitelist && data.tagWhitelist.length) {
 			input.attr('readonly', '');
 			input.attr('placeholder', '');
 		} else {
@@ -115,11 +116,15 @@ define('composer/tags', function() {
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
 
-		postContainer.find('.tags-container').toggleClass('hidden', config.maximumTagsPerTopic === 0 && !postData.tags.length);
+		postContainer.find('.tags-container').toggleClass('hidden', !data.privileges['topics:tag'] || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
+
+		if (!data.privileges['topics:tag']) {
+			postContainer.find('.tags').tagsinput('removeAll');
+		}
 
 		$(window).trigger('action:tag.toggleInput', {
 			postContainer: postContainer,
-			tagWhitelist: tagWhitelist,
+			tagWhitelist: data.tagWhitelist,
 			tagsInput: input,
 		});
 	}

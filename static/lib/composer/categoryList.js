@@ -110,7 +110,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 	function changeCategory(postContainer, postData, cid) {
 		postData.cid = cid;
 		require(['composer/tags'], function (tags) {
-			tags.updateWhitelist(postContainer, cid);
+			tags.onChangeCategory(postContainer, postData, cid);
 		});
 	}
 
