@@ -116,9 +116,9 @@ define('composer/tags', function() {
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
 
-		postContainer.find('.tags-container').toggleClass('hidden', !data.privileges['topics:tag'] || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
+		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
 
-		if (!data.privileges['topics:tag']) {
+		if (data.privileges && !data.privileges['topics:tag']) {
 			postContainer.find('.tags').tagsinput('removeAll');
 		}
 
