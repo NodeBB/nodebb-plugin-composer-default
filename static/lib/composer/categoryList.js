@@ -75,7 +75,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 					categorySelector.selectCategory(postData.cid);
 				}
 
-				var selectedCategory  = categorySelector.getSelectedCategory();
+				var selectedCategory = categorySelector.getSelectedCategory();
 
 				$('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
 				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');

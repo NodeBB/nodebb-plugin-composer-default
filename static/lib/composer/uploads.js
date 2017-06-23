@@ -219,6 +219,9 @@ define('composer/uploads', [
 		uploadForm.attr('action', config.relative_path + params.route);
 
 		cid = categoryList.getSelectedCid();
+		if (!cid && ajaxify.data.cid) {
+			cid = ajaxify.data.cid;
+		}
 
 		var filenameMapping = [];
 
