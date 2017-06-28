@@ -459,6 +459,11 @@ define('composer', [
 		var path = 'compose?p=' + window.location.pathname,
 			returnPath = window.location.pathname.slice(1);
 
+		// Remove relative path from returnPath
+		if (returnPath.startsWith(config.relative_path.slice(1))) {
+			returnPath = returnPath.slice(config.relative_path.length);
+		}
+
 		// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
 		window.history.replaceState({
 			url: null,
