@@ -37,7 +37,7 @@
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-12 yescript">
+			<div class="category-list-container col-lg-3 col-md-12">
 
 			</div>
 			<!-- ENDIF isTopic -->
