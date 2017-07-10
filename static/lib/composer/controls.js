@@ -43,6 +43,8 @@ define('composer/controls', function() {
 			matches[3] +
 			currentVal.slice(textarea.selectionEnd)
 		);
+
+		return [matches[1].length, matches[3].length];
 	};
 
 	controls.updateTextareaSelection = function(textarea, start, end){
