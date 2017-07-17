@@ -204,6 +204,7 @@ plugin.build = function(data, callback) {
 					allowTopicsThumbnail: meta.config.allowTopicsThumbnail && data.isMain,
 
 					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
+					thumb: data.topicData ? data.topicData.thumb : '',
 					body: body,
 
 					isMain: data.isMain,
