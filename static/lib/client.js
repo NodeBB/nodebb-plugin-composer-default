@@ -3,6 +3,48 @@
 /* globals config, ajaxify */
 
 $(document).ready(function() {
+	// Load drafts if they were open
+	try {
+		var open = localStorage.getItem('drafts:open');
+		open = JSON.parse(open);
+	} catch (e) {
+		console.warn('[composer/drafts] Could not read list of open drafts');
+		open = [];
+	}
+
+	if (open.length) {
+		require(['composer', 'composer/drafts'], function (composer, drafts) {
+			// Deconstruct each save_id and open up composer
+			open.forEach(function (save_id) {
+				var saveObj = save_id.split(':');
+				var uid = saveObj[1];
+				var type = saveObj[2];
+				var id = saveObj[3];
+				var content = drafts.getDraft(save_id);
+
+				if (!content || !content.length) {
+					// Empty content, remove from list of open drafts
+					drafts.updateVisibility(save_id);
+					return;
+				}
+
+				if (type === 'cid') {
+					composer.newTopic({
+						cid: id,
+						title: '',
+						body: content,
+						tags: [],
+					});
+				} else if (type === 'tid') {
+					socket.emit('topics.getTopic', id, function (err, topicObj) {
+						composer.newReply(id, undefined, topicObj.title, content);
+					});
+				} else if (type === 'pid') {
+					composer.editPost(id);
+				}
+			});
+		});
+	}
 
 	$(window).on('action:composer.topic.new', function(ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
