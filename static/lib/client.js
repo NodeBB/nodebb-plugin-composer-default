@@ -6,7 +6,7 @@ $(document).ready(function() {
 	// Load drafts if they were open
 	try {
 		var open = localStorage.getItem('drafts:open');
-		open = JSON.parse(open);
+		open = JSON.parse(open) || [];
 	} catch (e) {
 		console.warn('[composer/drafts] Could not read list of open drafts');
 		open = [];
