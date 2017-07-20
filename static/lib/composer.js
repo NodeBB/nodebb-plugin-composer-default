@@ -310,7 +310,8 @@ define('composer', [
 			composer.posts[post_uuid].modified = true;
 		});
 
-		submitBtn.on('click', function() {
+		submitBtn.on('click', function(e) {
+			e.preventDefault();
 			$(this).attr('disabled', true);
 			post(post_uuid);
 		});
