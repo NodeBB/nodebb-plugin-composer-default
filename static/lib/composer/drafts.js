@@ -9,7 +9,6 @@ define('composer/drafts', function() {
 	var saving = false;
 
 	drafts.init = function(postContainer, postData) {
-
 		var bodyEl = postContainer.find('textarea');
 		bodyEl.on('keyup', function() {
 			resetTimeout();
@@ -46,7 +45,31 @@ define('composer/drafts', function() {
 
 	drafts.removeDraft = function(save_id) {
 		resetTimeout();
+		drafts.updateVisibility(save_id);	// Remove save_id from list of open drafts
 		return localStorage.removeItem(save_id);
+	};
+
+	drafts.updateVisibility =  function (save_id, add) {
+		if (!canSave()) {
+			return;
+		}
+
+		try {
+			var open = localStorage.getItem('drafts:open');
+			open = open ? JSON.parse(open) : [];
+		} catch (e) {
+			console.warn('[composer/drafts] Could not read list of open drafts');
+			var open = [];
+		}
+		var idx = open.indexOf(save_id);
+
+		if (add && idx === -1) {
+			open.push(save_id);
+		} else if (!add && idx !== -1) {
+			open.splice(idx, 1);
+		}	// otherwise do nothing
+
+		localStorage.setItem('drafts:open', JSON.stringify(open));
 	};
 
 	function canSave() {
