@@ -12,7 +12,7 @@ $(document).ready(function() {
 		open = [];
 	}
 
-	if (open.length) {
+	if (open.length && app.user && app.user.uid !== 0) {
 		require(['composer', 'composer/drafts'], function (composer, drafts) {
 			// Deconstruct each save_id and open up composer
 			open.forEach(function (save_id) {
@@ -22,7 +22,7 @@ $(document).ready(function() {
 				var id = saveObj[3];
 				var content = drafts.getDraft(save_id);
 
-				if (!content || !content.length) {
+				if (!content || !content.length || parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
 					// Empty content, remove from list of open drafts
 					drafts.updateVisibility(save_id);
 					return;
