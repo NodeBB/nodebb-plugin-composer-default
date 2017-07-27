@@ -48,7 +48,7 @@ plugin.addAdminNavigation = function(header, callback) {
 	callback(null, header);
 };
 
-plugin.addPrefetchTags = function(tags, callback) {
+plugin.addPrefetchTags = function(data, callback) {
 	var prefetch = [
 			'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
 			'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
@@ -58,7 +58,7 @@ plugin.addPrefetchTags = function(tags, callback) {
 			'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
 		];
 
-	tags = tags.concat(prefetch.map(function(path) {
+	data.links = data.links.concat(prefetch.map(function(path) {
 		path = {
 			rel: 'prefetch',
 			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
@@ -66,7 +66,7 @@ plugin.addPrefetchTags = function(tags, callback) {
 		return path;
 	}));
 
-	callback(null, tags);
+	callback(null, data);
 };
 
 plugin.getFormattingOptions = function(callback) {
