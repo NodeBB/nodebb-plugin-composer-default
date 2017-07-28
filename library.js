@@ -58,7 +58,7 @@ plugin.addPrefetchTags = function(hookData, callback) {
 		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
 	];
 
-	hookData.defaultLinks = hookData.defaultLinks.concat(prefetch.map(function(path) {
+	hookData.links = hookData.links.concat(prefetch.map(function(path) {
 		return {
 			rel: 'prefetch',
 			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
