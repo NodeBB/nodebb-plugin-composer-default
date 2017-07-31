@@ -76,8 +76,15 @@
 		}
 
 		.category-list-container {
-			.category-dropdown-menu {
-				max-height: 300px;
+			
+			[component="category-selector"] {
+				float: right !important;
+
+				.category-dropdown-menu {
+					max-height: 300px;
+					right: 0;
+					left: auto;
+				}
 			}
 		}
 
