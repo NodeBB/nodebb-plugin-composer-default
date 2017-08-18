@@ -132,7 +132,8 @@ define('composer', [
 		}
 
 		// Post is opened, save to list of opened drafts
-		drafts.updateVisibility(post.save_id, true);
+		drafts.updateVisibility('available', post.save_id, true);
+		drafts.updateVisibility('open', post.save_id, true);
 
 		composer.posts[uuid] = post;
 		composer.load(uuid);

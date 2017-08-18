@@ -45,17 +45,21 @@ define('composer/drafts', function() {
 
 	drafts.removeDraft = function(save_id) {
 		resetTimeout();
-		drafts.updateVisibility(save_id);	// Remove save_id from list of open drafts
+
+		// Remove save_id from list of open and available drafts
+		drafts.updateVisibility('available', save_id);
+		drafts.updateVisibility('open', save_id);
+
 		return localStorage.removeItem(save_id);
 	};
 
-	drafts.updateVisibility =  function (save_id, add) {
+	drafts.updateVisibility =  function (set, save_id, add) {
 		if (!canSave()) {
 			return;
 		}
 
 		try {
-			var open = localStorage.getItem('drafts:open');
+			var open = localStorage.getItem('drafts:' + set);
 			open = open ? JSON.parse(open) : [];
 		} catch (e) {
 			console.warn('[composer/drafts] Could not read list of open drafts');
@@ -69,7 +73,7 @@ define('composer/drafts', function() {
 			open.splice(idx, 1);
 		}	// otherwise do nothing
 
-		localStorage.setItem('drafts:open', JSON.stringify(open));
+		localStorage.setItem('drafts:' + set, JSON.stringify(open));
 	};
 
 	function canSave() {
