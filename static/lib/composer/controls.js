@@ -2,7 +2,7 @@
 
 /*global define*/
 
-define('composer/controls', function() {
+define('composer/controls', ['composer/preview'], function(preview) {
 	var controls = {};
 
 	/*************************************************/
@@ -11,12 +11,15 @@ define('composer/controls', function() {
 	controls.insertIntoTextarea = function(textarea, value) {
 		var $textarea = $(textarea);
 		var currentVal = $textarea.val();
+		var postContainer = $textarea.parents('[component="composer"]');
 
 		$textarea.val(
 			currentVal.slice(0, textarea.selectionStart) +
 			value +
 			currentVal.slice(textarea.selectionStart)
 		);
+
+		preview.render(postContainer);
 	};
 
 	controls.wrapSelectionInTextareaWith = function(textarea, leading, trailing){
