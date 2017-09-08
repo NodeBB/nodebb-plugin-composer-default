@@ -132,7 +132,8 @@ define('composer', [
 		}
 
 		// Post is opened, save to list of opened drafts
-		drafts.updateVisibility(post.save_id, true);
+		drafts.updateVisibility('available', post.save_id, true);
+		drafts.updateVisibility('open', post.save_id, true);
 
 		composer.posts[uuid] = post;
 		composer.load(uuid);
@@ -598,21 +599,25 @@ define('composer', [
 			discard(post_uuid);
 			drafts.removeDraft(postData.save_id);
 
-			if (action === 'topics.post') {
-				ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
-			} else if (action === 'posts.reply') {
-				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-					window.history.back();
-				} else if (ajaxify.data.template.topic) {
-					if (parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)) {
+			if (data.queued) {
+				app.alertSuccess(data.message);
+			} else {
+				if (action === 'topics.post') {
+					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
+				} else if (action === 'posts.reply') {
+					if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+						window.history.back();
+					} else if (ajaxify.data.template.topic) {
+						if (parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)) {
+							ajaxify.go('post/' + data.pid);
+						}
+						// else, we're in the same topic, no nav required
+					} else {
 						ajaxify.go('post/' + data.pid);
 					}
-					// else, we're in the same topic, no nav required
 				} else {
-					ajaxify.go('post/' + data.pid);
+					removeComposerHistory();
 				}
-			} else {
-				removeComposerHistory();
 			}
 
 			$(window).trigger('action:composer.' + action, { composerData: composerData, data: data });

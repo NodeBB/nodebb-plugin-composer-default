@@ -5,26 +5,35 @@
 $(document).ready(function() {
 	// Load drafts if they were open
 	try {
+		var available = localStorage.getItem('drafts:available');
 		var open = localStorage.getItem('drafts:open');
+		available = JSON.parse(available) || [];
 		open = JSON.parse(open) || [];
 	} catch (e) {
-		console.warn('[composer/drafts] Could not read list of open drafts');
+		console.warn('[composer/drafts] Could not read list of open/available drafts');
+		available = [];
 		open = [];
 	}
 
-	if (open.length && app.user && app.user.uid !== 0) {
+	if (available.length && app.user && app.user.uid !== 0) {
 		require(['composer', 'composer/drafts'], function (composer, drafts) {
 			// Deconstruct each save_id and open up composer
-			open.forEach(function (save_id) {
+			available.forEach(function (save_id) {
 				var saveObj = save_id.split(':');
 				var uid = saveObj[1];
 				var type = saveObj[2];
 				var id = saveObj[3];
 				var content = drafts.getDraft(save_id);
 
+				// If draft is already open, do nothing
+				if (open.indexOf(save_id) !== -1) {
+					return;
+				}
+
 				if (!content || !content.length || parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
 					// Empty content, remove from list of open drafts
-					drafts.updateVisibility(save_id);
+					drafts.updateVisibility('available', save_id);
+					drafts.updateVisibility('open', save_id);
 					return;
 				}
 
@@ -45,6 +54,23 @@ $(document).ready(function() {
 			});
 		});
 	}
+
+	require(['composer/drafts'], function (drafts) {
+		$(window).on('unload', function (e) {
+			// Update visibility on all open composers
+			try {
+				var open = localStorage.getItem('drafts:open');
+				open = JSON.parse(open) || [];
+			} catch (e) {
+				console.warn('[composer/drafts] Could not read list of open/available drafts');
+				open = [];
+			}
+
+			open.forEach(function (save_id) {
+				drafts.updateVisibility('open', save_id);
+			});
+		});
+	});
 
 	$(window).on('action:composer.topic.new', function(ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
