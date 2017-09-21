@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals define, socket, app, config, ajaxify, utils, templates, bootbox, screenfull */
+/* globals define, socket, app, config, ajaxify, utils, bootbox, screenfull */
 
 define('composer', [
 	'taskbar',
@@ -482,8 +482,10 @@ define('composer', [
 	}
 
 	function parseAndTranslate(template, data, callback) {
-		templates.parse(template, data, function(composerTemplate) {
-			translator.translate(composerTemplate, callback);
+		require(['benchpress'], function(benchpress) {
+			benchpress.parse(template, data, function(composerTemplate) {
+				translator.translate(composerTemplate, callback);
+			});
 		});
 	}
 
