@@ -400,7 +400,7 @@ define('composer', [
 			mobileHistoryAppend();
 		}
 
-		parseAndTranslate('composer', data, function(composerTemplate) {
+		app.parseAndTranslate('composer', data, function(composerTemplate) {
 			if ($('#cmp-uuid-' + post_uuid).length) {
 				return;
 			}
@@ -479,14 +479,6 @@ define('composer', [
 		window.history.pushState({
 			url: path
 		}, path, config.relative_path + '/' + path);
-	}
-
-	function parseAndTranslate(template, data, callback) {
-		require(['benchpress'], function(benchpress) {
-			benchpress.parse(template, data, function(composerTemplate) {
-				translator.translate(composerTemplate, callback);
-			});
-		});
 	}
 
 	function handleHelp(postContainer) {
