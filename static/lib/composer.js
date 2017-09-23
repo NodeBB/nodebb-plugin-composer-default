@@ -314,7 +314,7 @@ define('composer', [
 		
 		postContainer.keypress(function (event) {                                 
 			var keyCode = (event.which ? event.which : event.keyCode);
-			if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
+			if ((keyCode === 10 || keyCode == 13) && event.ctrlKey) {
 				submitBtn.attr('disabled', true);
 				post(post_uuid);
 				return false;
