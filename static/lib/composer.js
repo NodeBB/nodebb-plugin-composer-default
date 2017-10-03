@@ -313,6 +313,8 @@ define('composer', [
 
 		submitBtn.on('click', function(e) {
 			e.preventDefault();
+			e.stopPropagation();	// Other click events bring composer back to active state which is undesired on submit
+
 			$(this).attr('disabled', true);
 			post(post_uuid);
 		});
@@ -589,6 +591,13 @@ define('composer', [
 		}
 
 		$(window).trigger('action:composer.submit', {composerEl: postContainer, action: action, composerData: composerData});
+
+		// Minimize composer (and set textarea as readonly) while submitting
+		var taskbarIconEl = $('#taskbar [data-uuid="' + post_uuid + '"] i');
+		var textareaEl = postContainer.find('.write');
+		taskbarIconEl.removeClass('fa-plus').addClass('fa-circle-o-notch fa-spin');
+		composer.minimize(post_uuid);
+		textareaEl.prop('readonly', true);
 
 		socket.emit(action, composerData, function (err, data) {
 			postContainer.find('.composer-submit').removeAttr('disabled');
