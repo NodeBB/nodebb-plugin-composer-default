@@ -178,7 +178,7 @@ define('composer', [
 		
 		$(window).trigger('filter:composer.topic.push', {
 			data: data,
-			pushData: postData
+			pushData: pushData
 		});
 
 		push(pushData);
