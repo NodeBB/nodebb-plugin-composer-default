@@ -166,7 +166,7 @@ define('composer', [
 	};
 
 	composer.newTopic = function(data) {
-		push({
+		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
 			title: data.title || '',
@@ -174,7 +174,14 @@ define('composer', [
 			tags: data.tags || [],
 			modified: false,
 			isMain: true
+		};
+		
+		$(window).trigger('filter:composer.topic.push', {
+			data: data,
+			pushData: postData
 		});
+
+		push(pushData);
 	};
 
 	composer.addQuote = function(tid, toPid, selectedPid, title, username, text, uuid) {
@@ -411,6 +418,11 @@ define('composer', [
 		if (data.mobile) {
 			mobileHistoryAppend();
 		}
+		
+		$(window).trigger('filter:composer.create', {
+			postData: postData,
+			createData: data
+		});
 
 		app.parseAndTranslate('composer', data, function(composerTemplate) {
 			if ($('#cmp-uuid-' + post_uuid).length) {
@@ -590,7 +602,7 @@ define('composer', [
 			};
 		}
 
-		$(window).trigger('action:composer.submit', {composerEl: postContainer, action: action, composerData: composerData});
+		$(window).trigger('action:composer.submit', {composerEl: postContainer, action: action, composerData: composerData, postData: postData});
 
 		// Minimize composer (and set textarea as readonly) while submitting
 		var taskbarIconEl = $('#taskbar [data-uuid="' + post_uuid + '"] i');
