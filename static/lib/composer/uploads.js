@@ -275,7 +275,7 @@ define('composer/uploads', [
 				success: function(uploads) {
 					if (uploads && uploads.length) {
 						for(var i=0; i<uploads.length; ++i) {
-							updateTextArea(filenameMapping[i], uploads[i].url.replace(/\s+/g, '%20'));
+							updateTextArea(filenameMapping[i], uploads[i].url);
 						}
 					}
 					preview.render(postContainer);
