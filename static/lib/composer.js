@@ -175,7 +175,7 @@ define('composer', [
 			modified: false,
 			isMain: true
 		};
-		
+
 		$(window).trigger('filter:composer.topic.push', {
 			data: data,
 			pushData: pushData
@@ -325,8 +325,8 @@ define('composer', [
 			$(this).attr('disabled', true);
 			post(post_uuid);
 		});
-		
-		postContainer.keypress(function (event) {                                 
+
+		postContainer.keypress(function (event) {
 			var keyCode = (event.which ? event.which : event.keyCode);
 			if ((keyCode === 10 || keyCode == 13) && event.ctrlKey) {
 				submitBtn.attr('disabled', true);
@@ -418,7 +418,7 @@ define('composer', [
 		if (data.mobile) {
 			mobileHistoryAppend();
 		}
-		
+
 		$(window).trigger('filter:composer.create', {
 			postData: postData,
 			createData: data
@@ -625,7 +625,7 @@ define('composer', [
 			drafts.removeDraft(postData.save_id);
 
 			if (data.queued) {
-				app.alertSuccess(data.message);
+				bootbox.alert(data.message);
 			} else {
 				if (action === 'topics.post') {
 					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
