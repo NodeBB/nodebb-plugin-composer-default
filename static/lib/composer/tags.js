@@ -52,6 +52,7 @@ define('composer/tags', function() {
 			input.autocomplete({
 				delay: 100,
 				position: { my: "left bottom", at: "left top", collision: "flip" },
+				appendTo: postContainer.find('.bootstrap-tagsinput'),
 				open: function() {
 					$(this).autocomplete('widget').css('z-index', 20000);
 				},
