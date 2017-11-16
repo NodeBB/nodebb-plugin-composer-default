@@ -35,8 +35,11 @@ define('composer/tags', function() {
 
 		tagEl.on('itemAdded', function(event) {
 			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
-			socket.emit('topics.isTagAllowed', {tag: event.item, cid: cid}, function(err, allowed) {
-				if (err || !allowed) {
+			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid }, function(err, allowed) {
+				if (err) {
+					return app.alertError(err.message);
+				}
+				if (!allowed) {
 					return tagEl.tagsinput('remove', event.item);
 				}
 				$(window).trigger('action:tag.added', {cid: cid, tagEl: tagEl, tag: event.item});
@@ -98,13 +101,14 @@ define('composer/tags', function() {
 
 			toggleTagInput(postContainer, postData, data);
 			tagDropdown.toggleClass('hidden', !data.tagWhitelist.length);
-			app.parseAndTranslate('composer', 'tagWhitelist', {tagWhitelist: data.tagWhitelist}, function (html) {
+			app.parseAndTranslate('composer', 'tagWhitelist', { tagWhitelist: data.tagWhitelist }, function (html) {
 				tagDropdown.find('.dropdown-menu').html(html);
 			});
 		});
 	};
 
 	function toggleTagInput(postContainer, postData, data) {
+		var tagEl = postContainer.find('.tags');
 		var input = postContainer.find('.bootstrap-tagsinput input');
 		if (!input.length) {
 			return;
@@ -112,6 +116,12 @@ define('composer/tags', function() {
 		if (data.tagWhitelist && data.tagWhitelist.length) {
 			input.attr('readonly', '');
 			input.attr('placeholder', '');
+
+			tagEl.tagsinput('items').slice().forEach(function (tag) {
+				if (data.tagWhitelist.indexOf(tag) === -1) {
+					tagEl.tagsinput('remove', tag);
+				}
+			});
 		} else {
 			input.removeAttr('readonly');
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
@@ -120,7 +130,7 @@ define('composer/tags', function() {
 		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
 
 		if (data.privileges && !data.privileges['topics:tag']) {
-			postContainer.find('.tags').tagsinput('removeAll');
+			tagEl.tagsinput('removeAll');
 		}
 
 		$(window).trigger('action:tag.toggleInput', {
