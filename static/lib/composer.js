@@ -306,7 +306,7 @@ define('composer', [
 			postContainer.find('#files.lt-ie9').removeClass('hide');
 		}
 
-		uploads.initialize(post_uuid, ajaxify.data.cid);
+		uploads.initialize(post_uuid);
 
 		if (config.allowTopicsThumbnail && postData.isMain) {
 			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].thumb || '');
