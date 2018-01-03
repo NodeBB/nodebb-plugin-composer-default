@@ -412,7 +412,8 @@ define('composer', [
 			showHandleInput:  config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
-			tagWhitelist: ajaxify.data.tagWhitelist
+			tagWhitelist: ajaxify.data.tagWhitelist,
+			privileges: app.user.privileges,
 		};
 
 		if (data.mobile) {
