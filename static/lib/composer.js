@@ -36,14 +36,14 @@ define('composer', [
 
 		if (composer.active && (env === 'xs' || env ==='sm')) {
 			if (!composer.posts[composer.active].modified) {
-				discard(composer.active);
+				composer.discard(composer.active);
 				return;
 			}
 
 			translator.translate('[[modules:composer.discard]]', function(translated) {
 				bootbox.confirm(translated, function(confirm) {
 					if (confirm) {
-						discard(composer.active);
+						composer.discard(composer.active);
 					}
 				});
 			});
@@ -341,15 +341,15 @@ define('composer', [
 
 			if (!composer.posts[post_uuid].modified) {
 				removeComposerHistory();
-				discard(post_uuid);
-				return;
+				return composer.discard(post_uuid);
 			}
+
 			var btn = $(this).prop('disabled', true);
 			translator.translate('[[modules:composer.discard]]', function(translated) {
 				bootbox.confirm(translated, function(confirm) {
 					if (confirm) {
 						removeComposerHistory();
-						discard(post_uuid);
+						composer.discard(post_uuid);
 					}
 					btn.prop('disabled', false);
 				});
@@ -622,7 +622,7 @@ define('composer', [
 				return app.alertError(err.message);
 			}
 
-			discard(post_uuid);
+			composer.discard(post_uuid);
 			drafts.removeDraft(postData.save_id);
 
 			if (data.queued) {
@@ -659,7 +659,7 @@ define('composer', [
 		$('html').removeClass('composing');
 	}
 
-	function discard(post_uuid) {
+	composer.discard = function(post_uuid) {
 		if (composer.posts[post_uuid]) {
 			$('#cmp-uuid-' + post_uuid).remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
@@ -672,7 +672,7 @@ define('composer', [
 			$(window).trigger('action:composer.discard');
 		}
 		onHide();
-	}
+	};
 
 	composer.minimize = function(post_uuid) {
 		var postContainer = $('#cmp-uuid-' + post_uuid);
