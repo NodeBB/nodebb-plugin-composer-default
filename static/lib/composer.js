@@ -312,6 +312,8 @@ define('composer', [
 			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].thumb || '');
 		}
 
+		tags.init(postContainer, composer.posts[post_uuid]);
+
 		autocomplete.init(postContainer);
 
 		postContainer.on('change', 'input, textarea', function() {
@@ -446,8 +448,6 @@ define('composer', [
 
 				Eventually, stuff after this line should be moved into composer.enhance().
 			*/
-
-			tags.init(postContainer, composer.posts[post_uuid]);
 
 			activate(post_uuid);
 
