@@ -382,7 +382,9 @@ define('composer', [
 			$('[data-format="zen"]').addClass('hidden');
 		}
 
-		$(window).trigger('action:composer.enhanced');
+		$(window).trigger('action:composer.enhanced', {
+			postContainer: postContainer
+		});
 	};
 
 	function createNewComposer(post_uuid) {
