@@ -211,7 +211,7 @@ plugin.build = function(data, callback) {
 					discardRoute: discardRoute,
 
 					resizable: false,
-					allowTopicsThumbnail: meta.config.allowTopicsThumbnail && data.isMain,
+					allowTopicsThumbnail: parseInt(meta.config.allowTopicsThumbnail, 10) === 1 && data.isMain,
 
 					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
 					thumb: data.topicData ? data.topicData.thumb : '',
@@ -224,7 +224,7 @@ plugin.build = function(data, callback) {
 					tagWhitelist: data.tagWhitelist,
 					isTopic: !!req.query.cid,
 					isEditing: isEditing,
-					showHandleInput: meta.config.allowGuestHandles && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
+					showHandleInput: parseInt(meta.config.allowGuestHandles, 10) === 1 && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
 					handle: data.postData ? data.postData.handle || '' : undefined,
 					formatting: data.formatting,
 					isAdminOrMod: data.isAdmin || data.isMod,
