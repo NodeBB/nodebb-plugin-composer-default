@@ -8,21 +8,30 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 
 	autocomplete.init = function(postContainer) {
 		var element = postContainer.find('.write');
+		var dropdownClass = 'composer-autocomplete-dropdown-' + utils.generateUUID();
+		var timer;
+
 		var data = {
 			element: element,
 			strategies: [],
 			options: {
 				zIndex: 20000,
-				listPosition: function(position) {
-					// Adjust calculated position based on window scrollTop value
-					position.top -= $(window).scrollTop();
-
-					this.$el.css(this._applyPlacement(position));
-					this.$el.css('position', 'fixed');
-					return this;
-				}
+				dropdownClassName: dropdownClass + ' dropdown-menu textcomplete-dropdown',
 			}
 		};
+
+		element.on('keyup', function () {
+			clearTimeout(timer);
+			timer = setTimeout(function () {
+				var dropdown = document.querySelector('.' + dropdownClass);
+				var pos = dropdown.getBoundingClientRect();
+
+				var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
+
+				var offset = window.innerHeight + margin - 10 - pos.bottom;
+				dropdown.style.marginTop = Math.min(offset, 0) + 'px';
+			}, 0);
+		});
 
 		$(window).trigger('composer:autocomplete:init', data);
 		data.element.textcomplete(data.strategies, data.options);
