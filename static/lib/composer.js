@@ -314,7 +314,7 @@ define('composer', [
 
 		tags.init(postContainer, composer.posts[post_uuid]);
 
-		autocomplete.init(postContainer);
+		autocomplete.init(postContainer, post_uuid);
 
 		postContainer.on('change', 'input, textarea', function() {
 			composer.posts[post_uuid].modified = true;
@@ -663,7 +663,9 @@ define('composer', [
 
 	composer.discard = function(post_uuid) {
 		if (composer.posts[post_uuid]) {
-			$('#cmp-uuid-' + post_uuid).remove();
+			var postContainer = $('#cmp-uuid-' + post_uuid);
+			postContainer.find('.write').textcomplete('destroy');
+			postContainer.remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
 
 			delete composer.posts[post_uuid];

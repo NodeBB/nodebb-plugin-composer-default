@@ -6,9 +6,9 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 
 	var autocomplete = {};
 
-	autocomplete.init = function(postContainer) {
+	autocomplete.init = function(postContainer, post_uuid) {
 		var element = postContainer.find('.write');
-		var dropdownClass = 'composer-autocomplete-dropdown-' + utils.generateUUID();
+		var dropdownClass = 'composer-autocomplete-dropdown-' + post_uuid;
 		var timer;
 
 		var data = {
