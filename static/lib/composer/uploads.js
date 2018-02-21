@@ -237,7 +237,7 @@ define('composer/uploads', [
 
 			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
 		}
-
+		postContainer.find('[data-action="post"]').prop('disabled', true);
 		textarea.val(text);
 
 		uploadForm.off('submit').submit(function() {
@@ -263,7 +263,10 @@ define('composer/uploads', [
 				formData: params.formData,
 				data: { cid: cid },
 
-				error: onUploadError,
+				error: function (xhr) {
+					postContainer.find('[data-action="post"]').prop('disabled', false);
+					onUploadError(xhr);
+				},
 
 				uploadProgress: function(event, position, total, percent) {
 					translator.translate('[[modules:composer.uploading, ' + percent + '%]]', function(translated) {
@@ -285,6 +288,7 @@ define('composer/uploads', [
 					}
 					preview.render(postContainer);
 					textarea.focus();
+					postContainer.find('[data-action="post"]').prop('disabled', false);
 				},
 
 				complete: function() {
