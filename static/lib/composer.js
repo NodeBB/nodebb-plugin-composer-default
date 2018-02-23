@@ -435,6 +435,10 @@ define('composer', [
 			}
 			composerTemplate = $(composerTemplate);
 
+			composerTemplate.find('.title').each(function () {
+				$(this).text(translator.unescape($(this).text()));
+			});
+
 			composerTemplate.attr('id', 'cmp-uuid-' + post_uuid);
 
 			$(document.body).append(composerTemplate);
