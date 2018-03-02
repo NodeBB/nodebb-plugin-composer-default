@@ -124,7 +124,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 		category.level = level;
 		category.text = level + bullet + category.name;
 		categoriesData.push(category);
-		$('<li data-cid="' + category.cid + '">' + category.name + '</li>').appendTo($('.category-selector'));
+		$('<li data-cid="' + category.cid + '">' + category.name + '</li>').translateText(category.name).appendTo($('.category-selector'));
 		category.children.forEach(function (child) {
 			recursive(child, categoriesData, '&nbsp;&nbsp;&nbsp;&nbsp;' + level);
 		});
