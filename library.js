@@ -6,6 +6,7 @@ var categories = module.parent.require('./categories');
 var posts = module.parent.require('./posts');
 var user = module.parent.require('./user');
 var meta = module.parent.require('./meta');
+var privileges = module.parent.require('./privileges');
 var translator = module.parent.require('../public/src/modules/translator');
 var helpers = module.parent.require('./controllers/helpers');
 var SocketPlugins = require.main.require('./src/socket.io/plugins');
@@ -140,6 +141,9 @@ plugin.build = function(data, callback) {
 		tagWhitelist: function(next) {
 			getTagWhitelist(req.query, next);
 		},
+		privileges: function (next) {
+			privileges.global.get(uid, next);
+		}
 	}, function(err, data) {
 		if (err) {
 			return callback(err);
@@ -228,7 +232,8 @@ plugin.build = function(data, callback) {
 					handle: data.postData ? data.postData.handle || '' : undefined,
 					formatting: data.formatting,
 					isAdminOrMod: data.isAdmin || data.isMod,
-					save_id: save_id
+					save_id: save_id,
+					privileges: data.privileges,
 				}
 			});
 		}
