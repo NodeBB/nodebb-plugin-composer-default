@@ -371,7 +371,9 @@ define('composer', [
 		});
 
 		bodyEl.val(draft ? draft : postData.body);
-		drafts.init(postContainer, postData);
+		if (app.user.uid > 0) {
+			drafts.init(postContainer, postData);
+		}
 
 		handleHelp(postContainer);
 

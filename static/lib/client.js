@@ -19,6 +19,9 @@ $(document).ready(function() {
 		require(['composer', 'composer/drafts'], function (composer, drafts) {
 			// Deconstruct each save_id and open up composer
 			available.forEach(function (save_id) {
+				if (!save_id) {
+					return;
+				}
 				var saveObj = save_id.split(':');
 				var uid = saveObj[1];
 				var type = saveObj[2];
