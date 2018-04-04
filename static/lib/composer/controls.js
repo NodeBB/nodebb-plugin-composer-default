@@ -57,12 +57,12 @@ define('composer/controls', ['composer/preview'], function(preview) {
 
 	controls.getBlockData = function (textareaEl, query, selectionStart) {
 		// Determines whether the cursor is sitting inside a block-type element (bold, italic, etc.)
-		let value = textareaEl.value;
+		var value = textareaEl.value;
 		query = query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-		const regex = new RegExp(query, 'g');
-		let match;
-		let matchIndices = [];
-		let payload;
+		var regex = new RegExp(query, 'g');
+		var match;
+		var matchIndices = [];
+		var payload;
 
 		// Isolate the line the cursor is on
 		value = value.split('\n').reduce(function (memo, line) {
