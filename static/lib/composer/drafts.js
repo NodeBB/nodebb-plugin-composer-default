@@ -44,8 +44,10 @@ define('composer/drafts', function() {
 	}
 
 	drafts.removeDraft = function(save_id) {
+		if (!save_id) {
+			return;
+		}
 		resetTimeout();
-
 		// Remove save_id from list of open and available drafts
 		drafts.updateVisibility('available', save_id);
 		drafts.updateVisibility('open', save_id);
@@ -54,7 +56,7 @@ define('composer/drafts', function() {
 	};
 
 	drafts.updateVisibility =  function (set, save_id, add) {
-		if (!canSave()) {
+		if (!canSave() || !save_id) {
 			return;
 		}
 

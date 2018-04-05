@@ -1,21 +1,23 @@
 "use strict";
 
-var plugins = module.parent.require('./plugins'),
-	topics = module.parent.require('./topics'),
-	posts = module.parent.require('./posts'),
-	user = module.parent.require('./user'),
-	meta = module.parent.require('./meta'),
-	translator = module.parent.require('../public/src/modules/translator'),
-	helpers = module.parent.require('./controllers/helpers'),
-	SocketPlugins = require.main.require('./src/socket.io/plugins'),
-	socketMethods = require('./websockets'),
+var plugins = module.parent.require('./plugins');
+var topics = module.parent.require('./topics');
+var categories = module.parent.require('./categories');
+var posts = module.parent.require('./posts');
+var user = module.parent.require('./user');
+var meta = module.parent.require('./meta');
+var privileges = module.parent.require('./privileges');
+var translator = module.parent.require('../public/src/modules/translator');
+var helpers = module.parent.require('./controllers/helpers');
+var SocketPlugins = require.main.require('./src/socket.io/plugins');
+var socketMethods = require('./websockets');
 
-	async = module.parent.require('async'),
-	nconf = module.parent.require('nconf'),
+var async = module.parent.require('async');
+var nconf = module.parent.require('nconf');
 
-	plugin = {
-		socketMethods: socketMethods
-	};
+var plugin = module.exports;
+
+plugin.socketMethods = socketMethods;
 
 plugin.init = function(data, callback) {
 	var controllers = require('./controllers');
@@ -80,9 +82,9 @@ plugin.getFormattingOptions = function(callback) {
 };
 
 plugin.build = function(data, callback) {
-	var req = data.req,
-		res = data.res,
-		next = data.next;
+	var req = data.req;
+	var res = data.res;
+	var next = data.next;
 
 	if (req.query.p) {
 		if (!res.locals.isAPI) {
@@ -98,7 +100,7 @@ plugin.build = function(data, callback) {
 		return helpers.redirect(res, '/');
 	}
 
-	var uid = req.user ? req.user.uid : 0;
+	var uid = req.uid;
 
 	async.parallel({
 		isMain: async.apply(posts.isMain, req.query.pid),
@@ -135,11 +137,23 @@ plugin.build = function(data, callback) {
 				next(null, false);
 			}
 		},
-		formatting: async.apply(plugin.getFormattingOptions)
+		formatting: async.apply(plugin.getFormattingOptions),
+		tagWhitelist: function(next) {
+			getTagWhitelist(req.query, next);
+		},
+		privileges: function (next) {
+			privileges.global.get(uid, next);
+		}
 	}, function(err, data) {
-		var isEditing = !!req.query.pid,
-			isGuestPost = data.postData && parseInt(data.postData.uid, 10) === 0,
-			save_id, discardRoute, body;
+		if (err) {
+			return callback(err);
+		}
+
+		var isEditing = !!req.query.pid;
+		var isGuestPost = data.postData && parseInt(data.postData.uid, 10) === 0;
+		var save_id;
+		var discardRoute;
+		var body;
 
 		if (uid) {
 			if (req.query.cid) {
@@ -201,7 +215,7 @@ plugin.build = function(data, callback) {
 					discardRoute: discardRoute,
 
 					resizable: false,
-					allowTopicsThumbnail: meta.config.allowTopicsThumbnail && data.isMain,
+					allowTopicsThumbnail: parseInt(meta.config.allowTopicsThumbnail, 10) === 1 && data.isMain,
 
 					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
 					thumb: data.topicData ? data.topicData.thumb : '',
@@ -209,19 +223,41 @@ plugin.build = function(data, callback) {
 
 					isMain: data.isMain,
 					isTopicOrMain: !!req.query.cid || data.isMain,
-					// minimumTagLength:
-					// maximumTagLength:
+					minimumTagLength: meta.config.minimumTagLength || 3,
+					maximumTagLength: meta.config.maximumTagLength || 15,
+					tagWhitelist: data.tagWhitelist,
 					isTopic: !!req.query.cid,
 					isEditing: isEditing,
-					showHandleInput: meta.config.allowGuestHandles && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
+					showHandleInput: parseInt(meta.config.allowGuestHandles, 10) === 1 && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
 					handle: data.postData ? data.postData.handle || '' : undefined,
 					formatting: data.formatting,
 					isAdminOrMod: data.isAdmin || data.isMod,
-					save_id: save_id
+					save_id: save_id,
+					privileges: data.privileges,
 				}
 			});
 		}
 	});
 };
 
-module.exports = plugin;
+function getTagWhitelist(query, callback) {
+	async.waterfall([
+		function (next) {
+			if (query.cid) {
+				return next(null, query.cid)
+			} else if (query.tid) {
+				topics.getTopicField(query.tid, 'cid', next);
+			} else if (query.pid) {
+				posts.getCidByPid(query.pid, next);
+			} else {
+				next(null, null);
+			}
+		},
+		function (cid, next) {
+			categories.getTagWhitelist([cid], next);
+		},
+		function (tagWhitelist, next) {
+			next(null, tagWhitelist[0]);
+		},
+	], callback);
+}
