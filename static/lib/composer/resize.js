@@ -29,6 +29,8 @@ define('composer/resize', [], function() {
 	function getBounds() {
 		var headerRect = header.getBoundingClientRect();
 
+		var headerBottom = Math.max(headerRect.bottom, 0);
+
 		var rect = {
 			top: 0,
 			left: 0,
@@ -39,8 +41,8 @@ define('composer/resize', [], function() {
 		rect.width = rect.right;
 		rect.height = rect.bottom;
 
-		rect.boundedTop = headerRect.bottom;
-		rect.boundedHeight = rect.bottom - headerRect.bottom;
+		rect.boundedTop = headerBottom;
+		rect.boundedHeight = rect.bottom - headerBottom;
 
 		return rect;
 	}
