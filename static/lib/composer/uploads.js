@@ -162,8 +162,8 @@ define('composer/uploads', [
 	}
 
 	function initializePaste(post_uuid) {
-		$(window).off('paste').on('paste', function(event) {
-
+		var postContainer = $('#cmp-uuid-' + post_uuid);
+		postContainer.on('paste', function(event) {
 			var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
 
 			[].some.call(items, function(item) {
