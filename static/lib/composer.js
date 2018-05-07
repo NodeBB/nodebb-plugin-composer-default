@@ -611,7 +611,12 @@ define('composer', [
 			};
 		}
 
-		$(window).trigger('action:composer.submit', {composerEl: postContainer, action: action, composerData: composerData, postData: postData});
+		$(window).trigger('action:composer.submit', {
+			composerEl: postContainer,
+			action: action,
+			composerData: composerData,
+			postData: postData
+		});
 
 		// Minimize composer (and set textarea as readonly) while submitting
 		var taskbarIconEl = $('#taskbar [data-uuid="' + post_uuid + '"] i');
