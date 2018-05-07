@@ -241,19 +241,10 @@ define('composer', [
 			if (err) {
 				return app.alertError(err.message);
 			}
-
-			push({
-				action: 'posts.edit',
-				pid: pid,
-				uid: threadData.uid,
-				handle: threadData.handle,
-				title: threadData.title,
-				body: threadData.body,
-				modified: false,
-				isMain: threadData.isMain,
-				thumb: threadData.thumb,
-				tags: threadData.tags
-			});
+			threadData.action = 'posts.edit';
+			threadData.pid = pid;
+			threadData.modified = false;
+			push(threadData);
 		});
 	};
 
