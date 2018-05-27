@@ -35,7 +35,7 @@ define('composer/tags', function() {
 
 		tagEl.on('itemAdded', function(event) {
 			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
-			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid }, function(err, allowed) {
+			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0}, function(err, allowed) {
 				if (err) {
 					return app.alertError(err.message);
 				}
@@ -127,7 +127,7 @@ define('composer/tags', function() {
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
 
-		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
+		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
 
 		if (data.privileges && !data.privileges['topics:tag']) {
 			tagEl.tagsinput('removeAll');
