@@ -129,7 +129,7 @@ define('composer/tags', function() {
 
 		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
 
-		if (data.privileges && !data.privileges['topics:tag']) {
+		if (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) {
 			tagEl.tagsinput('removeAll');
 		}
 

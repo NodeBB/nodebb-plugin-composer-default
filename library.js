@@ -143,6 +143,13 @@ plugin.build = function(data, callback) {
 		},
 		privileges: function (next) {
 			privileges.global.get(uid, next);
+		},
+		canTag: function (next) {
+			if (parseInt(req.query.cid, 10)) {
+				privileges.categories.can('topics:tag', req.query.cid, req.uid, next);
+			} else {
+				next(null, true);
+			}
 		}
 	}, function(err, data) {
 		if (err) {
@@ -201,7 +208,7 @@ plugin.build = function(data, callback) {
 			} else {
 				data.isMain = true;
 			}
-
+			data.privileges['topics:tag'] = data.canTag;
 			callback(null, {
 				req: req,
 				res: res,
