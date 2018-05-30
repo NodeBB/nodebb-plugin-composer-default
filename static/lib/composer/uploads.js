@@ -25,7 +25,7 @@ define('composer/uploads', [
 	};
 
 	function addChangeHandlers(post_uuid) {
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 
 		postContainer.find('#files').on('change', function(e) {
 			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null);
@@ -51,7 +51,7 @@ define('composer/uploads', [
 	}
 
 	function addTopicThumbHandlers(post_uuid) {
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 
 		postContainer.on('click', '.topic-thumb-clear-btn', function(e) {
 			postContainer.find('input#topic-thumb-url').val('').trigger('change');
@@ -145,7 +145,7 @@ define('composer/uploads', [
 
 		var draggingDocument = false;
 
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var drop = postContainer.find('.imagedrop');
 
 		$(document).off('dragstart').on('dragstart', function() {
@@ -162,7 +162,7 @@ define('composer/uploads', [
 	}
 
 	function initializePaste(post_uuid) {
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		postContainer.on('paste', function(event) {
 			var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
 
@@ -205,7 +205,7 @@ define('composer/uploads', [
 	function uploadContentFiles(params) {
 		var files = params.files;
 		var post_uuid = params.post_uuid;
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var textarea = postContainer.find('textarea');
 		var text = textarea.val();
 		var uploadForm = postContainer.find('#fileForm');
@@ -305,7 +305,7 @@ define('composer/uploads', [
 
 	function uploadTopicThumb(params) {
 		var post_uuid = params.post_uuid,
-			postContainer = $('#cmp-uuid-' + post_uuid),
+			postContainer = $('.composer[data-uuid="' + post_uuid + '"]'),
 			spinner = postContainer.find('.topic-thumb-spinner'),
 			thumbForm = postContainer.find('#thumbForm');
 

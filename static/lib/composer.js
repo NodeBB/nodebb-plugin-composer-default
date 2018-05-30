@@ -60,7 +60,7 @@ define('composer', [
 	function onWindowResize() {
 		var env = utils.findBootstrapEnvironment();
 		if (composer.active !== undefined) {
-			resize.reposition($('#cmp-uuid-' + composer.active));
+			resize.reposition($('.composer[data-uuid="' + composer.active + '"]'));
 
 			if ((env === 'md' || env === 'lg') && window.location.pathname.startsWith('/compose')) {
 				/*
@@ -140,7 +140,7 @@ define('composer', [
 	}
 
 	function composerAlert(post_uuid, message) {
-		$('#cmp-uuid-' + post_uuid).find('.composer-submit').removeAttr('disabled');
+		$('.composer[data-uuid="' + post_uuid + '"]').find('.composer-submit').removeAttr('disabled');
 		app.alert({
 			type: 'danger',
 			timeout: 3000,
@@ -205,7 +205,7 @@ define('composer', [
 			composer.load(uuid);
 		}
 
-		var postContainer = $('#cmp-uuid-' + uuid);
+		var postContainer = $('.composer[data-uuid="' + uuid + '"]');
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && (selectedPid || toPid)) {
@@ -249,7 +249,7 @@ define('composer', [
 	};
 
 	composer.load = function(post_uuid) {
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		if (postContainer.length) {
 			activate(post_uuid);
 			resize.reposition(postContainer);
@@ -423,7 +423,7 @@ define('composer', [
 		});
 
 		app.parseAndTranslate('composer', data, function(composerTemplate) {
-			if ($('#cmp-uuid-' + post_uuid).length) {
+			if ($('.composer.composer[data-uuid="' + post_uuid + '"]').length) {
 				return;
 			}
 			composerTemplate = $(composerTemplate);
@@ -432,7 +432,7 @@ define('composer', [
 				$(this).text(translator.unescape($(this).text()));
 			});
 
-			composerTemplate.attr('id', 'cmp-uuid-' + post_uuid);
+			composerTemplate.attr('data-uuid', post_uuid);
 
 			$(document.body).append(composerTemplate);
 
@@ -539,7 +539,7 @@ define('composer', [
 
 	function post(post_uuid) {
 		var postData = composer.posts[post_uuid];
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var handleEl = postContainer.find('.handle');
 		var titleEl = postContainer.find('.title');
 		var bodyEl = postContainer.find('textarea');
@@ -610,7 +610,7 @@ define('composer', [
 		});
 
 		// Minimize composer (and set textarea as readonly) while submitting
-		var taskbarIconEl = $('#taskbar [data-uuid="' + post_uuid + '"] i');
+		var taskbarIconEl = $('#taskbar .composer[data-uuid="' + post_uuid + '"] i');
 		var textareaEl = postContainer.find('.write');
 		taskbarIconEl.removeClass('fa-plus').addClass('fa-circle-o-notch fa-spin');
 		composer.minimize(post_uuid);
@@ -665,7 +665,7 @@ define('composer', [
 
 	composer.discard = function(post_uuid) {
 		if (composer.posts[post_uuid]) {
-			var postContainer = $('#cmp-uuid-' + post_uuid);
+			var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 			postContainer.find('.write').textcomplete('destroy');
 			postContainer.remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
@@ -681,7 +681,7 @@ define('composer', [
 	};
 
 	composer.minimize = function(post_uuid) {
-		var postContainer = $('#cmp-uuid-' + post_uuid);
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		postContainer.css('visibility', 'hidden');
 		composer.active = undefined;
 		taskbar.minimize('composer', post_uuid);

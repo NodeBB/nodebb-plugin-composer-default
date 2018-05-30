@@ -159,7 +159,7 @@ define('composer/tags', function() {
 	}
 
 	tags.getTags = function(post_uuid) {
-		return $('#cmp-uuid-' + post_uuid + ' .tags').tagsinput('items');
+		return $('.composer[data-uuid="' + post_uuid + '"]' + ' .tags').tagsinput('items');
 	};
 
 	return tags;
