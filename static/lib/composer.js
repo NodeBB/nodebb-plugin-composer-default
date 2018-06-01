@@ -415,7 +415,11 @@ define('composer', [
 
 		if (data.mobile) {
 			mobileHistoryAppend();
+
+			app.toggleNavbar(false);
 		}
+
+		postData.mobile = composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm';
 
 		$(window).trigger('filter:composer.create', {
 			postData: postData,
@@ -661,6 +665,7 @@ define('composer', [
 	function onHide() {
 		$('body').css({ paddingBottom: 0 });
 		$('html').removeClass('composing');
+		app.toggleNavbar(true);
 	}
 
 	composer.discard = function(post_uuid) {
