@@ -14,6 +14,7 @@ var socketMethods = require('./websockets');
 
 var async = module.parent.require('async');
 var nconf = module.parent.require('nconf');
+var validator = require('validator');
 
 var plugin = module.exports;
 
@@ -173,7 +174,7 @@ plugin.build = function(data, callback) {
 		}
 
 		if (req.query.cid) {
-			discardRoute = nconf.get('relative_path') + '/category/' + req.query.cid;
+			discardRoute = nconf.get('relative_path') + '/category/' + validator.escape(String(req.query.cid));
 		} else if ((req.query.tid || req.query.pid)) {
 			if (data.topicData) {
 				discardRoute = nconf.get('relative_path') + '/topic/' + data.topicData.slug;

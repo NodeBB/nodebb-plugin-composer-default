@@ -276,7 +276,7 @@ define('composer', [
 		if (!post_uuid && !postData) {
 			post_uuid = utils.generateUUID();
 			composer.posts[post_uuid] = postData = ajaxify.data;
-			postContainer.attr('id', 'cmp-uuid-' + post_uuid);
+			postContainer.attr('data-uuid', post_uuid);
 		}
 
 		var bodyEl = postContainer.find('textarea');
