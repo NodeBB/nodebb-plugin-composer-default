@@ -20,7 +20,7 @@ define('composer', [
 		active: undefined,
 		posts: {},
 		bsEnvironment: undefined,
-		formatting: undefined
+		formatting: undefined,
 	};
 
 	$(window).off('resize', onWindowResize).on('resize', onWindowResize);
@@ -37,15 +37,22 @@ define('composer', [
 		if (composer.active && (env === 'xs' || env ==='sm')) {
 			if (!composer.posts[composer.active].modified) {
 				composer.discard(composer.active);
+				if (composer.discardConfirm && composer.discardConfirm.length) {
+					composer.discardConfirm.modal('hide');
+					delete composer.discardConfirm;
+				}
 				return;
 			}
 
 			translator.translate('[[modules:composer.discard]]', function(translated) {
-				bootbox.confirm(translated, function(confirm) {
+				composer.discardConfirm = bootbox.confirm(translated, function(confirm) {
 					if (confirm) {
 						composer.discard(composer.active);
+					} else {
+						composer.posts[composer.active].modified = true;
 					}
 				});
+				composer.posts[composer.active].modified = false;
 			});
 		}
 	});
