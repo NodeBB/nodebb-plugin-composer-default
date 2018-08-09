@@ -121,9 +121,16 @@ define('composer', [
 			return composer.load(existingUUID);
 		}
 
-		translator.translate('[[topic:composer.new_topic]]', function(newTopicStr) {
+		var actionText = '[[topic:composer.new_topic]]';
+		if (post.action === 'posts.reply') {
+			actionText = '[[topic:composer.replying_to]]';
+		} else if (post.action === 'posts.edit') {
+			actionText = '[[topic:composer.editing]]';
+		}
+
+		translator.translate(actionText, function(translatedAction) {
 			taskbar.push('composer', uuid, {
-				title: post.title ? post.title : newTopicStr
+				title: translatedAction.replace('%1', '"' + post.title + '"')
 			});
 		});
 
