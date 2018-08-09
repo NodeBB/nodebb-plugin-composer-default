@@ -68,6 +68,10 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 		});
 	};
 
+	formatting.getDispatchTable = function () {
+		return formattingDispatchTable;
+	};
+
 	formatting.addButtonDispatch = function(name, onClick) {
 		formattingDispatchTable[name] = onClick;
 	};

@@ -485,7 +485,8 @@ define('composer', [
 
 			$(window).trigger('action:composer.loaded', {
 				post_uuid: post_uuid,
-				composerData: composer.posts[post_uuid]
+				composerData: composer.posts[post_uuid],
+				formatting: composer.formatting,
 			});
 
 			scrollStop.apply(postContainer.find('.write'));
