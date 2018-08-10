@@ -635,6 +635,9 @@ define('composer', [
 					return app.showEmailConfirmWarning(err);
 				}
 
+				// Restore composer on error
+				composer.load(post_uuid);
+
 				return app.alertError(err.message);
 			}
 
