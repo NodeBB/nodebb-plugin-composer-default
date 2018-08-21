@@ -64,7 +64,13 @@
 	}
 
 	.title-container {
+		display: flex;
 		border-bottom: 1px solid #eee;
+		margin: 0;
+
+		> div:first-child {
+			flex: 1;
+		}
 
 		.title {
 			display: block;
@@ -79,7 +85,7 @@
 		.category-list-container {
 			
 			[component="category-selector"] {
-				float: right !important;
+				margin-right: 1em;
 
 				.category-dropdown-menu {
 					max-height: 300px;
