@@ -240,11 +240,28 @@ define('composer/uploads', [
 		postContainer.find('[data-action="post"]').prop('disabled', true);
 		textarea.val(text);
 
+		$(window).trigger('action:composer.uploadStart', {
+			post_uuid: post_uuid,
+			files: filenameMapping.map(function (filename, i) {
+				return {
+					filename: filename.slice(2),
+					isImage: /image./.test(files[i].type),
+				}
+			}),
+			text: uploadingText,
+		});
+
 		uploadForm.off('submit').submit(function() {
 			function updateTextArea(filename, text) {
 				var current = textarea.val();
 				var re = new RegExp(escapeRegExp(filename) + "]\\([^)]+\\)", 'g');
 				textarea.val(current.replace(re, filename + '](' + text + ')'));
+
+				$(window).trigger('action:composer.uploadUpdate', {
+					post_uuid: post_uuid,
+					filename: filename.slice(2),
+					text: text,
+				});
 			}
 
 			uploads.inProgress[post_uuid] = uploads.inProgress[post_uuid] || [];
