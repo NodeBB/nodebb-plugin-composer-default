@@ -32,8 +32,7 @@ define('composer', [
 	});
 
 	$(window).on('popstate', function() {
-		var env = composer.bsEnvironment;
-
+		var env = utils.findBootstrapEnvironment();
 		if (composer.active && (env === 'xs' || env ==='sm')) {
 			if (!composer.posts[composer.active].modified) {
 				composer.discard(composer.active);
