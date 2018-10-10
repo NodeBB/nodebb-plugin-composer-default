@@ -346,16 +346,16 @@ define('composer', [
 			e.preventDefault();
 
 			if (!composer.posts[post_uuid].modified) {
-				removeComposerHistory();
-				return composer.discard(post_uuid);
+				composer.discard(post_uuid);
+				return removeComposerHistory();
 			}
 
 			var btn = $(this).prop('disabled', true);
 			translator.translate('[[modules:composer.discard]]', function(translated) {
 				bootbox.confirm(translated, function(confirm) {
 					if (confirm) {
-						removeComposerHistory();
 						composer.discard(post_uuid);
+						removeComposerHistory();
 					}
 					btn.prop('disabled', false);
 				});
