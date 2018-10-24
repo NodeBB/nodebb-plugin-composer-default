@@ -1,14 +1,14 @@
 "use strict";
 
-var plugins = module.parent.require('./plugins');
-var topics = module.parent.require('./topics');
-var categories = module.parent.require('./categories');
-var posts = module.parent.require('./posts');
-var user = module.parent.require('./user');
-var meta = module.parent.require('./meta');
-var privileges = module.parent.require('./privileges');
-var translator = module.parent.require('../public/src/modules/translator');
-var helpers = module.parent.require('./controllers/helpers');
+var plugins = require.main.require('./src/plugins');
+var topics = require.main.require('./src/topics');
+var categories = require.main.require('./src/categories');
+var posts = require.main.require('./src/posts');
+var user = require.main.require('./src/user');
+var meta = require.main.require('./src/meta');
+var privileges = require.main.require('./src/privileges');
+var translator = require.main.require('./public/src/modules/translator');
+var helpers = require.main.require('./src/controllers/helpers');
 var SocketPlugins = require.main.require('./src/socket.io/plugins');
 var socketMethods = require('./websockets');
 
