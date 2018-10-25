@@ -1,20 +1,25 @@
 "use strict";
 
-var plugins = require.main.require('./src/plugins');
-var topics = require.main.require('./src/topics');
-var categories = require.main.require('./src/categories');
-var posts = require.main.require('./src/posts');
-var user = require.main.require('./src/user');
-var meta = require.main.require('./src/meta');
-var privileges = require.main.require('./src/privileges');
-var translator = require.main.require('./public/src/modules/translator');
-var helpers = require.main.require('./src/controllers/helpers');
-var SocketPlugins = require.main.require('./src/socket.io/plugins');
-var socketMethods = require('./websockets');
-
-var async = module.parent.require('async');
-var nconf = module.parent.require('nconf');
 var validator = require('validator');
+
+var nconf = module.parent.require('nconf');
+var async = module.parent.require('async');
+
+var socketMethods = require('./websockets');
+var nbbRequire = require('./lib/nbbRequire');
+
+
+var plugins = nbbRequire('./src/plugins');
+var topics = nbbRequire('./src/topics');
+var categories = nbbRequire('./src/categories');
+var posts = nbbRequire('./src/posts');
+var user = nbbRequire('./src/user');
+var meta = nbbRequire('./src/meta');
+var privileges = nbbRequire('./src/privileges');
+var translator = nbbRequire('./public/src/modules/translator');
+var helpers = nbbRequire('./src/controllers/helpers');
+var SocketPlugins = nbbRequire('./src/socket.io/plugins');
+
 
 var plugin = module.exports;
 
