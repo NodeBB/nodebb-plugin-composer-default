@@ -643,6 +643,7 @@ define('composer', [
 
 				// Restore composer on error
 				composer.load(post_uuid);
+				textareaEl.prop('readonly', false);
 
 				return app.alertError(err.message);
 			}
