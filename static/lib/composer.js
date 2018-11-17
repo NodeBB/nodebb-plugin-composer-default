@@ -362,6 +362,12 @@ define('composer', [
 			});
 		});
 
+		postContainer.find('.composer-minimize').on('click', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			composer.minimize(post_uuid);
+		});
+
 		bodyEl.on('input propertychange', function() {
 			preview.render(postContainer);
 		});

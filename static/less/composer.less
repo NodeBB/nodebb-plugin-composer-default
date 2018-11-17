@@ -41,25 +41,20 @@
 			font-size: 20px;
 		}
 
-		.category-name-container {
-			font-size: 16px;
-			padding: 10px 5px;
-			vertical-align: middle;
-			display: inline-block;
+		display: flex;
+
+		.category-name-container, .title {
 			text-align: center;
-			width: ~"calc(100% - 75px)";
-			white-space: nowrap;
-			overflow: hidden;
 			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+			flex-grow: 2;
+			font-size: 16px;
+			line-height: inherit;
 		}
 
-		.title {
-			text-align: center;
-			margin-right: 46px;
-			margin-left: 46px;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
+		.category-name-container {
+			padding: 9px 5px;
 		}
 	}
 
@@ -369,6 +364,7 @@
 		.composer {
 			height: 100%;
 			overflow: hidden;
+			z-index: @zindex-popover + 10;
 		}
 
 		body {

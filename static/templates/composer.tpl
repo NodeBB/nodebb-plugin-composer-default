@@ -1,21 +1,22 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar navbar-fixed-top mobile-navbar visible-xs visible-sm">
-			<div class="pull-left">
+		<nav class="navbar navbar-fixed-top mobile-navbar hidden-md hidden-lg">
+			<div>
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
+				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
 			</div>
 			<!-- IF isTopic -->
 			<div class="category-name-container">
 				<span class="category-name"></span> <i class="fa fa-sort"></i>
 			</div>
 			<!-- ENDIF isTopic -->
-			<div class="pull-right">
-				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
-			</div>
 			<!-- IF !isTopicOrMain -->
 			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
+			<div>
+				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
+			</div>
 		</nav>
 		<div class="row title-container">
 			<!-- IF showHandleInput -->
