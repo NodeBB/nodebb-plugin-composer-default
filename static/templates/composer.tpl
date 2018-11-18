@@ -2,7 +2,7 @@
 
 	<div class="composer-container">
 		<nav class="navbar navbar-fixed-top mobile-navbar hidden-md hidden-lg">
-			<div>
+			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
 			</div>
@@ -14,7 +14,7 @@
 			<!-- IF !isTopicOrMain -->
 			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
-			<div>
+			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
