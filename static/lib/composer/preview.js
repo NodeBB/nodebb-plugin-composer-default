@@ -9,6 +9,10 @@ define('composer/preview', function() {
 
 	preview.render = function(postContainer, callback) {
 		callback = callback || function() {};
+		if (!postContainer.find('.preview-container').is(':visible')) {
+			return callback();
+		}
+
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 			timeoutId = 0;
@@ -31,6 +35,9 @@ define('composer/preview', function() {
 	};
 
 	preview.matchScroll = function(postContainer) {
+		if (!postContainer.find('.preview-container').is(':visible')) {
+			return;
+		}
 		var textarea = postContainer.find('textarea');
 		var preview = postContainer.find('.preview');
 
