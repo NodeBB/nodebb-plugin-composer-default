@@ -227,6 +227,8 @@ define('composer/uploads', [
 		var filenameMapping = [];
 
 		for (var i = 0; i < files.length; ++i) {
+			// The filename map has datetime and iterator prepended so that they can be properly tracked even if the
+			// filenames are identical.
 			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
 			var isImage = files[i].type.match(/image./);
 
@@ -244,7 +246,7 @@ define('composer/uploads', [
 			post_uuid: post_uuid,
 			files: filenameMapping.map(function (filename, i) {
 				return {
-					filename: filename.slice(2),
+					filename: filename.replace(/^\d+_\d{13}_/, ''),
 					isImage: /image./.test(files[i].type),
 				}
 			}),
@@ -252,14 +254,18 @@ define('composer/uploads', [
 		});
 
 		uploadForm.off('submit').submit(function() {
-			function updateTextArea(filename, text) {
+			function updateTextArea(filename, text, trim) {
+				var newFilename;
+				if (trim) {
+					newFilename = filename.replace(/^\d+_\d{13}_/, '');
+				}
 				var current = textarea.val();
 				var re = new RegExp(escapeRegExp(filename) + "]\\([^)]+\\)", 'g');
-				textarea.val(current.replace(re, filename + '](' + text + ')'));
+				textarea.val(current.replace(re, (newFilename || filename) + '](' + text + ')'));
 
 				$(window).trigger('action:composer.uploadUpdate', {
 					post_uuid: post_uuid,
-					filename: filename.slice(2),
+					filename: filename,
 					text: text,
 				});
 			}
@@ -300,7 +306,7 @@ define('composer/uploads', [
 					doneUploading = true;
 					if (uploads && uploads.length) {
 						for (var i=0; i<uploads.length; ++i) {
-							updateTextArea(filenameMapping[i], uploads[i].url);
+							updateTextArea(filenameMapping[i], uploads[i].url, true);
 						}
 					}
 					preview.render(postContainer);
