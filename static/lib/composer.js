@@ -558,7 +558,7 @@ define('composer', [
 			} else {
 				postContainer.find('textarea').focus().putCursorAtEnd();
 			}
-		}, 1);
+		}, 20);
 	}
 
 	function post(post_uuid) {
