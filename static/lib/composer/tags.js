@@ -100,10 +100,12 @@ define('composer/tags', function() {
 			}
 
 			toggleTagInput(postContainer, postData, data);
-			tagDropdown.toggleClass('hidden', !data.tagWhitelist.length);
-			app.parseAndTranslate('composer', 'tagWhitelist', { tagWhitelist: data.tagWhitelist }, function (html) {
-				tagDropdown.find('.dropdown-menu').html(html);
-			});
+			tagDropdown.toggleClass('hidden', !data.tagWhitelist || !data.tagWhitelist.length);
+			if (data.tagWhitelist) {
+				app.parseAndTranslate('composer', 'tagWhitelist', { tagWhitelist: data.tagWhitelist }, function (html) {
+					tagDropdown.find('.dropdown-menu').html(html);
+				});
+			}
 		});
 	};
 
