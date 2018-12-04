@@ -23,6 +23,12 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 				return app.alertError(err.message);
 			}
 
+			categories.forEach(function (category) {
+				if (!category.disabledClass) {
+					$('<li data-cid="' + category.cid + '">' + category.name + '</li>').translateText(category.name).appendTo($('.category-selector'));
+				}
+			});
+
 			app.parseAndTranslate('partials/category-selector', {
 				categories: categories,
 				pullRight: true
