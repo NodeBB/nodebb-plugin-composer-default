@@ -93,7 +93,7 @@ define('composer/tags', function() {
 	};
 
 	tags.onChangeCategory = function (postContainer, postData, cid) {
-		$.get('/api/category/' + cid, function (data) {
+		$.get(config.relative_path + '/api/category/' + cid, function (data) {
 			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
 			if (!tagDropdown.length) {
 				return;

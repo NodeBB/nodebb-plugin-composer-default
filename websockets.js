@@ -7,6 +7,7 @@ var privileges = require.main.require('./src/privileges');
 var posts = require.main.require('./src/posts');
 var topics = require.main.require('./src/topics');
 var plugins = require.main.require('./src/plugins');
+var categories = require.main.require('./src/categories');
 
 var server = require.main.require('./src/socket.io');
 
@@ -89,4 +90,29 @@ Sockets.renderHelp = function(socket, data, callback) {
 
 Sockets.getFormattingOptions = function(socket, data, callback) {
 	module.parent.exports.getFormattingOptions(callback);
+};
+
+Sockets.getCategoriesForSelect = function (socket, data, callback) {
+	async.waterfall([
+		function (next) {
+			categories.getCidsByPrivilege('categories:cid', socket.uid, 'topics:create', next);
+		},
+		function (cids, next) {
+			async.parallel({
+				categories: function (next) {
+					categories.getCategories(cids, socket.uid, next);
+				},
+				parents: function (next) {
+					categories.getParents(cids, next);
+				},
+			}, next);
+		},
+		function (results, next) {
+			results.categories.forEach(function (c, i) {
+				c.parent = results.parents[i];
+			});
+
+			next(null, results.categories);
+		},
+	], callback);
 };

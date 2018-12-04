@@ -6,6 +6,8 @@
 define('composer/categoryList', ['categorySelector'], function(categorySelector) {
 	var categoryList = {};
 
+	var selector;
+
 	categoryList.init = function(postContainer, postData) {
 		var listContainer = postContainer.find('.category-list-container');
 		if (!listContainer.length) {
@@ -16,7 +18,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 			toggleDropDirection(postContainer);
 		});
 
-		socket.emit('categories.getCategoriesByPrivilege', 'topics:create', function(err, categories) {
+		socket.emit('plugins.composer.getCategoriesForSelect', {}, function(err, categories) {
 			if (err) {
 				return app.alertError(err.message);
 			}
@@ -63,7 +65,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 				pullRight: true
 			}, function (html) {
 				listContainer.append(html);
-				categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
+				selector = categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
 					if (postData.hasOwnProperty('cid')) {
 						changeCategory(postContainer, postData, selectedCategory.cid);
 					}
@@ -72,10 +74,10 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 				});
 
 				if (postData.cid) {
-					categorySelector.selectCategory(postData.cid);
+					selector.selectCategory(postData.cid);
 				}
 
-				var selectedCategory = categorySelector.getSelectedCategory();
+				var selectedCategory = selector.getSelectedCategory();
 
 				$('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
 				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
@@ -103,7 +105,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 	}
 
 	categoryList.getSelectedCid = function () {
-		var selectedCategory = categorySelector.getSelectedCategory();
+		var selectedCategory = selector.getSelectedCategory();
 		return selectedCategory ? selectedCategory.cid : 0;
 	};
 
