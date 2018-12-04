@@ -93,26 +93,46 @@ Sockets.getFormattingOptions = function(socket, data, callback) {
 };
 
 Sockets.getCategoriesForSelect = function (socket, data, callback) {
+	var cids;
 	async.waterfall([
 		function (next) {
-			categories.getCidsByPrivilege('categories:cid', socket.uid, 'topics:create', next);
+			categories.getAllCidsFromSet('categories:cid', next);
 		},
-		function (cids, next) {
+		function (_cids, next) {
+			cids = _cids;
 			async.parallel({
-				categories: function (next) {
-					categories.getCategories(cids, socket.uid, next);
+				allowed: function (next) {
+					privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid, next);
 				},
-				parents: function (next) {
-					categories.getParents(cids, next);
+				categories: function (next) {
+					categories.getCategoriesData(cids, next);
 				},
 			}, next);
 		},
 		function (results, next) {
-			results.categories.forEach(function (c, i) {
-				c.parent = results.parents[i];
+			var _ = require.main.require('lodash')
+			categories.getTree(results.categories);
+
+			var cidToCategory = _.zipObject(cids, results.categories);
+
+			results.categories = results.categories.filter(function (c, i) {
+				if (results.allowed[i]) {
+					return true;
+				}
+
+				const hasChildren = !!c.children.length;
+				if (hasChildren) {
+					c.disabledClass = true;
+				} else if (c.parent) {
+					cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => {
+						return child.cid !== c.cid;
+					});
+				}
+
+				return hasChildren;
 			});
 
-			next(null, results.categories);
+			categories.buildForSelectCategories(results.categories, next);
 		},
 	], callback);
 };
