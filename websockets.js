@@ -111,6 +111,7 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 		},
 		function (results, next) {
 			var _ = require.main.require('lodash')
+			results.categories = results.categories.filter(c => c && !c.link);
 			categories.getTree(results.categories);
 
 			var cidToCategory = _.zipObject(cids, results.categories);
