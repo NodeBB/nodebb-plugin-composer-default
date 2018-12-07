@@ -74,7 +74,10 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 	}
 
 	categoryList.getSelectedCid = function () {
-		var selectedCategory = selector.getSelectedCategory();
+		var selectedCategory;
+		if (selector) {
+			selectedCategory = selector.getSelectedCategory();
+		}
 		return selectedCategory ? selectedCategory.cid : 0;
 	};
 
