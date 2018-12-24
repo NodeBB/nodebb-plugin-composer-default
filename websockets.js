@@ -111,18 +111,20 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 		},
 		function (results, next) {
 			var _ = require.main.require('lodash')
-			results.categories = results.categories.filter(c => c && !c.link);
 			categories.getTree(results.categories);
 
 			var cidToCategory = _.zipObject(cids, results.categories);
 
 			results.categories = results.categories.filter(function (c, i) {
-				if (results.allowed[i]) {
+				if (!c) {
+					return false;
+				}
+				if (results.allowed[i] && !c.link) {
 					return true;
 				}
 
 				const hasChildren = !!c.children.length;
-				if (hasChildren) {
+				if (hasChildren || c.link) {
 					c.disabledClass = true;
 				} else if (c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
 					cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => {
