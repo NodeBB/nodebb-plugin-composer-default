@@ -124,7 +124,7 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 				const hasChildren = !!c.children.length;
 				if (hasChildren) {
 					c.disabledClass = true;
-				} else if (c.parent) {
+				} else if (c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
 					cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => {
 						return child.cid !== c.cid;
 					});
