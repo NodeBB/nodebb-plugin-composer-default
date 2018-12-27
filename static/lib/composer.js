@@ -709,6 +709,9 @@ define('composer', [
 		onHide();
 	};
 
+	// Alias to .discard();
+	composer.close = composer.discard;
+
 	composer.minimize = function(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		postContainer.css('visibility', 'hidden');
