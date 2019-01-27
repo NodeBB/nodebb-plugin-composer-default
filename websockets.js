@@ -113,17 +113,18 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 			var _ = require.main.require('lodash')
 			categories.getTree(results.categories);
 
+			var cidToAllowed = _.zipObject(cids, results.allowed);
 			var cidToCategory = _.zipObject(cids, results.categories);
 
-			results.categories = results.categories.filter(function (c, i) {
+			results.categories = results.categories.filter(function (c) {
 				if (!c) {
 					return false;
 				}
-				if (results.allowed[i] && !c.link) {
+				if (cidToAllowed[c.cid] && !c.link) {
 					return true;
 				}
 
-				const hasChildren = !!c.children.length;
+				const hasChildren = hasPostableChildren(c, cidToAllowed);
 				if (hasChildren || c.link) {
 					c.disabledClass = true;
 				} else if (c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
@@ -139,3 +140,10 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 		},
 	], callback);
 };
+
+function hasPostableChildren(category, cidToAllowed) {
+	if (!Array.isArray(category.children) || !category.children.length) {
+		return false;
+	}
+	return category.children.some(c => c && cidToAllowed[c.cid]);
+}
