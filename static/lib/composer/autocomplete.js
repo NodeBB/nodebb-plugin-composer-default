@@ -4,7 +4,16 @@
 
 define('composer/autocomplete', ['composer/preview'], function(preview) {
 
-	var autocomplete = {};
+	var autocomplete = {
+		_active: {},
+	};
+
+	$(window).on('action:composer.discard', function (evt, data) {
+		if (autocomplete._active.hasOwnProperty(data.post_uuid)) {
+			autocomplete._active[data.post_uuid].destroy();
+			delete autocomplete._active[data.post_uuid];
+		}
+	});
 
 	autocomplete.init = function(postContainer, post_uuid) {
 		var element = postContainer.find('.write');
@@ -42,7 +51,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 
 		$(window).trigger('composer:autocomplete:init', data);
 
-		autocomplete.setup(data);
+		autocomplete._active[post_uuid] = autocomplete.setup(data);
 
 		data.element.on('textComplete:select', function() {
 			preview.render(postContainer);
@@ -70,6 +79,8 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 				textcomplete.dropdown.items[0].activate();
 			}
 		});
+
+		return textcomplete;
 	};
 
 	return autocomplete;

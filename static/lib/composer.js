@@ -695,7 +695,6 @@ define('composer', [
 	composer.discard = function(post_uuid) {
 		if (composer.posts[post_uuid]) {
 			var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-			postContainer.find('.write').textcomplete('destroy');
 			postContainer.remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
 
@@ -704,7 +703,9 @@ define('composer', [
 			taskbar.discard('composer', post_uuid);
 			$('[data-action="post"]').removeAttr('disabled');
 
-			$(window).trigger('action:composer.discard');
+			$(window).trigger('action:composer.discard', {
+				post_uuid: post_uuid,
+			});
 		}
 		onHide();
 	};
