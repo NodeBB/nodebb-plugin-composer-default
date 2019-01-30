@@ -21,7 +21,12 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 		var timer;
 
 		if (!element.length) {
-			console.warn('[composer/autocomplete] No composer .write element found');
+			/**
+			 * Some composers do their own thing before calling autocomplete.init() again.
+			 * One reason is because they want to override the textarea with their own element.
+			 * In those scenarios, they don't specify the "write" class, and this conditional
+			 * looks for that and stops the autocomplete init process.
+			 **/
 			return;
 		}
 
