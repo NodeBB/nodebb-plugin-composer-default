@@ -239,7 +239,9 @@ define('composer/uploads', [
 
 			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
 		}
-		postContainer.find('[data-action="post"]').prop('disabled', true);
+		if (uploadForm.length) {
+			postContainer.find('[data-action="post"]').prop('disabled', true);
+		}
 		textarea.val(text);
 
 		$(window).trigger('action:composer.uploadStart', {
