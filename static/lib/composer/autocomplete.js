@@ -74,6 +74,10 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 			var ContentEditable = window.Textcomplete.editors.ContentEditable;
 			editor = new ContentEditable(element);
 		}
+
+		// yuku-t/textcomplete inherits directionality from target element itself
+		element.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
+
 		var textcomplete = new window.Textcomplete(editor, {
 			dropdown: data.options,
 		});
