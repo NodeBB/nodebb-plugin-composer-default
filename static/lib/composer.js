@@ -222,9 +222,9 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && (selectedPid || toPid)) {
-			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.userLang || config.defaultLang, onTranslated);
 		} else {
-			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.userLang || config.defaultLang, onTranslated);
 		}
 
 		function onTranslated(translated) {
@@ -236,7 +236,7 @@ define('composer', [
 	};
 
 	composer.newReply = function(tid, toPid, title, text) {
-		translator.translate(text, config.defaultLang, function(translated) {
+		translator.translate(text, config.userLang || config.defaultLang, function(translated) {
 			push({
 				action: 'posts.reply',
 				tid: tid,
