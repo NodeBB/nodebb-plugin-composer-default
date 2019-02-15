@@ -120,20 +120,21 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 				if (!c) {
 					return false;
 				}
-				if (cidToAllowed[c.cid] && !c.link) {
-					return true;
-				}
 
 				const hasChildren = hasPostableChildren(c, cidToAllowed);
-				if (hasChildren || c.link) {
+				const shouldBeRemoved = !hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
+				const shouldBeDisaplayedAsDisabled = hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
+				if (shouldBeDisaplayedAsDisabled) {
 					c.disabledClass = true;
-				} else if (c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
+				}
+
+				if (shouldBeRemoved && c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
 					cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => {
 						return child.cid !== c.cid;
 					});
 				}
 
-				return hasChildren;
+				return !shouldBeRemoved;
 			});
 
 			categories.buildForSelectCategories(results.categories, next);
