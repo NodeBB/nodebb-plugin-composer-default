@@ -387,6 +387,8 @@ define('composer', [
 
 		handleHelp(postContainer);
 
+		handleSearch(postContainer);
+
 		focusElements(postContainer);
 
 		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
@@ -538,6 +540,20 @@ define('composer', [
 					bootbox.alert(html);
 				});
 			}
+		});
+	}
+
+	function handleSearch(postContainer) {
+		var searchInput = postContainer.find('input.title');
+		var quickSearchResults = postContainer.find('.quick-search-results');
+		searchInput.on('blur', function () {
+			setTimeout(function () {
+				quickSearchResults.addClass('hidden');
+			}, 100);
+		});
+		app.enableTopicSearch({
+			inputEl: searchInput,
+			resultEl: quickSearchResults,
 		});
 	}
 
