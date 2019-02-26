@@ -8,8 +8,7 @@ var posts = require.main.require('./src/posts');
 var topics = require.main.require('./src/topics');
 var plugins = require.main.require('./src/plugins');
 var categories = require.main.require('./src/categories');
-
-var server = require.main.require('./src/socket.io');
+var user = require.main.require('./src/user');
 
 var Sockets = module.exports;
 
@@ -40,7 +39,7 @@ Sockets.push = function(socket, pid, callback) {
 				isMain: function(next) {
 					posts.isMain(pid, next);
 				}
-			}, next)
+			}, next);
 		},
 		function (results, next) {
 			if (!results.topic) {
@@ -107,11 +106,21 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 				categories: function (next) {
 					categories.getCategoriesData(cids, next);
 				},
+				isModerator: function (next) {
+					user.isModerator(socket.uid, cids, next);
+				},
+				isAdmin: function (next) {
+					user.isAdministrator(socket.uid, next);
+				},
 			}, next);
 		},
 		function (results, next) {
-			var _ = require.main.require('lodash')
+			var _ = require.main.require('lodash');
 			categories.getTree(results.categories);
+
+			results.allowed = results.allowed.map(function (allowed, i) {
+				return results.isAdmin || results.isModerator[i] || allowed;
+			});
 
 			var cidToAllowed = _.zipObject(cids, results.allowed);
 			var cidToCategory = _.zipObject(cids, results.categories);
