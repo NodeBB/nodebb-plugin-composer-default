@@ -544,6 +544,12 @@ define('composer', [
 	}
 
 	function handleSearch(postContainer) {
+		var uuid = postContainer.attr('data-uuid');
+		var isEditing = composer.posts[uuid] && composer.posts[uuid].action === 'posts.edit';
+		if (isEditing) {
+			return;
+		}
+
 		var searchInput = postContainer.find('input.title');
 		var quickSearchResults = postContainer.find('.quick-search-results');
 		searchInput.on('blur', function () {
