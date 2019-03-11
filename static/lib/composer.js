@@ -546,7 +546,9 @@ define('composer', [
 	function handleSearch(postContainer) {
 		var uuid = postContainer.attr('data-uuid');
 		var isEditing = composer.posts[uuid] && composer.posts[uuid].action === 'posts.edit';
-		if (isEditing) {
+		var env = utils.findBootstrapEnvironment();
+		var isMobile = env === 'xs' || env === 'sm';
+		if (isEditing || isMobile) {
 			return;
 		}
 
