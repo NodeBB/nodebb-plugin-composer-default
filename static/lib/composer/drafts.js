@@ -10,11 +10,13 @@ define('composer/drafts', function() {
 
 	drafts.init = function(postContainer, postData) {
 		var bodyEl = postContainer.find('textarea');
+		var draftIconEl = postContainer.find('.draft-icon');
+
 		bodyEl.on('keyup', function() {
 			resetTimeout();
 
 			saveThrottleId = setTimeout(function() {
-				saveDraft(postContainer, postData);
+				saveDraft(postContainer, draftIconEl, postData);
 			}, 1000);
 		});
 	};
@@ -30,13 +32,17 @@ define('composer/drafts', function() {
 		return localStorage.getItem(save_id);
 	};
 
-	function saveDraft(postContainer, postData) {
+	function saveDraft(postContainer, draftIconEl, postData) {
 		var raw;
 
 		if (canSave() && postData && postData.save_id && postContainer.length) {
 			raw = postContainer.find('textarea').val();
 			if (raw.length) {
 				localStorage.setItem(postData.save_id, raw);
+				draftIconEl.removeClass('active');
+				setTimeout(function () {
+					draftIconEl.addClass('active');
+				});
 			} else {
 				drafts.removeDraft(postData.save_id);
 			}

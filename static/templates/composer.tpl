@@ -39,6 +39,8 @@
 			<div class="category-list-container hidden-sm hidden-xs"></div>
 			<!-- ENDIF isTopic -->
 
+			<div class="pull-right draft-icon"></div>
+
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
 				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
@@ -113,6 +115,7 @@
 					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
+				<div class="pull-right draft-icon hidden-md hidden-lg"></div>
 				<textarea class="write" tabindex="4"></textarea>
 			</div>
 			<div class="hidden-sm hidden-xs preview-container">

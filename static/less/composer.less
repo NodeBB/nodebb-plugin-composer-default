@@ -361,6 +361,53 @@
 		display: inline-block;
 		vertical-align: -50% !important;
 	}
+
+	.draft-icon {
+		font-family: 'FontAwesome';
+		color: @state-success-text;
+		margin: 0 1em;
+		opacity: 0;
+
+		&::before {
+			content: @fa-var-save;
+			position: relative;
+			top: 25%;
+		}
+
+		&::after {
+			content: @fa-var-check;
+			position: relative;
+			top: 18px;
+			font-size: 0.7em;
+			left: -15%;
+		}
+
+		&.active {
+			animation: draft-saved 3s ease;
+		}
+	}
+}
+
+@keyframes draft-saved {
+	0%, 100% {
+		opacity: 0;
+	}
+
+	15% {
+		opacity: 1;
+	}
+
+	30% {
+		opacity: 0.5;
+	}
+
+	45% {
+		opacity: 1;
+	}
+
+	85% {
+		opacity: 1;
+	}
 }
 
 @media (max-width: @screen-sm-max) {
@@ -368,6 +415,16 @@
 		.composer {
 			height: 100%;
 			z-index: @zindex-popover + 10;
+
+			.draft-icon {
+				position: absolute;
+				top: 1em;
+				right: 0em;
+
+				&::after {
+					top: 7px;
+				}
+			}
 		}
 
 		body {
