@@ -276,7 +276,7 @@
 		display: none;
 		position: absolute;
 		width: 100%;
-		top: 10px;
+		top: 0px;
 		height: 0;
 
 		.pointer;
@@ -284,27 +284,34 @@
 		.trigger {
 			position: relative;
 			display: block;
-			width: 32px;
-			height: 32px;
 			top: -20px;
 			margin: 0 auto;
 			margin-left: 20px;
-
-			background: #333;
-			border: 1px solid #333;
-			.border-radius(50%);
-
 			line-height: 26px;
+			.transition(filter .15s linear);
+
+			&:hover {
+				filter: invert(100%);
+				cursor: ns-resize;
+			}
 
 			i {
+				width: 32px;
+				height: 32px;
+				background: #333;
+				border: 1px solid #333;
+				.border-radius(50%);
+
 				position: relative;
+				left: -50%;
+
 				color: #FFF;
 				font-size: 16px;
 
 				&:before {
 					content: @fa-var-arrows-v;
 					position: relative;
-					top: 3px;
+					top: 25%;
 				}
 			}
 		}
