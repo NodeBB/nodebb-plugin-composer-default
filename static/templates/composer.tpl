@@ -64,12 +64,15 @@
 					<!--[if gte IE 9]><!-->
 						<!-- IF privileges.upload:post:image -->
 						<li class="img-upload-btn hide" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
-							<i class="fa fa-cloud-upload"></i>
+							<i class="fa fa-file-image-o"></i>
 						</li>
 						<!-- ENDIF privileges.upload:post:image -->
 						<!-- IF privileges.upload:post:file -->
 						<li class="file-upload-btn hide" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
-							<i class="fa fa-upload"></i>
+							<span class="fa-stack">
+								<i class="fa fa-file-o fa-stack-1x"></i>
+								<i class="fa fa-arrow-up fa-stack-1x"></i>
+							</span>
 						</li>
 						<!-- ENDIF privileges.upload:post:file -->
 					<!--<![endif]-->
