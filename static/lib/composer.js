@@ -557,7 +557,7 @@ define('composer', [
 		searchInput.on('blur', function () {
 			setTimeout(function () {
 				quickSearchResults.addClass('hidden');
-			}, 100);
+			}, 200);
 		});
 		app.enableTopicSearch({
 			inputEl: searchInput,
