@@ -9,14 +9,26 @@ define('composer/controls', ['composer/preview'], function(preview) {
 	/* Rich Textarea Controls                        */
 	/*************************************************/
 	controls.insertIntoTextarea = function(textarea, value) {
-		var $textarea = $(textarea);
+		var payload = {
+			context: this,
+			textarea: textarea,
+			value: value,
+			preventDefault: false,
+		};
+		$(window).trigger('action:composer.insertIntoTextarea', payload);
+
+		if (payload.preventDefault) {
+			return;
+		}
+
+		var $textarea = $(payload.textarea);
 		var currentVal = $textarea.val();
 		var postContainer = $textarea.parents('[component="composer"]');
 
 		$textarea.val(
-			currentVal.slice(0, textarea.selectionStart) +
-			value +
-			currentVal.slice(textarea.selectionStart)
+			currentVal.slice(0, payload.textarea.selectionStart) +
+			payload.value +
+			currentVal.slice(payload.textarea.selectionStart)
 		);
 
 		preview.render(postContainer);
@@ -51,8 +63,21 @@ define('composer/controls', ['composer/preview'], function(preview) {
 	};
 
 	controls.updateTextareaSelection = function(textarea, start, end){
-		textarea.setSelectionRange(start, end);
-		$(textarea).focus();
+		var payload = {
+			context: this,
+			textarea: textarea,
+			start: start,
+			end: end,
+			preventDefault: false,
+		};
+		$(window).trigger('action:composer.updateTextareaSelection', payload);
+
+		if (payload.preventDefault) {
+			return;
+		}
+
+		textarea.setSelectionRange(payload.start, payload.end);
+		$(payload.textarea).focus();
 	};
 
 	controls.getBlockData = function (textareaEl, query, selectionStart) {

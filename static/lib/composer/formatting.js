@@ -57,8 +57,8 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 		}
 	};
 
-	formatting.addButton = function(iconClass, onClick, title) {
-		var name = iconClass.replace('fa fa-', '');
+	formatting.addButton = function(iconClass, onClick, title, name) {
+		var name = name || iconClass.replace('fa fa-', '');
 
 		formattingDispatchTable[name] = onClick;
 		buttons.push({
