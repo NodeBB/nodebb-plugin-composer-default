@@ -38,8 +38,6 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 					if (postData.hasOwnProperty('cid')) {
 						changeCategory(postContainer, postData, selectedCategory.cid);
 					}
-
-					$('[tabindex=' + (parseInt($(this).attr('tabindex'), 10) + 1) + ']').trigger('focus');
 				});
 
 				if (postData.cid) {
