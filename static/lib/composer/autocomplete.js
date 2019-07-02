@@ -66,6 +66,9 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 	// This is a generic method that is also used by the chat
 	autocomplete.setup = function (data) {
 		var element = data.element.get(0);
+		if (!element) {
+			return;
+		}
 		var editor;
 		if (element.nodeName === 'TEXTAREA') {
 			var Textarea = window.Textcomplete.editors.Textarea;
