@@ -39,7 +39,7 @@
 			<div class="category-list-container hidden-sm hidden-xs"></div>
 			<!-- ENDIF isTopic -->
 
-			<div class="pull-right draft-icon"></div>
+			<div class="pull-right draft-icon hidden-xs hidden-sm"></div>
 
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
 				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
