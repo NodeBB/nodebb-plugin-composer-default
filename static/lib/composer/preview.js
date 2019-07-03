@@ -68,7 +68,6 @@ define('composer/preview', function() {
 		function togglePreview(show) {
 			var env = utils.findBootstrapEnvironment();
 			if (env === 'xs' || env ==='sm') {
-				console.log('here, and', show);
 				previewContainer.toggleClass('hidden-xs hidden-sm', !show);
 				writeContainer.toggleClass('hidden-xs hidden-sm', show);
 			} else {
