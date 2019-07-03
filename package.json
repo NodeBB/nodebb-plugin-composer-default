@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "screenfull": "^4.0.0",
-    "validator": "10.4.0"
+    "validator": "^11.0.0"
   }
 }
