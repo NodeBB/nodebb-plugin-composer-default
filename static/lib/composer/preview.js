@@ -66,9 +66,16 @@ define('composer/preview', function() {
 		}
 
 		function togglePreview(show) {
-			previewContainer.toggleClass('hide', !show);
-			writeContainer.toggleClass('maximized', !show);
-			showBtn.toggleClass('hide', show);
+			var env = utils.findBootstrapEnvironment();
+			if (env === 'xs' || env ==='sm') {
+				console.log('here, and', show);
+				previewContainer.toggleClass('hidden-xs hidden-sm', !show);
+				writeContainer.toggleClass('hidden-xs hidden-sm', show);
+			} else {
+				previewContainer.toggleClass('hide', !show);
+				writeContainer.toggleClass('maximized', !show);
+				showBtn.toggleClass('hide', show);
+			}
 
 			$('.write').focus();
 			preview.matchScroll(postContainer);
