@@ -70,13 +70,18 @@ define('composer/preview', function() {
 			if (env === 'xs' || env ==='sm') {
 				previewContainer.toggleClass('hidden-xs hidden-sm', !show);
 				writeContainer.toggleClass('hidden-xs hidden-sm', show);
+
+				// Render preview once on mobile
+				if (show) {
+					preview.render(postContainer, function () {});
+				}
 			} else {
 				previewContainer.toggleClass('hide', !show);
 				writeContainer.toggleClass('maximized', !show);
 				showBtn.toggleClass('hide', show);
+				$('.write').focus();
 			}
 
-			$('.write').focus();
 			preview.matchScroll(postContainer);
 		}
 
