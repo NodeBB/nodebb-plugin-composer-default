@@ -3,7 +3,7 @@
 
 /* globals define */
 
-define('composer/resize', ['taskbar'], function(taskbar) {
+define('composer/resize', ['taskbar', 'composer/preview'], function(taskbar, preview) {
 	var resize = {};
 	var oldRatio = 0;
 	var minimumRatio = 0.3;
@@ -50,6 +50,7 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 	function doResize(postContainer, ratio) {
 		var bounds = getBounds();
 		var elem = postContainer[0];
+		var env = utils.findBootstrapEnvironment();
 
 		if (bounds.width >= mediumMin) {
 			ratio = Math.min(Math.max(ratio, minimumRatio), 1);
@@ -68,6 +69,13 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 
 		postContainer.ratio = ratio;
 		elem.style.visibility = 'visible';
+
+		if (preview.env !== env && (env === 'xs' || env === 'sm')) {
+			preview.env = env;
+			preview.toggle(false);
+		} else {
+			preview.env = env;
+		}
 
 		taskbar.updateActive(postContainer.attr('data-uuid'));
 	}

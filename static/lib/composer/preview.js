@@ -55,20 +55,27 @@ define('composer/preview', function() {
 	};
 
 	preview.handleToggler = function(postContainer) {
-		var env = utils.findBootstrapEnvironment();
+		preview.env = utils.findBootstrapEnvironment();
 
 		function hidePreview() {
 			togglePreview(false);
-			localStorage.setItem('composer:previewToggled', true);
+			if (preview.env !== 'xs' && preview.env !=='sm') {
+				localStorage.setItem('composer:previewToggled', true);
+			}
 		}
 
 		function showPreview() {
 			togglePreview(true);
-			localStorage.removeItem('composer:previewToggled');
+			if (preview.env !== 'xs' && preview.env !=='sm') {
+				localStorage.removeItem('composer:previewToggled');
+			}
 		}
 
 		function togglePreview(show) {
-			if (env === 'xs' || env ==='sm') {
+			if (preview.env === 'xs' || preview.env ==='sm') {
+				previewContainer.toggleClass('hide', false);
+				writeContainer.toggleClass('maximized', false);
+				showBtn.toggleClass('hide', true);
 				previewContainer.toggleClass('hidden-xs hidden-sm', !show);
 				writeContainer.toggleClass('hidden-xs hidden-sm', show);
 
@@ -85,6 +92,7 @@ define('composer/preview', function() {
 
 			preview.matchScroll(postContainer);
 		}
+		preview.toggle = togglePreview;
 
 		var showBtn = postContainer.find('.write-container .toggle-preview'),
 			hideBtn = postContainer.find('.preview-container .toggle-preview'),
@@ -94,7 +102,7 @@ define('composer/preview', function() {
 		hideBtn.on('click', hidePreview);
 		showBtn.on('click', showPreview);
 
-		if (localStorage.getItem('composer:previewToggled') || (env === 'xs' || env ==='sm')) {
+		if (localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env ==='sm')) {
 			hidePreview();
 		} else {
 			showPreview();
