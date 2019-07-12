@@ -78,14 +78,14 @@ define('composer', [
 		if (composer.active !== undefined) {
 			resize.reposition($('.composer[data-uuid="' + composer.active + '"]'));
 
-			if (!isMobile && window.location.pathname.startsWith('/compose')) {
+			if (!isMobile && window.location.pathname.startsWith(config.relative_path + '/compose')) {
 				/*
 				 *	If this conditional is met, we're no longer in mobile/tablet
 				 *	resolution but we've somehow managed to have a mobile
 				 *	composer load, so let's go back to the topic
 				 */
 				history.back();
-			} else if (isMobile && !window.location.pathname.startsWith('/compose')) {
+			} else if (isMobile && !window.location.pathname.startsWith(config.relative_path + '/compose')) {
 				/*
 				 *	In this case, we're in mobile/tablet resolution but the composer
 				 *	that loaded was a regular composer, so let's fix the address bar
