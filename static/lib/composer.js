@@ -752,6 +752,9 @@ define('composer', [
 		postContainer.css('visibility', 'hidden');
 		composer.active = undefined;
 		taskbar.minimize('composer', post_uuid);
+		$(window).trigger('action:composer.minimize', {
+			post_uuid: post_uuid,
+		});
 
 		onHide();
 	};
