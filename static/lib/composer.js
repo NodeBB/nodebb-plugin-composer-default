@@ -302,8 +302,9 @@ define('composer', [
 			postContainer.attr('data-uuid', post_uuid);
 		}
 
+		var titleEl = postContainer.find('input.title');
 		var bodyEl = postContainer.find('textarea');
-		var draft = drafts.getDraft(postData.save_id);
+		var draft = drafts.get(postData.save_id);
 		var submitBtn = postContainer.find('.composer-submit');
 
 		categoryList.init(postContainer, composer.posts[post_uuid]);
@@ -390,7 +391,10 @@ define('composer', [
 			preview.matchScroll(postContainer);
 		});
 
-		bodyEl.val(draft ? draft : postData.body);
+		if (draft && draft.title) {
+			titleEl.val(draft.title);
+		}
+		bodyEl.val(draft ? draft.text : postData.body);
 		if (app.user.uid > 0) {
 			drafts.init(postContainer, postData);
 		}

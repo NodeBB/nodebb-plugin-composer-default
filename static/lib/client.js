@@ -26,7 +26,7 @@ $(document).ready(function() {
 				var uid = saveObj[1];
 				var type = saveObj[2];
 				var id = saveObj[3];
-				var content = drafts.getDraft(save_id);
+				var content = drafts.get(save_id);
 
 				// If draft is already open, do nothing
 				if (open.indexOf(save_id) !== -1) {
@@ -43,13 +43,13 @@ $(document).ready(function() {
 				if (type === 'cid') {
 					composer.newTopic({
 						cid: id,
-						title: '',
-						body: content,
+						title: content.title,
+						body: content.text,
 						tags: [],
 					});
 				} else if (type === 'tid') {
 					socket.emit('topics.getTopic', id, function (err, topicObj) {
-						composer.newReply(id, undefined, topicObj.title, content);
+						composer.newReply(id, undefined, topicObj.title, content.text);
 					});
 				} else if (type === 'pid') {
 					composer.editPost(id);
