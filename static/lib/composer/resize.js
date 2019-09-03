@@ -27,7 +27,13 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 	}
 
 	function getBounds() {
-		var headerRect = header.getBoundingClientRect();
+		var headerRect;
+		if (header) {
+			headerRect = header.getBoundingClientRect();
+		} else {
+			// Mock data
+			headerRect = { bottom: 0 };
+		}
 
 		var headerBottom = Math.max(headerRect.bottom, 0);
 
