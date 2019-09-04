@@ -394,7 +394,7 @@ define('composer', [
 		if (draft && draft.title) {
 			titleEl.val(draft.title);
 		}
-		bodyEl.val(draft ? draft.text : postData.body);
+		bodyEl.val(draft.text ? draft.text : postData.body);
 		if (app.user.uid > 0) {
 			drafts.init(postContainer, postData);
 		}
