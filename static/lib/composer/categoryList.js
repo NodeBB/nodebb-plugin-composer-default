@@ -89,11 +89,14 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 
 	categoryList.updateTaskbar = function (postContainer, postData) {
 		var uuid = postContainer.attr('data-uuid');
-		taskbar.update('composer', uuid, {
-			image: categoryList._map[postData.cid].image,
-			'background-color': categoryList._map[postData.cid].bgColor,
-			icon: categoryList._map[postData.cid].icon.slice(3),
-		});
+		var category = categoryList._map[postData.cid];
+		if (category) {
+			taskbar.update('composer', uuid, {
+				image: category.image,
+				'background-color': category.bgColor,
+				icon: category.icon.slice(3),
+			});
+		}
 	}
 
 	function changeCategory(postContainer, postData, cid) {
