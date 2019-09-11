@@ -146,7 +146,7 @@ Sockets.getCategoriesForSelect = function (socket, data, callback) {
 				return !shouldBeRemoved;
 			});
 
-			categories.buildForSelectCategories(results.categories, next);
+			next(null, categories.buildForSelectCategories(results.categories));
 		},
 	], callback);
 };
