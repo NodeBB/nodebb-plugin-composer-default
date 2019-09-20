@@ -125,13 +125,7 @@ Sockets.getCategoriesForSelect = async function (socket) {
 		return !shouldBeRemoved;
 	});
 
-	const selectCategories = categories.buildForSelectCategories(visibleCategories);
-	return selectCategories.map(category => {
-		return _.pick(category, [
-			'name', 'description', 'level', 'disabledClass', 'icon',
-			'cid', 'parentCid', 'color', 'bgColor', 'backgroundImage', 'imageClass'
-		]);
-	});
+	return categories.buildForSelectCategories(visibleCategories);
 };
 
 function hasPostableChildren(category, cidToAllowed) {
