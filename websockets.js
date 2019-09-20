@@ -1,6 +1,7 @@
 "use strict";
 
 var async = require.main.require('async');
+const _ = require.main.require('lodash');
 
 var meta = require.main.require('./src/meta');
 var privileges = require.main.require('./src/privileges');
@@ -91,64 +92,46 @@ Sockets.getFormattingOptions = function(socket, data, callback) {
 	module.parent.exports.getFormattingOptions(callback);
 };
 
-Sockets.getCategoriesForSelect = function (socket, data, callback) {
-	var cids;
-	async.waterfall([
-		function (next) {
-			categories.getAllCidsFromSet('categories:cid', next);
-		},
-		function (_cids, next) {
-			cids = _cids;
-			async.parallel({
-				allowed: function (next) {
-					privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid, next);
-				},
-				categories: function (next) {
-					categories.getCategoriesData(cids, next);
-				},
-				isModerator: function (next) {
-					user.isModerator(socket.uid, cids, next);
-				},
-				isAdmin: function (next) {
-					user.isAdministrator(socket.uid, next);
-				},
-			}, next);
-		},
-		function (results, next) {
-			var _ = require.main.require('lodash');
-			categories.getTree(results.categories);
+Sockets.getCategoriesForSelect = async function (socket) {
+	const cids = await categories.getAllCidsFromSet('categories:cid');
+	const [allowed, categoriesData, isModerator, isAdmin] = await Promise.all([
+		privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid),
+		categories.getCategoriesData(cids),
+		user.isModerator(socket.uid, cids),
+		user.isAdministrator(socket.uid),
+	]);
 
-			results.allowed = results.allowed.map(function (allowed, i) {
-				return results.isAdmin || results.isModerator[i] || allowed;
-			});
+	categories.getTree(categoriesData);
 
-			var cidToAllowed = _.zipObject(cids, results.allowed);
-			var cidToCategory = _.zipObject(cids, results.categories);
+	const cidToAllowed = _.zipObject(cids, allowed.map((allowed, i) => isAdmin || isModerator[i] || allowed));
+	const cidToCategory = _.zipObject(cids, categoriesData);
 
-			results.categories = results.categories.filter(function (c) {
-				if (!c) {
-					return false;
-				}
+	const visibleCategories = categoriesData.filter(function (c) {
+		if (!c) {
+			return false;
+		}
 
-				const hasChildren = hasPostableChildren(c, cidToAllowed);
-				const shouldBeRemoved = !hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
-				const shouldBeDisaplayedAsDisabled = hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
-				if (shouldBeDisaplayedAsDisabled) {
-					c.disabledClass = true;
-				}
+		const hasChildren = hasPostableChildren(c, cidToAllowed);
+		const shouldBeRemoved = !hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
+		const shouldBeDisaplayedAsDisabled = hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
+		if (shouldBeDisaplayedAsDisabled) {
+			c.disabledClass = true;
+		}
 
-				if (shouldBeRemoved && c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
-					cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => {
-						return child.cid !== c.cid;
-					});
-				}
+		if (shouldBeRemoved && c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
+			cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => child.cid !== c.cid);
+		}
 
-				return !shouldBeRemoved;
-			});
+		return !shouldBeRemoved;
+	});
 
-			next(null, categories.buildForSelectCategories(results.categories));
-		},
-	], callback);
+	const selectCategories = categories.buildForSelectCategories(visibleCategories);
+	return selectCategories.map(category => {
+		return _.pick(category, [
+			'name', 'description', 'level', 'disabledClass', 'icon',
+			'cid', 'parentCid', 'color', 'bgColor', 'backgroundImage', 'imageClass'
+		]);
+	});
 };
 
 function hasPostableChildren(category, cidToAllowed) {

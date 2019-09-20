@@ -19,15 +19,14 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 		});
 
 		socket.emit('plugins.composer.getCategoriesForSelect', {}, function(err, categories) {
+			if (err) {
+				return app.alertError(err.message);
+			}
 			// Save hash for queries
 			categoryList._map = categories.reduce(function (memo, cur) {
 				memo[cur.cid] = cur;
 				return memo;
 			}, {});
-
-			if (err) {
-				return app.alertError(err.message);
-			}
 
 			categories.forEach(function (category) {
 				if (!category.disabledClass) {
