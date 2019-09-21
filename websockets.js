@@ -125,7 +125,7 @@ Sockets.getCategoriesForSelect = async function (socket) {
 		return !shouldBeRemoved;
 	});
 
-	return categories.buildForSelectCategories(visibleCategories);
+	return categories.buildForSelectCategories(visibleCategories, ['disabledClass']);
 };
 
 function hasPostableChildren(category, cidToAllowed) {
