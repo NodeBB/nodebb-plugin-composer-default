@@ -111,7 +111,7 @@ Sockets.getCategoriesForSelect = async function (socket) {
 			return false;
 		}
 
-		const hasChildren = hasPostableChildren(c, cidToAllowed);
+		const hasChildren = Array.isArray(c.children) && c.children.some(c => c && cidToAllowed[c.cid]);
 		const shouldBeRemoved = !hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
 		const shouldBeDisaplayedAsDisabled = hasChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
 		if (shouldBeDisaplayedAsDisabled) {
@@ -127,10 +127,3 @@ Sockets.getCategoriesForSelect = async function (socket) {
 
 	return categories.buildForSelectCategories(visibleCategories, ['disabledClass']);
 };
-
-function hasPostableChildren(category, cidToAllowed) {
-	if (!Array.isArray(category.children) || !category.children.length) {
-		return false;
-	}
-	return category.children.some(c => c && cidToAllowed[c.cid]);
-}
