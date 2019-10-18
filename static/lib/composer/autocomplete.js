@@ -71,6 +71,14 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 		var textcomplete = new window.Textcomplete(editor, {
 			dropdown: data.options,
 		});
+
+		var _getCursorOffset = editor.getCursorOffset;
+		editor.getCursorOffset = function () {
+			var offset = _getCursorOffset.apply(editor, arguments);
+			offset.clientTop = offset.top;
+			return offset;
+		};
+
 		textcomplete.register(data.strategies);
 		textcomplete.on('rendered', function () {
 			if (textcomplete.dropdown.items.length) {
