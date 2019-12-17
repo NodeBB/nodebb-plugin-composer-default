@@ -8,10 +8,10 @@ var user = require.main.require('./src/user');
 var meta = require.main.require('./src/meta');
 var privileges = require.main.require('./src/privileges');
 var translator = require.main.require('./public/src/modules/translator');
-var utils = require.main.require('./public/src/utils');
 var helpers = require.main.require('./src/controllers/helpers');
 var SocketPlugins = require.main.require('./src/socket.io/plugins');
 var socketMethods = require('./websockets');
+var url = require('url');
 
 var async = module.parent.require('async');
 var nconf = module.parent.require('nconf');
@@ -89,14 +89,14 @@ plugin.build = function(data, callback) {
 	var next = data.next;
 
 	if (req.query.p) {
-		if (!res.locals.isAPI) {
-			if (req.query.p.startsWith(nconf.get('relative_path'))) {
-				req.query.p = req.query.p.replace(nconf.get('relative_path'), '');
-			}
-			if (!utils.isRelativeUrl(req.query.p)) {
+		if (!res.locals.isAPI) {		
+			var a;
+			try {
+				a = url.parse(req.query.p, true, true)
+			} catch (e) {
 				return helpers.redirect(res, '/');
 			}
-			return helpers.redirect(res, req.query.p);
+			return helpers.redirect(res, '/' + (a.path || '').replace(/^\//, '') );
 		} else {
 			return res.render('', {});
 		}
