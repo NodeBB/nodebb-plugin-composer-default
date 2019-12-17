@@ -8,6 +8,7 @@ var user = require.main.require('./src/user');
 var meta = require.main.require('./src/meta');
 var privileges = require.main.require('./src/privileges');
 var translator = require.main.require('./public/src/modules/translator');
+var utils = require.main.require('./public/src/utils');
 var helpers = require.main.require('./src/controllers/helpers');
 var SocketPlugins = require.main.require('./src/socket.io/plugins');
 var socketMethods = require('./websockets');
@@ -92,7 +93,9 @@ plugin.build = function(data, callback) {
 			if (req.query.p.startsWith(nconf.get('relative_path'))) {
 				req.query.p = req.query.p.replace(nconf.get('relative_path'), '');
 			}
-
+			if (!utils.isRelativeUrl(req.query.p)) {
+				return helpers.redirect(res, '/');
+			}
 			return helpers.redirect(res, req.query.p);
 		} else {
 			return res.render('', {});
