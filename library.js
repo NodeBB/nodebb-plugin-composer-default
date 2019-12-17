@@ -96,7 +96,7 @@ plugin.build = function(data, callback) {
 			} catch (e) {
 				return helpers.redirect(res, '/');
 			}
-			return helpers.redirect(res, '/' + (a.path || '').replace(/^\//, '') );
+			return helpers.redirect(res, '/' + (a.path || '').replace(/^\/*/, '') );
 		} else {
 			return res.render('', {});
 		}
