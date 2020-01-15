@@ -89,7 +89,7 @@ plugin.build = function(data, callback) {
 	var next = data.next;
 
 	if (req.query.p) {
-		if (!res.locals.isAPI) {		
+		if (!res.locals.isAPI) {
 			var a;
 			try {
 				a = url.parse(req.query.p, true, true)
@@ -98,7 +98,8 @@ plugin.build = function(data, callback) {
 			}
 			return helpers.redirect(res, '/' + (a.path || '').replace(/^\/*/, '') );
 		} else {
-			return res.render('', {});
+			res.render('', {});
+			return;
 		}
 	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
 		return helpers.redirect(res, '/');
