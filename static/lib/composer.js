@@ -3,7 +3,6 @@
 /* globals define, socket, app, config, ajaxify, utils, bootbox, screenfull */
 
 define('composer', [
-	'taskbar',
 	'translator',
 	'composer/controls',
 	'composer/uploads',
@@ -15,7 +14,7 @@ define('composer', [
 	'composer/resize',
 	'composer/autocomplete',
 	'scrollStop'
-], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
+], function(translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -126,22 +125,8 @@ define('composer', [
 			existingUUID = alreadyOpen(post);
 
 		if (existingUUID) {
-			taskbar.updateActive(existingUUID);
 			return composer.load(existingUUID);
 		}
-
-		var actionText = '[[topic:composer.new_topic]]';
-		if (post.action === 'posts.reply') {
-			actionText = '[[topic:composer.replying_to]]';
-		} else if (post.action === 'posts.edit') {
-			actionText = '[[topic:composer.editing]]';
-		}
-
-		translator.translate(actionText, function(translatedAction) {
-			taskbar.push('composer', uuid, {
-				title: translatedAction.replace('%1', '"' + post.title + '"')
-			});
-		});
 
 		// Construct a save_id
 		if (0 !== parseInt(app.user.uid, 10)) {
@@ -489,12 +474,6 @@ define('composer', [
 
 			activate(post_uuid);
 
-			postContainer.on('click', function() {
-				if (!taskbar.isActive(post_uuid)) {
-					taskbar.updateActive(post_uuid);
-				}
-			});
-
 			resize.handleResize(postContainer);
 
 			if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
@@ -672,9 +651,7 @@ define('composer', [
 		});
 
 		// Minimize composer (and set textarea as readonly) while submitting
-		var taskbarIconEl = $('#taskbar .composer[data-uuid="' + post_uuid + '"] i');
 		var textareaEl = postContainer.find('.write');
-		taskbarIconEl.removeClass('fa-plus').addClass('fa-circle-o-notch fa-spin');
 		composer.minimize(post_uuid);
 		textareaEl.prop('readonly', true);
 
@@ -738,7 +715,7 @@ define('composer', [
 
 			delete composer.posts[post_uuid];
 			composer.active = undefined;
-			taskbar.discard('composer', post_uuid);
+
 			$('[data-action="post"]').removeAttr('disabled');
 
 			$(window).trigger('action:composer.discard', {
@@ -755,7 +732,6 @@ define('composer', [
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		postContainer.css('visibility', 'hidden');
 		composer.active = undefined;
-		taskbar.minimize('composer', post_uuid);
 		$(window).trigger('action:composer.minimize', {
 			post_uuid: post_uuid,
 		});

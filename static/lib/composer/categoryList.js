@@ -3,7 +3,7 @@
 
 /*globals define, socket, app*/
 
-define('composer/categoryList', ['categorySelector', 'taskbar'], function(categorySelector, taskbar) {
+define('composer/categoryList', ['categorySelector'], function(categorySelector) {
 	var categoryList = {};
 
 	var selector;
@@ -33,8 +33,6 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 					$('<li data-cid="' + category.cid + '">' + category.name + '</li>').translateText(category.name).appendTo($('.category-selector'));
 				}
 			});
-
-			categoryList.updateTaskbar(postContainer, postData);
 
 			app.parseAndTranslate('partials/category-selector', {
 				categories: categories,
@@ -86,26 +84,12 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 		return selectedCategory ? selectedCategory.cid : 0;
 	};
 
-	categoryList.updateTaskbar = function (postContainer, postData) {
-		var uuid = postContainer.attr('data-uuid');
-		var category = categoryList._map[postData.cid];
-		if (category) {
-			taskbar.update('composer', uuid, {
-				image: category.image,
-				'background-color': category.bgColor,
-				icon: category.icon.slice(3),
-			});
-		}
-	}
-
 	function changeCategory(postContainer, postData, cid) {
 		postData.cid = cid;
 
 		require(['composer/tags'], function (tags) {
 			tags.onChangeCategory(postContainer, postData, cid);
 		});
-
-		categoryList.updateTaskbar(postContainer, postData);
 	}
 
 	return categoryList;

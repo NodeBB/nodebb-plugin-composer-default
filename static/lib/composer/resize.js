@@ -3,7 +3,7 @@
 
 /* globals define */
 
-define('composer/resize', ['taskbar'], function(taskbar) {
+define('composer/resize', function() {
 	var resize = {};
 	var oldRatio = 0;
 	var minimumRatio = 0.3;
@@ -74,8 +74,6 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 
 		postContainer.ratio = ratio;
 		elem.style.visibility = 'visible';
-
-		taskbar.updateActive(postContainer.attr('data-uuid'));
 	}
 
 	var resizeIt = doResize;
