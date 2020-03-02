@@ -658,13 +658,12 @@ define('composer', [
 		socket.emit(action, composerData, function (err, data) {
 			postContainer.find('.composer-submit').removeAttr('disabled');
 			if (err) {
-				if (err.message === '[[error:email-not-confirmed]]') {
-					return app.showEmailConfirmWarning(err);
-				}
-
 				// Restore composer on error
 				composer.load(post_uuid);
 				textareaEl.prop('readonly', false);
+				if (err.message === '[[error:email-not-confirmed]]') {
+					return app.showEmailConfirmWarning(err);
+				}
 
 				return app.alertError(err.message);
 			}
