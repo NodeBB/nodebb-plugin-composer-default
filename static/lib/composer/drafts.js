@@ -23,6 +23,22 @@ define('composer/drafts', function() {
 		draftIconEl.on('animationend', function () {
 			$(this).toggleClass('active', false);
 		});
+
+		$(window).on('unload', function (e) {
+			// Update visibility on all open composers
+			try {
+				var open = localStorage.getItem('drafts:open');
+				open = JSON.parse(open) || [];
+			} catch (e) {
+				console.warn('[composer/drafts] Could not read list of open/available drafts');
+				open = [];
+			}
+			if (open.length) {
+				open.forEach(function (save_id) {
+					drafts.updateVisibility('open', save_id);
+				});
+			}
+		});
 	};
 
 	function resetTimeout() {
