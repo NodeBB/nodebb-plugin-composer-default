@@ -19,6 +19,10 @@ define('composer/drafts', function() {
 				saveDraft(postContainer, draftIconEl, postData);
 			}, 1000);
 		});
+
+		draftIconEl.on('animationend', function () {
+			$(this).toggleClass('active', false);
+		});
 	};
 
 	function resetTimeout() {
@@ -51,10 +55,7 @@ define('composer/drafts', function() {
 			if (raw.length) {
 				localStorage.setItem(postData.save_id, raw);
 				localStorage.setItem(postData.save_id + ':title', title);
-				draftIconEl.removeClass('active');
-				setTimeout(function () {
-					draftIconEl.addClass('active');
-				});
+				draftIconEl.toggleClass('active', true);
 			} else {
 				drafts.removeDraft(postData.save_id);
 			}
