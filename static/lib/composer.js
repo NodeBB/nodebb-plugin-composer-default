@@ -195,7 +195,7 @@ define('composer', [
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
-			modified: false,
+			modified: (data.title.length || data.body.length ) ? true : false,
 			isMain: true
 		};
 
@@ -253,7 +253,7 @@ define('composer', [
 				toPid: toPid,
 				title: title,
 				body: translated,
-				modified: false,
+				modified: (title.length || body.length ) ? true : false,
 				isMain: false
 			});
 		});
