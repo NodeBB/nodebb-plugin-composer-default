@@ -20,6 +20,7 @@
 		"./node_modules/screenfull/dist/screenfull.js"
 	],
 	"modules": {
+		"admin/plugins/composer-default.js": "./static/lib/admin.js",
 		"composer.js": "./static/lib/composer.js",
 		"composer/categoryList.js": "./static/lib/composer/categoryList.js",
 		"composer/controls.js": "./static/lib/composer/controls.js",
@@ -31,8 +32,5 @@
 		"composer/uploads.js": "./static/lib/composer/uploads.js",
 		"composer/autocomplete.js": "./static/lib/composer/autocomplete.js"
 	},
-	"acpScripts": [
-		"./static/lib/admin.js"
-	],
 	"templates": "static/templates"
 }
