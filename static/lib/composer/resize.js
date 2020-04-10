@@ -12,7 +12,7 @@ define('composer/resize', function() {
 
 	var $body = $('body');
 	var $window = $(window);
-	var $headerMenu = $('[component="navbar"]');
+	var $headerMenu = $('[data-component="navbar"]');
 
 	var html = document.documentElement;
 	var body = document.body;

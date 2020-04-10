@@ -1,5 +1,4 @@
-<div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
-
+<div data-component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 	<div class="composer-container">
 		<nav class="navbar navbar-fixed-top mobile-navbar hidden-md hidden-lg">
 			<div class="btn-group">
@@ -132,7 +131,7 @@
 		<!-- IF isTopicOrMain -->
 		<div class="tag-row">
 			<div class="tags-container">
-				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
+				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" data-component="composer/tag/dropdown">
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						<span class="caret"></span>

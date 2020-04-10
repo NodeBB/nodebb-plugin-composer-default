@@ -39,7 +39,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 				pullRight: true
 			}, function (html) {
 				listContainer.append(html);
-				selector = categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
+				selector = categorySelector.init(listContainer.find('[data-component="category-selector"]'), function (selectedCategory) {
 					if (postData.hasOwnProperty('cid')) {
 						changeCategory(postContainer, postData, selectedCategory.cid);
 					}
@@ -73,7 +73,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 	};
 
 	function toggleDropDirection(postContainer) {
-		postContainer.find('.category-list-container [component="category-selector"]').toggleClass('dropup', postContainer.outerHeight() < $(window).height() / 2);
+		postContainer.find('.category-list-container [data-component="category-selector"]').toggleClass('dropup', postContainer.outerHeight() < $(window).height() / 2);
 	}
 
 	categoryList.getSelectedCid = function () {

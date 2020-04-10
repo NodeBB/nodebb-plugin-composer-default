@@ -80,7 +80,7 @@ define('composer/tags', ['jquery-ui/ui/widgets/autocomplete'], function() {
 			triggerEnter(input);
 		});
 
-		$('[component="composer/tag/dropdown"]').on('click', 'li', function () {
+		$('[data-component="composer/tag/dropdown"]').on('click', 'li', function () {
 			var tag = $(this).attr('data-tag');
 			if (tag) {
 				addTags([tag], tagEl);
@@ -91,7 +91,7 @@ define('composer/tags', ['jquery-ui/ui/widgets/autocomplete'], function() {
 
 	tags.onChangeCategory = function (postContainer, postData, cid) {
 		$.get(config.relative_path + '/api/category/' + cid, function (data) {
-			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
+			var tagDropdown = postContainer.find('[data-component="composer/tag/dropdown"]');
 			if (!tagDropdown.length) {
 				return;
 			}

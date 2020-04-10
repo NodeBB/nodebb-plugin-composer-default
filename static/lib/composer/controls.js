@@ -23,7 +23,7 @@ define('composer/controls', ['composer/preview'], function(preview) {
 
 		var $textarea = $(payload.textarea);
 		var currentVal = $textarea.val();
-		var postContainer = $textarea.parents('[component="composer"]');
+		var postContainer = $textarea.parents('[data-component="composer"]');
 
 		$textarea.val(
 			currentVal.slice(0, payload.textarea.selectionStart) +
