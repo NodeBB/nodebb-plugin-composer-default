@@ -245,14 +245,14 @@ define('composer', [
 	};
 
 	composer.editPost = function(pid) {
-		socket.emit('plugins.composer.push', pid, function(err, threadData) {
+		socket.emit('plugins.composer.push', pid, function(err, topicData) {
 			if (err) {
 				return app.alertError(err.message);
 			}
-			threadData.action = 'posts.edit';
-			threadData.pid = pid;
-			threadData.modified = false;
-			push(threadData);
+			topicData.action = 'posts.edit';
+			topicData.pid = pid;
+			topicData.modified = false;
+			push(topicData);
 		});
 	};
 
