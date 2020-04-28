@@ -18,14 +18,14 @@
 		<div class="title-container row">
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
-				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
+				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle-placeholder]]" value="{handle}" />
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
 				<!-- IF isTopicOrMain -->
-				<input name="title" form="compose-form" class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
+				<input name="title" form="compose-form" class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title-placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
-				<span class="title">[[topic:composer.replying_to, "{topicTitle}"]]</span>
+				<span class="title">[[topic:composer.replying-to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 				<ul class="dropdown-menu quick-search-results hidden">
 					<!-- IMPORT partials/quick-search-results.tpl -->
@@ -68,22 +68,22 @@
 
 					<!-- IF allowTopicsThumbnail -->
 					<li tabindex="-1">
-						<i class="fa fa-th-large topic-thumb-btn topic-thumb-toggle-btn hide" title="[[topic:composer.thumb_title]]"></i>
+						<i class="fa fa-th-large topic-thumb-btn topic-thumb-toggle-btn hide" title="[[topic:composer.thumb-title]]"></i>
 					</li>
 					<div class="topic-thumb-container center-block hide">
 						<form id="thumbForm" method="post" class="topic-thumb-form form-inline" enctype="multipart/form-data">
 							<img class="topic-thumb-preview"></img>
 							<div class="form-group">
-								<label for="topic-thumb-url">[[topic:composer.thumb_url_label]]</label>
-								<input type="text" id="topic-thumb-url" class="form-control" placeholder="[[topic:composer.thumb_url_placeholder]]" />
+								<label for="topic-thumb-url">[[topic:composer.thumb-url-label]]</label>
+								<input type="text" id="topic-thumb-url" class="form-control" placeholder="[[topic:composer.thumb-url-placeholder]]" />
 							</div>
 							<div class="form-group">
-								<label for="topic-thumb-file">[[topic:composer.thumb_file_label]]</label>
+								<label for="topic-thumb-file">[[topic:composer.thumb-file-label]]</label>
 								<input type="file" id="topic-thumb-file" class="form-control" />
 							</div>
 							<div class="form-group topic-thumb-ctrl">
 								<i class="fa fa-spinner fa-spin hide topic-thumb-spinner" title="[[topic:composer.uploading]]"></i>
-								<i class="fa fa-times topic-thumb-btn hide topic-thumb-clear-btn" title="[[topic:composer.thumb_remove]]"></i>
+								<i class="fa fa-times topic-thumb-btn hide topic-thumb-clear-btn" title="[[topic:composer.thumb-remove]]"></i>
 							</div>
 						</form>
 					</div>
@@ -111,13 +111,13 @@
 			<div class="col-md-6 col-sm-12 write-container">
 				<div class="help-text">
 					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
-					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
+					<span class="toggle-preview hide">[[modules:composer.show-preview]]</span>
 				</div>
 				<textarea name="content" form="compose-form" class="write" tabindex="5"></textarea>
 			</div>
 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
 				<div class="help-text">
-					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
+					<span class="toggle-preview">[[modules:composer.hide-preview]]</span>
 				</div>
 				<div class="preview well"></div>
 			</div>
@@ -138,7 +138,7 @@
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>
-				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
+				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
 			</div>
 		</div>
 		<!-- ENDIF isTopicOrMain -->

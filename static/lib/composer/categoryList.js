@@ -51,7 +51,7 @@ define('composer/categoryList', ['categorySelector'], function(categorySelector)
 
 				var selectedCategory = selector.getSelectedCategory();
 
-				$('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
+				$('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select-category]]');
 				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 
 				toggleDropDirection(postContainer);

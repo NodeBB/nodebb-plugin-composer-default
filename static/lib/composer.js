@@ -203,9 +203,9 @@ define('composer', [
 		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + (selectedPid || toPid) + ')';
 		if (uuid === undefined) {
 			if (title && (selectedPid || toPid)) {
-				composer.newReply(tid, toPid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
+				composer.newReply(tid, toPid, title, '[[modules:composer.user-said-in, ' + username + ', ' + link + ']]\n' + text);
 			} else {
-				composer.newReply(tid, toPid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
+				composer.newReply(tid, toPid, title, '[[modules:composer.user-said, ' + username + ']]\n' + text);
 			}
 			return;
 		} else if (uuid !== composer.active) {
@@ -217,9 +217,9 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (title && (selectedPid || toPid)) {
-			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user-said-in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
-			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user-said, ' + username + ']]\n', config.defaultLang, onTranslated);
 		}
 
 		function onTranslated(translated) {

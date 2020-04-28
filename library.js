@@ -76,7 +76,7 @@ plugin.getFormattingOptions = function(callback) {
 	plugins.fireHook('filter:composer.formatting', {
 		options: [
 			{ name: 'tags', className: 'fa fa-tags', mobile: true },
-			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false }
+			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen-mode]]', mobile: false }
 		]
 	}, function(err, payload) {
 		callback(err, payload ? payload.options : null);
@@ -190,7 +190,7 @@ plugin.build = function(data, callback) {
 		// Quoted reply
 		if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && data.postData) {
 			user.getUserField(data.postData.uid, 'username', function(err, username) {
-				translator.translate('[[modules:composer.user_said, ' + username + ']]', function(translated) {
+				translator.translate('[[modules:composer.user-said, ' + username + ']]', function(translated) {
 					body = '> ' + (data.postData ? data.postData.content.replace(/\n/g, '\n> ') + '\n\n' : '');
 					body = translated + '\n' + body;
 					ready();
