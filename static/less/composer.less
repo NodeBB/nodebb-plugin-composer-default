@@ -65,11 +65,15 @@
 		border-bottom: 1px solid #eee;
 		margin: 0;
 
-		> div:first-child {
+		> div[data-component="composer/title"] {
 			flex: 1;
 		}
 
-		.title {
+		> div[data-component="composer/handle"] {
+			flex: 0.33;
+		}
+
+		.title, .handle {
 			display: block;
 			margin: 0;
 			padding: 8px;

@@ -20,11 +20,11 @@
 		</nav>
 		<div class="row title-container">
 			<!-- IF showHandleInput -->
-			<div class="col-sm-3 col-md-12">
+			<div data-component="composer/handle">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 			</div>
 			<!-- ENDIF showHandleInput -->
-			<div>
+			<div data-component="composer/title">
 				<!-- IF isTopicOrMain -->
 				<input class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{title}"/>
 				<!-- ELSE -->
