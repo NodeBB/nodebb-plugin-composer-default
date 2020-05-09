@@ -195,7 +195,7 @@ define('composer', [
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
-			modified: (data.title.length || data.body.length ) ? true : false,
+			modified: ((data.title && data.title.length) || (data.body && data.body.length)) ? true : false,
 			isMain: true
 		};
 
