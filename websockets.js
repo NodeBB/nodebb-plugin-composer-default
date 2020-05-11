@@ -132,5 +132,5 @@ function checkPostableChildren(category, cidToAllowed) {
 	if (!Array.isArray(category.children) || !category.children.length) {
 		return false;
 	}
-	return category.children.some(c => c && (cidToAllowed[c.cid] || checkPostableChildren(c, cidToAllowed)));
+	return category.children.some(c => c && !c.disabled && (cidToAllowed[c.cid] || checkPostableChildren(c, cidToAllowed)));
 }
