@@ -9,10 +9,9 @@ define('composer/drafts', function() {
 	var saving = false;
 
 	drafts.init = function(postContainer, postData) {
-		var bodyEl = postContainer.find('textarea');
 		var draftIconEl = postContainer.find('.draft-icon');
 
-		bodyEl.on('keyup', function() {
+		postContainer.on('keyup', 'textarea, input.handle, input.title', function() {
 			resetTimeout();
 
 			saveThrottleId = setTimeout(function() {
@@ -39,6 +38,8 @@ define('composer/drafts', function() {
 				});
 			}
 		});
+
+		drafts.migrateGuest();
 	};
 
 	function resetTimeout() {
@@ -55,22 +56,35 @@ define('composer/drafts', function() {
 	};
 
 	drafts.get = function(save_id) {
-		return {
-			title: localStorage.getItem(save_id + ':title'),
-			text: localStorage.getItem(save_id),
+		const uid = save_id.split(':')[1];
+
+		if (parseInt(uid, 10)) {
+			return {
+				title: localStorage.getItem(save_id + ':title'),
+				text: localStorage.getItem(save_id),
+			}
+		} else {
+			return {
+				handle: sessionStorage.getItem(save_id + ':handle'),
+				title: sessionStorage.getItem(save_id + ':title'),
+				text: sessionStorage.getItem(save_id),
+			}
 		}
 	}
 
 	function saveDraft(postContainer, draftIconEl, postData) {
-		var raw;
-		var title;
+		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
+			var title = postContainer.find('input.title').val();
+			var raw = postContainer.find('textarea').val();
+			var storage = app.user.uid ? localStorage : sessionStorage;
 
-		if (canSave() && postData && postData.save_id && postContainer.length) {
-			title = postContainer.find('input.title').val();
-			raw = postContainer.find('textarea').val();
 			if (raw.length) {
-				localStorage.setItem(postData.save_id, raw);
-				localStorage.setItem(postData.save_id + ':title', title);
+				storage.setItem(postData.save_id, raw);
+				storage.setItem(postData.save_id + ':title', title);
+				if (!app.user.uid) {
+					var handle = postContainer.find('input.handle').val();
+					storage.setItem(postData.save_id + ':handle', handle);
+				}
 				draftIconEl.toggleClass('active', true);
 			} else {
 				drafts.removeDraft(postData.save_id);
@@ -92,8 +106,8 @@ define('composer/drafts', function() {
 		return;
 	};
 
-	drafts.updateVisibility =  function (set, save_id, add) {
-		if (!canSave() || !save_id) {
+	drafts.updateVisibility = function (set, save_id, add) {
+		if (!canSave(app.user.uid ? 'localStorage' : 'sessionStorage') || !save_id) {
 			return;
 		}
 
@@ -115,19 +129,49 @@ define('composer/drafts', function() {
 		localStorage.setItem('drafts:' + set, JSON.stringify(open));
 	};
 
-	function canSave() {
-		if (saving) {
-			return saving;
-		}
+	drafts.migrateGuest = function () {
+		// If any drafts are made while as guest, and user then logs in, assume control of those drafts
+		if (canSave('localStorage') && app.user.uid) {
+			var test = /^composer:\d+:\w+:\d+(:\w+)?$/;
+			var keys = Object.keys(sessionStorage).filter(function (key) {
+				return test.test(key);
+			});
+			var renamed = keys.map(function (key) {
+				var parts = key.split(':');
+				parts[1] = app.user.uid;
+				return parts.join(':');
+			});
 
+			keys.forEach(function (key, idx) {
+				localStorage.setItem(renamed[idx], sessionStorage.getItem(key));
+				sessionStorage.removeItem(key);
+			});
+		}
+	}
+
+	// Feature detection courtesy of: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+	function canSave(type) {
+		var storage;
 		try {
-			localStorage.setItem('test', 'test');
-			localStorage.removeItem('test');
-			saving = true;
+			storage = window[type];
+			var x = '__storage_test__';
+			storage.setItem(x, x);
+			storage.removeItem(x);
 			return true;
-		} catch(e) {
-			saving = false;
-			return false;
+		}
+		catch(e) {
+			return e instanceof DOMException && (
+				// everything except Firefox
+				e.code === 22 ||
+				// Firefox
+				e.code === 1014 ||
+				// test name field too, because code might not be present
+				// everything except Firefox
+				e.name === 'QuotaExceededError' ||
+				// Firefox
+				e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+				// acknowledge QuotaExceededError only if there's something already stored
+				(storage && storage.length !== 0);
 		}
 	}
 

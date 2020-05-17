@@ -167,14 +167,12 @@ plugin.build = function(data, callback) {
 		var discardRoute;
 		var body;
 
-		if (uid) {
-			if (req.query.cid) {
-				save_id = ['composer', uid, 'cid', req.query.cid].join(':');
-			} else if (req.query.tid) {
-				save_id = ['composer', uid, 'tid', req.query.tid].join(':');
-			} else if (req.query.pid) {
-				save_id = ['composer', uid, 'pid', req.query.pid].join(':');
-			}
+		if (req.query.cid) {
+			save_id = ['composer', uid, 'cid', req.query.cid].join(':');
+		} else if (req.query.tid) {
+			save_id = ['composer', uid, 'tid', req.query.tid].join(':');
+		} else if (req.query.pid) {
+			save_id = ['composer', uid, 'pid', req.query.pid].join(':');
 		}
 
 		if (req.query.cid) {
