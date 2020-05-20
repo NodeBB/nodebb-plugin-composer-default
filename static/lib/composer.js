@@ -409,7 +409,8 @@ define('composer', [
 		}
 
 		$(window).trigger('action:composer.enhanced', {
-			postContainer: postContainer
+			postContainer: postContainer,
+			postData: postData,
 		});
 	};
 

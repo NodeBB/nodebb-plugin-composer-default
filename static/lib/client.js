@@ -3,65 +3,9 @@
 /* globals config, ajaxify */
 
 $(document).ready(function() {
-	// Load drafts if they were open
-	try {
-		var available = localStorage.getItem('drafts:available');
-		var open = localStorage.getItem('drafts:open');
-		available = JSON.parse(available) || [];
-		open = JSON.parse(open) || [];
-	} catch (e) {
-		console.warn('[composer/drafts] Could not read list of open/available drafts');
-		available = [];
-		open = [];
-	}
-
-	if (available.length && app.user && app.user.uid !== 0) {
-		require(['composer', 'composer/drafts'], function (composer, drafts) {
-			// Deconstruct each save_id and open up composer
-			available.forEach(function (save_id) {
-				if (!save_id) {
-					return;
-				}
-				var saveObj = save_id.split(':');
-				var uid = saveObj[1];
-				var type = saveObj[2];
-				var id = saveObj[3];
-				var content = drafts.get(save_id);
-
-				// If draft is already open, do nothing
-				if (open.indexOf(save_id) !== -1) {
-					return;
-				}
-
-				// Don't open other peoples' drafts
-				if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
-					return;
-				}
-
-				if (!content || (content.text && content.title && !content.text.title && !content.text.length)) {
-					// Empty content, remove from list of open drafts
-					drafts.updateVisibility('available', save_id);
-					drafts.updateVisibility('open', save_id);
-					return;
-				}
-
-				if (type === 'cid') {
-					composer.newTopic({
-						cid: id,
-						title: content.title,
-						body: content.text,
-						tags: [],
-					});
-				} else if (type === 'tid') {
-					socket.emit('topics.getTopic', id, function (err, topicObj) {
-						composer.newReply(id, undefined, topicObj.title, content.text);
-					});
-				} else if (type === 'pid') {
-					composer.editPost(id);
-				}
-			});
-		});
-	}
+	require(['composer/drafts'], function (drafts) {
+		drafts.loadOpen();
+	});
 
 	$(window).on('action:composer.topic.new', function(ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
