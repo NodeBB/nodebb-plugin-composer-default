@@ -315,7 +315,7 @@ define('composer', [
 		postContainer.find('.img-upload-btn').removeClass('hide');
 		postContainer.find('#files.lt-ie9').removeClass('hide');
 
-		if (config.allowFileUploads) {
+		if (app.user.privileges['upload:post:file']) {
 			postContainer.find('.file-upload-btn').removeClass('hide');
 			postContainer.find('#files.lt-ie9').removeClass('hide');
 		}
