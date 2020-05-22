@@ -27,9 +27,7 @@
 				<!-- ELSE -->
 				<span class="title">[[topic:composer.replying_to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
-				<ul class="dropdown-menu quick-search-results hidden">
-					<!-- IMPORT partials/quick-search-results.tpl -->
-				</ul>
+				<ul class="dropdown-menu quick-search-results hidden"></ul>
 			</div>
 
 			<!-- IF isTopic -->
