@@ -203,7 +203,7 @@ define('composer/uploads', [
 	}
 
 	function uploadContentFiles(params) {
-		var files = params.files;
+		var files = [ ...params.files ];
 		var post_uuid = params.post_uuid;
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var textarea = postContainer.find('textarea');
@@ -290,7 +290,7 @@ define('composer/uploads', [
 
 				error: function (xhr) {
 					postContainer.find('[data-action="post"]').prop('disabled', false);
-					onUploadError(xhr);
+					onUploadError(xhr, post_uuid);
 				},
 
 				uploadProgress: function(event, position, total, percent) {
@@ -308,12 +308,18 @@ define('composer/uploads', [
 					doneUploading = true;
 					if (uploads && uploads.length) {
 						for (var i=0; i<uploads.length; ++i) {
+							uploads[i].filename = filenameMapping[i].replace(/^\d+_\d{13}_/, '');
+							uploads[i].isImage = /image./.test(files[i].type);
 							updateTextArea(filenameMapping[i], uploads[i].url, true);
 						}
 					}
 					preview.render(postContainer);
 					textarea.focus();
 					postContainer.find('[data-action="post"]').prop('disabled', false);
+					$(window).trigger('action:composer.upload', {
+						post_uuid: post_uuid,
+						files: uploads,
+					});
 				},
 
 				complete: function() {
@@ -361,12 +367,16 @@ define('composer/uploads', [
 		thumbForm.submit();
 	}
 
-	function onUploadError(xhr) {
+	function onUploadError(xhr, post_uuid) {
 		var msg = (xhr.responseJSON && xhr.responseJSON.error) || '[[error:parse-error]]';
 		if (xhr && xhr.status === 413) {
 			msg = xhr.statusText || 'Request Entity Too Large';
 		}
 		app.alertError(msg);
+		$(window).trigger('action:composer.uploadError', {
+			post_uuid: post_uuid,
+			message: msg,
+		});
 	}
 
 	return uploads;
