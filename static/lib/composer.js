@@ -566,15 +566,16 @@ define('composer', [
 		}
 
 		var searchInput = postContainer.find('input.title');
-		var quickSearchResults = postContainer.find('.quick-search-results');
+		var quickSearchContainer = postContainer.find('.quick-search-container');
 		searchInput.on('blur', function () {
 			setTimeout(function () {
-				quickSearchResults.addClass('hidden');
+				quickSearchContainer.addClass('hidden');
 			}, 200);
 		});
 		app.enableTopicSearch({
 			inputEl: searchInput,
-			resultEl: quickSearchResults,
+			resultEl: quickSearchContainer,
+			hideOnNoMatches: true,
 		});
 	}
 
