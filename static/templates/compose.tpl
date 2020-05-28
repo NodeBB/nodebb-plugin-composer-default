@@ -27,7 +27,9 @@
 				<!-- ELSE -->
 				<span class="title">[[topic:composer.replying-to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
-				<ul class="dropdown-menu quick-search-results hidden"></ul>
+				<div id="quick-search-container" class="quick-search-container hidden">
+					<div id="quick-search-results-container"></div>
+				</div>
 			</div>
 
 			<!-- IF isTopic -->
