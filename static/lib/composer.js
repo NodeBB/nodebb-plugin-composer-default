@@ -619,19 +619,31 @@ define('composer', [
 		var checkTitle = (postData.hasOwnProperty('cid') || parseInt(postData.pid, 10)) && postContainer.find('input.title').length;
 		var isCategorySelected = !checkTitle || (checkTitle && parseInt(postData.cid, 10));
 
+		// Specifically for checking title/body length via plugins
+		var payload = {
+			post_uuid: post_uuid,
+			postData: postData,
+			postContainer: postContainer,
+			titleEl: titleEl,
+			titleLen: titleEl.val().length,
+			bodyEl: bodyEl,
+			bodyLen: bodyEl.val().length,
+		};
+		$(window).trigger('action:composer.check', payload);
+
 		if (uploads.inProgress[post_uuid] && uploads.inProgress[post_uuid].length) {
 			return composerAlert(post_uuid, '[[error:still-uploading]]');
-		} else if (checkTitle && titleEl.val().length < parseInt(config.minimumTitleLength, 10)) {
+		} else if (checkTitle && payload.titleLen < parseInt(config.minimumTitleLength, 10)) {
 			return composerAlert(post_uuid, '[[error:title-too-short, ' + config.minimumTitleLength + ']]');
-		} else if (checkTitle && titleEl.val().length > parseInt(config.maximumTitleLength, 10)) {
+		} else if (checkTitle && payload.titleLen > parseInt(config.maximumTitleLength, 10)) {
 			return composerAlert(post_uuid, '[[error:title-too-long, ' + config.maximumTitleLength + ']]');
 		} else if (action === 'topics.post' && !isCategorySelected) {
 			return composerAlert(post_uuid, '[[error:category-not-selected]]');
 		} else if (checkTitle && tags.getTags(post_uuid) && tags.getTags(post_uuid).length < parseInt(config.minimumTagsPerTopic, 10)) {
 			return composerAlert(post_uuid, '[[error:not-enough-tags, ' + config.minimumTagsPerTopic + ']]');
-		} else if (bodyEl.val().length < parseInt(config.minimumPostLength, 10)) {
+		} else if (payload.bodyLen < parseInt(config.minimumPostLength, 10)) {
 			return composerAlert(post_uuid, '[[error:content-too-short, ' + config.minimumPostLength + ']]');
-		} else if (bodyEl.val().length > parseInt(config.maximumPostLength, 10)) {
+		} else if (payload.bodyLen > parseInt(config.maximumPostLength, 10)) {
 			return composerAlert(post_uuid, '[[error:content-too-long, ' + config.maximumPostLength + ']]');
 		}
 
