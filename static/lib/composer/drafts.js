@@ -10,14 +10,16 @@ define('composer/drafts', function () {
 
 	drafts.init = function(postContainer, postData) {
 		var draftIconEl = postContainer.find('.draft-icon');
-
-		postContainer.on('keyup', 'textarea, input.handle, input.title', function() {
+		function saveThrottle() {
 			resetTimeout();
 
 			saveThrottleId = setTimeout(function() {
 				saveDraft(postContainer, draftIconEl, postData);
 			}, 1000);
-		});
+		}
+
+		postContainer.on('keyup', 'textarea, input.handle, input.title', saveThrottle);
+		postContainer.on('click', 'input[type="checkbox"]', saveThrottle);
 
 		draftIconEl.on('animationend', function () {
 			$(this).toggleClass('active', false);
@@ -56,20 +58,22 @@ define('composer/drafts', function () {
 	};
 
 	drafts.get = function(save_id) {
-		const uid = save_id.split(':')[1];
-
-		if (parseInt(uid, 10)) {
-			return {
-				title: localStorage.getItem(save_id + ':title'),
-				text: localStorage.getItem(save_id),
-			}
-		} else {
-			return {
-				handle: sessionStorage.getItem(save_id + ':handle'),
-				title: sessionStorage.getItem(save_id + ':title'),
-				text: sessionStorage.getItem(save_id),
-			}
+		var uid = save_id.split(':')[1];
+		var storage = parseInt(uid, 10) ? localStorage : sessionStorage;
+		var draft = {
+			title: storage.getItem(save_id + ':title'),
+			text: storage.getItem(save_id),
+		};
+		if (!parseInt(uid, 10)) {
+			draft.handle = storage.getItem(save_id + ':handle');
 		}
+
+		$(window).trigger('action:composer.drafts.get', {
+			save_id: save_id,
+			draft: draft,
+			storage: storage,
+		});
+		return draft;
 	}
 
 	function saveDraft(postContainer, draftIconEl, postData) {
@@ -85,6 +89,12 @@ define('composer/drafts', function () {
 					var handle = postContainer.find('input.handle').val();
 					storage.setItem(postData.save_id + ':handle', handle);
 				}
+
+				$(window).trigger('action:composer.drafts.save', {
+					storage: storage,
+					postData: postData,
+					postContainer: postContainer,
+				});
 				draftIconEl.toggleClass('active', true);
 			} else {
 				drafts.removeDraft(postData.save_id);
@@ -182,7 +192,7 @@ define('composer/drafts', function () {
 					var uid = saveObj[1];
 					var type = saveObj[2];
 					var id = saveObj[3];
-					var content = drafts.get(save_id);
+					var draft = drafts.get(save_id);
 
 					// If draft is already open, do nothing
 					if (open.indexOf(save_id) !== -1) {
@@ -194,7 +204,7 @@ define('composer/drafts', function () {
 						return;
 					}
 
-					if (!content || (content.text && content.title && !content.text.title && !content.text.length)) {
+					if (!draft || (draft.text && draft.title && !draft.text.title && !draft.text.length)) {
 						// Empty content, remove from list of open drafts
 						drafts.updateVisibility('available', save_id);
 						drafts.updateVisibility('open', save_id);
@@ -204,9 +214,9 @@ define('composer/drafts', function () {
 					if (type === 'cid') {
 						composer.newTopic({
 							cid: id,
-							title: content.title,
-							body: content.text,
-							tags: [],
+							title: draft.title,
+							body: draft.text,
+							tags: []
 						});
 					} else if (type === 'tid') {
 						socket.emit('topics.getTopic', id, function (err, topicObj) {

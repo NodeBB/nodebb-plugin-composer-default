@@ -303,7 +303,6 @@ define('composer', [
 		var titleEl = postContainer.find('input.title');
 		var handleEl = postContainer.find('input.handle');
 		var bodyEl = postContainer.find('textarea');
-		var draft = drafts.get(postData.save_id);
 		var submitBtn = postContainer.find('.composer-submit');
 
 		categoryList.init(postContainer, composer.posts[post_uuid]);
@@ -390,6 +389,8 @@ define('composer', [
 			preview.matchScroll(postContainer);
 		});
 
+		drafts.init(postContainer, postData);
+		var draft = drafts.get(postData.save_id);
 		if (draft && draft.title) {
 			titleEl.val(draft.title);
 		}
@@ -398,7 +399,6 @@ define('composer', [
 		}
 		bodyEl.val(draft.text ? draft.text : postData.body);
 
-		drafts.init(postContainer, postData);
 		handleHelp(postContainer);
 		handleSearch(postContainer);
 		focusElements(postContainer);
@@ -411,6 +411,7 @@ define('composer', [
 		$(window).trigger('action:composer.enhanced', {
 			postContainer: postContainer,
 			postData: postData,
+			draft: draft,
 		});
 	};
 
