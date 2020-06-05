@@ -25,7 +25,7 @@ define('composer/preview', function() {
 				if (err) {
 					return;
 				}
-				preview = $(preview);
+				preview = $('<div>' + preview + '</div>');
 				preview.find('img:not(.not-responsive)').addClass('img-responsive');
 				postContainer.find('.preview').html(preview);
 				$(window).trigger('action:composer.preview');
