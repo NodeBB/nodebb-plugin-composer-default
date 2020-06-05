@@ -152,10 +152,6 @@ define('composer', [
 			post.save_id = ['composer', app.user.uid, 'pid', post.pid].join(':');
 		}
 
-		// Post is opened, save to list of opened drafts
-		drafts.updateVisibility('available', post.save_id, true);
-		drafts.updateVisibility('open', post.save_id, true);
-
 		composer.posts[uuid] = post;
 		composer.load(uuid);
 	}
@@ -331,6 +327,10 @@ define('composer', [
 
 		postContainer.on('change', 'input, textarea', function() {
 			composer.posts[post_uuid].modified = true;
+
+			// Post is modified, save to list of opened drafts
+			drafts.updateVisibility('available', composer.posts[post_uuid].save_id, true);
+			drafts.updateVisibility('open', composer.posts[post_uuid].save_id, true);
 		});
 
 		submitBtn.on('click', function(e) {
