@@ -57,8 +57,14 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		var bounds = getBounds();
 		var elem = postContainer[0];
 
+		// Adjust minimumRatio for shorter viewports
+		var adjustStart = 1200;
+		var adjustEnd = 400;
+		var spread = adjustStart - adjustEnd;
+		var adjustedMinimum = minimumRatio + ((1 - minimumRatio) * (1 - (window.innerHeight - adjustEnd) / spread));
+
 		if (bounds.width >= mediumMin) {
-			ratio = Math.min(Math.max(ratio, minimumRatio), 1);
+			ratio = Math.min(Math.max(ratio, adjustedMinimum), 1);
 
 			var top = ratio * bounds.boundedHeight / bounds.height;
 			elem.style.top = ((1 - top) * 100).toString() + '%';
