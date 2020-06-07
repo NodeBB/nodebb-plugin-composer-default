@@ -94,12 +94,20 @@ Sockets.getFormattingOptions = function(socket, data, callback) {
 
 Sockets.getCategoriesForSelect = async function (socket) {
 	const cids = await categories.getAllCidsFromSet('categories:cid');
-	const [allowed, categoriesData, isModerator, isAdmin] = await Promise.all([
+	let [allowed, categoriesData, isModerator, isAdmin] = await Promise.all([
 		privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid),
 		categories.getCategoriesData(cids),
 		user.isModerator(socket.uid, cids),
 		user.isAdministrator(socket.uid),
 	]);
+
+	const filtered = await plugins.fireHook('filter:composer.getCategoriesForSelect', {
+		allowed: allowed,
+		categoriesData: categoriesData,
+		isModerator: isModerator,
+		isAdmin: isAdmin,
+	});
+	[allowed, categoriesData, isModerator, isAdmin] = [... Object.values(filtered)];
 
 	categories.getTree(categoriesData);
 
