@@ -111,8 +111,8 @@ define('composer/drafts', function () {
 		drafts.updateVisibility('available', save_id);
 		drafts.updateVisibility('open', save_id);
 
-		localStorage.removeItem(save_id);
-		localStorage.removeItem(save_id + ':title');
+		const keys = Object.keys(localStorage).filter(key => key.startsWith(save_id));
+		keys.forEach(key => localStorage.removeItem(key));
 		return;
 	};
 
