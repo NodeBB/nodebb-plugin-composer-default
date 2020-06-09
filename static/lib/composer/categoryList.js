@@ -91,7 +91,7 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 		var category = categoryList._map[postData.cid];
 		if (category) {
 			taskbar.update('composer', uuid, {
-				image: category.image,
+				image: category.backgroundImage,
 				'background-color': category.bgColor,
 				icon: category.icon.slice(3),
 			});
