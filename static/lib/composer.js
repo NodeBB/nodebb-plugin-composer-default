@@ -566,16 +566,11 @@ define('composer', [
 			return;
 		}
 
-		var searchInput = postContainer.find('input.title');
-		var quickSearchContainer = postContainer.find('.quick-search-container');
-		searchInput.on('blur', function () {
-			setTimeout(function () {
-				quickSearchContainer.addClass('hidden');
-			}, 200);
-		});
 		app.enableTopicSearch({
-			inputEl: searchInput,
-			resultEl: quickSearchContainer,
+			searchElements: {
+				inputEl: postContainer.find('input.title'),
+				resultEl: postContainer.find('.quick-search-container'),
+			},
 			hideOnNoMatches: true,
 		});
 	}
