@@ -102,12 +102,13 @@ Sockets.getCategoriesForSelect = async function (socket) {
 	]);
 
 	const filtered = await plugins.fireHook('filter:composer.getCategoriesForSelect', {
+		uid: socket.uid,
 		allowed: allowed,
 		categoriesData: categoriesData,
 		isModerator: isModerator,
 		isAdmin: isAdmin,
 	});
-	[allowed, categoriesData, isModerator, isAdmin] = [... Object.values(filtered)];
+	({ allowed, categoriesData, isModerator, isAdmin } = filtered);
 
 	categories.getTree(categoriesData);
 
