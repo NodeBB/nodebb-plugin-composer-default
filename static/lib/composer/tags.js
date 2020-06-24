@@ -6,18 +6,26 @@
 define('composer/tags', function() {
 	var tags = {};
 
+	var tagsinputEl;
+	var minTags;
+	var maxTags;
+
 	tags.init = function(postContainer, postData) {
 		var tagEl = postContainer.find('.tags');
 		if (!tagEl.length) {
 			return;
 		}
 
-		tagEl.tagsinput({
-			maxTags: config.maximumTagsPerTopic,
+		minTags = ajaxify.data.hasOwnProperty('minTags') ? ajaxify.data.minTags : config.minimumTagsPerTopic;
+		maxTags = ajaxify.data.hasOwnProperty('maxTags') ? ajaxify.data.maxTags : config.maximumTagsPerTopic;
+
+		var tagsinput = tagEl.tagsinput({
+			maxTags: maxTags,
 			maxChars: config.maximumTagLength,
 			confirmKeys: [13, 44],
 			trimValue: true
 		});
+		tagsinputEl = tagsinput[0];
 
 		tagEl.on('beforeItemAdd', function(event) {
 			var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
@@ -35,14 +43,14 @@ define('composer/tags', function() {
 
 		tagEl.on('itemAdded', function(event) {
 			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
-			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0}, function(err, allowed) {
+			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function(err, allowed) {
 				if (err) {
 					return app.alertError(err.message);
 				}
 				if (!allowed) {
 					return tagEl.tagsinput('remove', event.item);
 				}
-				$(window).trigger('action:tag.added', {cid: cid, tagEl: tagEl, tag: event.item});
+				$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
 			});
 		});
 
@@ -91,6 +99,14 @@ define('composer/tags', function() {
 		});
 	};
 
+	tags.isEnoughTags = function (post_uuid) {
+		return tags.getTags(post_uuid).length >= minTags;
+	};
+
+	tags.minTagCount = function () {
+		return minTags;
+	};
+
 	tags.onChangeCategory = function (postContainer, postData, cid) {
 		$.get(config.relative_path + '/api/category/' + cid, function (data) {
 			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
@@ -114,6 +130,13 @@ define('composer/tags', function() {
 		if (!input.length) {
 			return;
 		}
+
+		minTags = data.minTags;
+		maxTags = data.maxTags;
+		if (tagsinputEl) {
+			tagsinputEl.options.maxTags = maxTags;
+		}
+
 		if (data.tagWhitelist && data.tagWhitelist.length) {
 			input.attr('readonly', '');
 			input.attr('placeholder', '');
@@ -128,7 +151,10 @@ define('composer/tags', function() {
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
 
-		postContainer.find('.tags-container').toggleClass('hidden', (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) || (config.maximumTagsPerTopic === 0 && !postData.tags.length));
+		postContainer.find('.tags-container').toggleClass('hidden', (
+			data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) ||
+			(maxTags === 0 && !postData.tags.length)
+		);
 
 		if (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) {
 			tagEl.tagsinput('removeAll');
