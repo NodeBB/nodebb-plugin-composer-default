@@ -20,21 +20,26 @@ define('composer/tags', function() {
 		maxTags = ajaxify.data.hasOwnProperty('maxTags') ? ajaxify.data.maxTags : config.maximumTagsPerTopic;
 
 		var tagsinput = tagEl.tagsinput({
-			maxTags: maxTags,
-			maxChars: config.maximumTagLength,
 			confirmKeys: [13, 44],
 			trimValue: true
 		});
 		tagsinputEl = tagsinput[0];
 
 		tagEl.on('beforeItemAdd', function(event) {
+			var reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
 			var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
 			var different = cleanTag !== event.item;
-			event.cancel = different || event.item.length < config.minimumTagLength || event.item.length > config.maximumTagLength;
+			event.cancel = different ||
+				event.item.length < config.minimumTagLength ||
+				event.item.length > config.maximumTagLength ||
+				reachedMaxTags;
+
 			if (event.item.length < config.minimumTagLength) {
 				return app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
 			} else if (event.item.length > config.maximumTagLength) {
 				return app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
+			} else if (reachedMaxTags) {
+				return app.alertError('[[error:too-many-tags, ' + maxTags + ']]');
 			}
 			if (different) {
 				tagEl.tagsinput('add', cleanTag);
@@ -133,9 +138,6 @@ define('composer/tags', function() {
 
 		minTags = data.minTags;
 		maxTags = data.maxTags;
-		if (tagsinputEl) {
-			tagsinputEl.options.maxTags = maxTags;
-		}
 
 		if (data.tagWhitelist && data.tagWhitelist.length) {
 			input.attr('readonly', '');
