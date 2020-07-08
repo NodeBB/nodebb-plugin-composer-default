@@ -298,6 +298,7 @@ define('composer', [
 
 		var titleEl = postContainer.find('input.title');
 		var handleEl = postContainer.find('input.handle');
+		var tagsEl = postContainer.find('input.tags');
 		var bodyEl = postContainer.find('textarea');
 		var submitBtn = postContainer.find('.composer-submit');
 
@@ -396,6 +397,12 @@ define('composer', [
 		}
 		if (draft && draft.handle) {
 			handleEl.val(draft.handle);
+		}
+		if (draft && draft.tags) {
+			const tags = draft.tags.split(',');
+			tags.forEach(function (tag) {
+				tagsEl.tagsinput('add', tag);
+			});
 		}
 		bodyEl.val(draft.text ? draft.text : postData.body);
 

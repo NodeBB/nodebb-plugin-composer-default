@@ -61,9 +61,14 @@ define('composer/drafts', function () {
 		var uid = save_id.split(':')[1];
 		var storage = parseInt(uid, 10) ? localStorage : sessionStorage;
 		var draft = {
-			title: storage.getItem(save_id + ':title'),
 			text: storage.getItem(save_id),
 		};
+		['cid', 'title', 'tags'].forEach(function (key) {
+			const value = storage.getItem(save_id + ':' + key);
+			if (value) {
+				draft[key] = value;
+			}
+		});
 		if (!parseInt(uid, 10)) {
 			draft.handle = storage.getItem(save_id + ':handle');
 		}
@@ -78,13 +83,20 @@ define('composer/drafts', function () {
 
 	function saveDraft(postContainer, draftIconEl, postData) {
 		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
-			var title = postContainer.find('input.title').val();
+			const titleEl = postContainer.find('input.title');
+			const title = titleEl && titleEl.val();
 			var raw = postContainer.find('textarea').val();
 			var storage = app.user.uid ? localStorage : sessionStorage;
 
-			if (raw.length) {
+			if (raw.length || (title && title.length)) {
 				storage.setItem(postData.save_id, raw);
-				storage.setItem(postData.save_id + ':title', title);
+
+				if (postData.hasOwnProperty('cid')) {
+					// New topic only
+					const tags = postContainer.find('input.tags').val();
+					storage.setItem(postData.save_id + ':tags', tags);
+					storage.setItem(postData.save_id + ':title', title);
+				}
 				if (!app.user.uid) {
 					var handle = postContainer.find('input.handle').val();
 					storage.setItem(postData.save_id + ':handle', handle);
