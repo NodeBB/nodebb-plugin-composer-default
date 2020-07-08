@@ -146,6 +146,9 @@ plugin.build = function(data, callback) {
 		tagWhitelist: function(next) {
 			getTagWhitelist(req.query, next);
 		},
+		categoryData: function (next) {
+			categories.getCategoryFields(req.query.cid, ['minTags', 'maxTags'], next);
+		},
 		privileges: function (next) {
 			privileges.global.get(uid, next);
 		},
@@ -236,6 +239,9 @@ plugin.build = function(data, callback) {
 					minimumTagLength: meta.config.minimumTagLength || 3,
 					maximumTagLength: meta.config.maximumTagLength || 15,
 					tagWhitelist: data.tagWhitelist,
+					minTags: data.categoryData.minTags,
+					maxTags: data.categoryData.maxTags,
+
 					isTopic: !!req.query.cid,
 					isEditing: isEditing,
 					showHandleInput: parseInt(meta.config.allowGuestHandles, 10) === 1 && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),

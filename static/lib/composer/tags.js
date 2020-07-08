@@ -136,8 +136,12 @@ define('composer/tags', function() {
 			return;
 		}
 
-		minTags = data.minTags;
-		maxTags = data.maxTags;
+		if (data.hasOwnProperty('minTags')) {
+			minTags = data.minTags;
+		}
+		if (data.hasOwnProperty('maxTags')) {
+			maxTags = data.maxTags;
+		}
 
 		if (data.tagWhitelist && data.tagWhitelist.length) {
 			input.attr('readonly', '');
