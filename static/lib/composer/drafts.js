@@ -88,6 +88,12 @@ define('composer/drafts', function () {
 			var raw = postContainer.find('textarea').val();
 			var storage = app.user.uid ? localStorage : sessionStorage;
 
+			if (postData.hasOwnProperty('cid') && !postData.save_id.endsWith(':cid:' + postData.cid)) {
+				// A new cid was selected, the save_id needs updating
+				drafts.removeDraft(postData.save_id);	// First, delete the old draft
+				postData.save_id = postData.save_id.replace(/cid:\d+$/, 'cid:' + postData.cid);	// then create a new save_id
+			}
+
 			if (raw.length || (title && title.length)) {
 				storage.setItem(postData.save_id, raw);
 
