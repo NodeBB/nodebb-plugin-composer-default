@@ -34,7 +34,20 @@ define('composer/controls', ['composer/preview'], function(preview) {
 		preview.render(postContainer);
 	};
 
-	controls.wrapSelectionInTextareaWith = function(textarea, leading, trailing){
+	controls.wrapSelectionInTextareaWith = function(textarea, leading, trailing) {
+		var payload = {
+			context: this,
+			textarea: textarea,
+			leading: leading,
+			trailing: trailing,
+			preventDefault: false,
+		};
+		$(window).trigger('action:composer.wrapSelectionInTextareaWith', payload);
+
+		if (payload.preventDefault) {
+			return;
+		}
+
 		if (trailing === undefined) {
 			trailing = leading;
 		}
@@ -62,7 +75,7 @@ define('composer/controls', ['composer/preview'], function(preview) {
 		return [matches[1].length, matches[3].length];
 	};
 
-	controls.updateTextareaSelection = function(textarea, start, end){
+	controls.updateTextareaSelection = function(textarea, start, end) {
 		var payload = {
 			context: this,
 			textarea: textarea,
