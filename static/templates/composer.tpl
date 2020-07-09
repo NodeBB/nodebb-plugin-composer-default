@@ -19,6 +19,10 @@
 			</div>
 		</nav>
 		<div class="row title-container">
+			<!-- IF isTopic -->
+			<div class="category-list-container hidden-sm hidden-xs"></div>
+			<!-- ENDIF isTopic -->
+
 			<!-- IF showHandleInput -->
 			<div data-component="composer/handle">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
@@ -34,10 +38,6 @@
 					<div class="quick-search-results-container"></div>
 				</div>
 			</div>
-
-			<!-- IF isTopic -->
-			<div class="category-list-container hidden-sm hidden-xs"></div>
-			<!-- ENDIF isTopic -->
 
 			<div class="pull-right draft-icon hidden-xs hidden-sm"></div>
 
@@ -119,7 +119,7 @@
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<div class="pull-right draft-icon hidden-md hidden-lg"></div>
-				<textarea class="write" tabindex="4"></textarea>
+				<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]"></textarea>
 			</div>
 			<div class="hidden-sm hidden-xs preview-container">
 				<div class="help-text">

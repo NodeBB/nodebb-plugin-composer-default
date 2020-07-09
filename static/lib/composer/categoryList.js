@@ -38,7 +38,7 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 
 			app.parseAndTranslate('partials/category-selector', {
 				categories: categories,
-				pullRight: true
+				pullRight: false,
 			}, function (html) {
 				listContainer.append(html);
 				selector = categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {

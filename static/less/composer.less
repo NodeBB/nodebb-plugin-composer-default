@@ -92,8 +92,6 @@
 
 				.category-dropdown-menu {
 					max-height: 300px;
-					right: 0;
-					left: auto;
 				}
 			}
 		}
@@ -438,6 +436,14 @@
 
 	85% {
 		opacity: 1;
+	}
+}
+@media (min-width: @screen-md-max) {
+	html.composing {
+		.composer {
+			left: 10%;
+			width: 80%;
+		}
 	}
 }
 

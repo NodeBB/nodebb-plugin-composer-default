@@ -16,6 +16,9 @@
 		</form>
 
 		<div class="title-container row">
+			<!-- IF isTopic -->
+			<div class="category-list-container"></div>
+			<!-- ENDIF isTopic -->
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
@@ -31,10 +34,6 @@
 					<div class="quick-search-results-container"></div>
 				</div>
 			</div>
-
-			<!-- IF isTopic -->
-			<div class="category-list-container col-lg-3 col-md-3"></div>
-			<!-- ENDIF isTopic -->
 		</div>
 
 		<div class="category-tag-row">
@@ -113,7 +112,7 @@
 					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
-				<textarea name="content" form="compose-form" class="write" tabindex="5"></textarea>
+				<textarea name="content" form="compose-form" class="write" tabindex="5" placeholder="[[modules:composer.textarea.placeholder]]"></textarea>
 			</div>
 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
 				<div class="help-text">
