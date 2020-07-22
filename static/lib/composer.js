@@ -24,6 +24,7 @@ define('composer', [
 	};
 
 	$(window).off('resize', onWindowResize).on('resize', onWindowResize);
+	$(document).off('keyup', onKeyUp).on('keyup', onKeyUp);
 	onWindowResize();
 
 	$(window).on('action:composer.topics.post', function(ev, data) {
@@ -94,6 +95,15 @@ define('composer', [
 			}
 		}
 		composer.bsEnvironment = env;
+	}
+
+	function onKeyUp(event) {
+		if (composer.active) {
+			var keycode = (event.which ? event.which : event.keyCode);
+			if (keycode === 27) {// escape
+				composer.minimize(composer.active)
+			}
+		}
 	}
 
 	function alreadyOpen(post) {
@@ -372,7 +382,7 @@ define('composer', [
 			});
 		});
 
-		postContainer.find('.composer-minimize').on('click', function (e) {
+		postContainer.find('.composer-minimize, .minimize .trigger').on('click', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 			composer.minimize(post_uuid);
