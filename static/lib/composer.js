@@ -352,14 +352,11 @@ define('composer', [
 			post(post_uuid);
 		});
 
-		postContainer.keypress(function (event) {
-			var keyCode = (event.which ? event.which : event.keyCode);
-			if ((keyCode === 10 || keyCode == 13) && event.ctrlKey) {
+		require(['mousetrap'], function (mousetrap) {
+			mousetrap(postContainer.get(0)).bind('mod+enter', function () {
 				submitBtn.attr('disabled', true);
 				post(post_uuid);
-				return false;
-			}
-			return true;
+			});
 		});
 
 		postContainer.find('.composer-discard').on('click', function(e) {
