@@ -3,12 +3,12 @@
 
 /*globals define, socket, app*/
 
-define('composer/categoryList', ['categorySelector', 'taskbar'], function(categorySelector, taskbar) {
+define('composer/categoryList', ['categorySelector', 'taskbar'], function (categorySelector, taskbar) {
 	var categoryList = {};
 
 	var selector;
 
-	categoryList.init = function(postContainer, postData) {
+	categoryList.init = function (postContainer, postData) {
 		var listContainer = postContainer.find('.category-list-container');
 		if (!listContainer.length) {
 			return;
@@ -18,7 +18,7 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 			toggleDropDirection(postContainer);
 		});
 
-		socket.emit('plugins.composer.getCategoriesForSelect', {}, function(err, categories) {
+		socket.emit('plugins.composer.getCategoriesForSelect', {}, function (err, categories) {
 			if (err) {
 				return app.alertError(err.message);
 			}
@@ -53,15 +53,15 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function(catego
 
 				var selectedCategory = selector.getSelectedCategory();
 
-				$('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
-				$('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
+				postContainer.find('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
+				postContainer.find('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
 
 				toggleDropDirection(postContainer);
 			});
 		});
 
 
-		$('.category-selector').on('click', 'li', function() {
+		$('.category-selector').on('click', 'li', function () {
 			$('.category-name').text($(this).text());
 			$('.category-selector').removeClass('open');
 			$('.category-selector li').removeClass('active');
