@@ -83,10 +83,10 @@
 					</li>
 					<div class="topic-thumb-container center-block hide">
 						<form id="thumbForm" method="post" class="topic-thumb-form form-inline" enctype="multipart/form-data">
-							<img class="topic-thumb-preview"></img>
+							<img class="topic-thumb-preview" {{{if thumb}}}src="{thumb}"{{{end}}}></img>
 							<div class="form-group">
 								<label for="topic-thumb-url">[[topic:composer.thumb_url_label]]</label>
-								<input type="text" id="topic-thumb-url" class="form-control" placeholder="[[topic:composer.thumb_url_placeholder]]" />
+								<input type="text" id="topic-thumb-url" class="form-control" placeholder="[[topic:composer.thumb_url_placeholder]]" {{{if thumb}}}value="{thumb}"{{{end}}}/>
 							</div>
 							<div class="form-group">
 								<label for="topic-thumb-file">[[topic:composer.thumb_file_label]]</label>

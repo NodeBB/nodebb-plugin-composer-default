@@ -449,6 +449,7 @@ define('composer', [
 			title: title,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
+			thumb: postData.thumb,
 			allowTopicsThumbnail: allowTopicsThumbnail,
 			isTopicOrMain: isTopic || isMain,
 			minimumTagLength: config.minimumTagLength,

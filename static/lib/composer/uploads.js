@@ -76,13 +76,10 @@ define('composer/uploads', [
 	}
 
 	uploads.toggleThumbEls = function(postContainer, url) {
-		var thumbToggleBtnEl = postContainer.find('.topic-thumb-toggle-btn');
-
-		postContainer.find('input#topic-thumb-url').val(url);
-		postContainer.find('img.topic-thumb-preview').attr('src', url);
 		if (url) {
 			postContainer.find('.topic-thumb-clear-btn').removeClass('hide');
 		}
+		var thumbToggleBtnEl = postContainer.find('.topic-thumb-toggle-btn');
 		thumbToggleBtnEl.removeClass('hide');
 		thumbToggleBtnEl.off('click').on('click', function() {
 			var container = postContainer.find('.topic-thumb-container');
