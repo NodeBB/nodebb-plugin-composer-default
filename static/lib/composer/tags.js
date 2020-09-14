@@ -56,6 +56,7 @@ define('composer/tags', function() {
 					return tagEl.tagsinput('remove', event.item);
 				}
 				$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
+				input.autocomplete('close');
 			});
 		});
 
