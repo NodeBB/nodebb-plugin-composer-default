@@ -115,7 +115,6 @@
 		<div class="row write-preview-container">
 			<div class="write-container">
 				<div class="help-text">
-					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<div class="pull-right draft-icon hidden-md hidden-lg"></div>
