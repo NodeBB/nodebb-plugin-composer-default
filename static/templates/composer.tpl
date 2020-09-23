@@ -35,6 +35,7 @@
 				<span class="title form-control">[[topic:composer.replying_to, "{title}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
 				<div id="quick-search-container" class="quick-search-container hidden">
+					<div class="text-center loading-indicator"><i class="fa fa-spinner fa-spin"></i></div>
 					<div class="quick-search-results-container"></div>
 				</div>
 			</div>
