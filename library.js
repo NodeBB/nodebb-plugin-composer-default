@@ -1,279 +1,255 @@
-"use strict";
+'use strict';
 
-var plugins = require.main.require('./src/plugins');
-var topics = require.main.require('./src/topics');
-var categories = require.main.require('./src/categories');
-var posts = require.main.require('./src/posts');
-var user = require.main.require('./src/user');
-var meta = require.main.require('./src/meta');
-var privileges = require.main.require('./src/privileges');
-var translator = require.main.require('./src/translator');
-var helpers = require.main.require('./src/controllers/helpers');
-var SocketPlugins = require.main.require('./src/socket.io/plugins');
-var socketMethods = require('./websockets');
-var url = require('url');
+const url = require('url');
 
-var async = module.parent.require('async');
-var nconf = module.parent.require('nconf');
-var validator = require('validator');
+const nconf = module.parent.require('nconf');
+const validator = require('validator');
 
-var plugin = module.exports;
+const plugins = require.main.require('./src/plugins');
+const topics = require.main.require('./src/topics');
+const categories = require.main.require('./src/categories');
+const posts = require.main.require('./src/posts');
+const user = require.main.require('./src/user');
+const meta = require.main.require('./src/meta');
+const privileges = require.main.require('./src/privileges');
+const translator = require.main.require('./src/translator');
+const helpers = require.main.require('./src/controllers/helpers');
+const SocketPlugins = require.main.require('./src/socket.io/plugins');
+const socketMethods = require('./websockets');
+
+const plugin = module.exports;
 
 plugin.socketMethods = socketMethods;
 
-plugin.init = function(data, callback) {
-	var controllers = require('./controllers');
+plugin.init = async function (data) {
+	const controllers = require('./controllers');
 	SocketPlugins.composer = socketMethods;
 
 	data.router.get('/admin/plugins/composer-default', data.middleware.admin.buildHeader, controllers.renderAdminPage);
 	data.router.get('/api/admin/plugins/composer-default', controllers.renderAdminPage);
-
-	callback();
 };
 
-plugin.appendConfig = function(config, callback) {
-	meta.settings.get('composer-default', function(err, settings) {
-		if (err) {
-			return callback(null, config);
-		}
-
-		config['composer-default'] = settings;
-		callback(null, config);
-	});
+plugin.appendConfig = async function (config) {
+	config['composer-default'] = await meta.settings.get('composer-default');
+	return config;
 };
 
-plugin.addAdminNavigation = function(header, callback) {
+plugin.addAdminNavigation = async function (header) {
 	header.plugins.push({
 		route: '/plugins/composer-default',
 		icon: 'fa-edit',
-		name: 'Composer (Default)'
+		name: 'Composer (Default)',
 	});
-
-	callback(null, header);
+	return header;
 };
 
-plugin.addPrefetchTags = function(hookData, callback) {
-	var prefetch = [
+plugin.addPrefetchTags = async function (hookData) {
+	const prefetch = [
 		'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
 		'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
 		'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
 		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/topic.json',
 		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/modules.json',
-		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json'
+		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json',
 	];
 
-	hookData.links = hookData.links.concat(prefetch.map(function(path) {
+	hookData.links = hookData.links.concat(prefetch.map(function (path) {
 		return {
 			rel: 'prefetch',
-			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
+			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster'],
 		};
 	}));
 
-	callback(null, hookData);
+	return hookData;
 };
 
-plugin.getFormattingOptions = function(callback) {
-	plugins.fireHook('filter:composer.formatting', {
+plugin.getFormattingOptions = async function () {
+	const payload = await plugins.fireHook('filter:composer.formatting', {
 		options: [
 			{ name: 'tags', className: 'fa fa-tags', mobile: true },
-			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false }
-		]
-	}, function(err, payload) {
-		callback(err, payload ? payload.options : null);
+			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false },
+		],
 	});
+	return payload ? payload.options : null;
 };
 
-plugin.build = function(data, callback) {
-	var req = data.req;
-	var res = data.res;
-	var next = data.next;
+plugin.filterComposerBuild = async function (hookData) {
+	const req = hookData.req;
+	const res = hookData.res;
 
 	if (req.query.p) {
 		if (!res.locals.isAPI) {
 			var a;
 			try {
-				a = url.parse(req.query.p, true, true)
+				a = url.parse(req.query.p, true, true);
 			} catch (e) {
 				return helpers.redirect(res, '/');
 			}
-			return helpers.redirect(res, '/' + (a.path || '').replace(/^\/*/, '') );
-		} else {
-			res.render('', {});
-			return;
+			return helpers.redirect(res, '/' + (a.path || '').replace(/^\/*/, ''));
 		}
+		res.render('', {});
+		return;
 	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
 		return helpers.redirect(res, '/');
 	}
+	const [
+		isMainPost,
+		postData,
+		topicData,
+		categoryData,
+		isAdmin,
+		isMod,
+		formatting,
+		tagWhitelist,
+		globalPrivileges,
+		canTagTopics,
+	] = await Promise.all([
+		posts.isMain(req.query.pid),
+		getPostData(req),
+		getTopicData(req),
+		categories.getCategoryFields(req.query.cid, ['minTags', 'maxTags']),
+		user.isAdministrator(req.uid),
+		isModerator(req),
+		plugin.getFormattingOptions(),
+		getTagWhitelist(req.query),
+		privileges.global.get(req.uid),
+		canTag(req),
+	]);
 
-	var uid = req.uid;
+	const isEditing = !!req.query.pid;
+	const isGuestPost = postData && parseInt(postData.uid, 10) === 0;
+	const save_id = generateSaveId(req);
+	const discardRoute = generateDiscardRoute(req, topicData);
+	const body = await generateBody(req, postData);
 
-	async.parallel({
-		isMain: async.apply(posts.isMain, req.query.pid),
-		postData: function(next) {
-			if (!req.query.pid && !req.query.toPid) {
-				return next();
-			}
+	var action = 'topics.post';
+	let isMain = isMainPost;
+	if (req.query.tid) {
+		action = 'posts.reply';
+	} else if (req.query.pid) {
+		action = 'posts.edit';
+	} else {
+		isMain = true;
+	}
+	globalPrivileges['topics:tag'] = canTagTopics;
+	return {
+		req: req,
+		res: res,
+		templateData: {
+			disabled: !req.query.pid && !req.query.tid && !req.query.cid,
+			pid: parseInt(req.query.pid, 10),
+			tid: parseInt(req.query.tid, 10),
+			cid: parseInt(req.query.cid, 10) || (topicData ? topicData.cid : null),
+			action: action,
+			toPid: parseInt(req.query.toPid, 10),
+			discardRoute: discardRoute,
 
-			posts.getPostData(req.query.pid || req.query.toPid, next);
+			resizable: false,
+			allowTopicsThumbnail: parseInt(meta.config.allowTopicsThumbnail, 10) === 1 && isMain,
+
+			topicTitle: topicData ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
+			thumb: topicData ? topicData.thumb : '',
+			body: body,
+
+			isMain: isMain,
+			isTopicOrMain: !!req.query.cid || isMain,
+			minimumTagLength: meta.config.minimumTagLength || 3,
+			maximumTagLength: meta.config.maximumTagLength || 15,
+			tagWhitelist: tagWhitelist,
+			minTags: categoryData.minTags,
+			maxTags: categoryData.maxTags,
+
+			isTopic: !!req.query.cid,
+			isEditing: isEditing,
+			showHandleInput: meta.config.allowGuestHandles === 1 && (req.uid === 0 || (isEditing && isGuestPost && (isAdmin || isMod))),
+			handle: postData ? postData.handle || '' : undefined,
+			formatting: formatting,
+			isAdminOrMod: isAdmin || isMod,
+			save_id: save_id,
+			privileges: globalPrivileges,
 		},
-		topicData: function(next) {
-			if (req.query.tid) {
-				topics.getTopicData(req.query.tid, next);
-			} else if (req.query.pid) {
-				topics.getTopicDataByPid(req.query.pid, next);
-			} else {
-				return next();
-			}
-		},
-		isAdmin: async.apply(user.isAdministrator, uid),
-		isMod: function(next) {
-			if (!uid) {
-				next(null, false);
-			} else if (req.query.cid) {
-				user.isModerator(uid, req.query.cid, next);
-			} else if (req.query.tid) {
-				async.waterfall([
-					async.apply(topics.getTopicField, req.query.tid, 'cid'),
-					async.apply(user.isModerator, uid)
-				], next);
-			} else if (req.query.pid) {
-				posts.isModerator(req.query.pid, uid, next);
-			} else {
-				next(null, false);
-			}
-		},
-		formatting: async.apply(plugin.getFormattingOptions),
-		tagWhitelist: function(next) {
-			getTagWhitelist(req.query, next);
-		},
-		categoryData: function (next) {
-			categories.getCategoryFields(req.query.cid, ['minTags', 'maxTags'], next);
-		},
-		privileges: function (next) {
-			privileges.global.get(uid, next);
-		},
-		canTag: function (next) {
-			if (parseInt(req.query.cid, 10)) {
-				privileges.categories.can('topics:tag', req.query.cid, req.uid, next);
-			} else {
-				next(null, true);
-			}
-		}
-	}, function(err, data) {
-		if (err) {
-			return callback(err);
-		}
-
-		var isEditing = !!req.query.pid;
-		var isGuestPost = data.postData && parseInt(data.postData.uid, 10) === 0;
-		var save_id;
-		var discardRoute;
-		var body;
-
-		if (req.query.cid) {
-			save_id = ['composer', uid, 'cid', req.query.cid].join(':');
-		} else if (req.query.tid) {
-			save_id = ['composer', uid, 'tid', req.query.tid].join(':');
-		} else if (req.query.pid) {
-			save_id = ['composer', uid, 'pid', req.query.pid].join(':');
-		}
-
-		if (req.query.cid) {
-			discardRoute = nconf.get('relative_path') + '/category/' + validator.escape(String(req.query.cid));
-		} else if ((req.query.tid || req.query.pid)) {
-			if (data.topicData) {
-				discardRoute = nconf.get('relative_path') + '/topic/' + data.topicData.slug;
-			} else {
-				return next();
-			}
-		}
-
-		// Quoted reply
-		if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && data.postData) {
-			user.getUserField(data.postData.uid, 'username', function(err, username) {
-				translator.translate('[[modules:composer.user_said, ' + username + ']]', function(translated) {
-					body = '> ' + (data.postData ? data.postData.content.replace(/\n/g, '\n> ') + '\n\n' : '');
-					body = translated + '\n' + body;
-					ready();
-				});
-			});
-		} else if (req.query.body) {
-			body = req.query.body;
-			ready();
-		} else {
-			body = data.postData ? data.postData.content : '';
-			ready();
-		}
-
-		function ready() {
-			var action = 'topics.post';
-			if (!!req.query.tid) {
-				action = 'posts.reply';
-			} else if (!!req.query.pid) {
-				action = 'posts.edit';
-			} else {
-				data.isMain = true;
-			}
-			data.privileges['topics:tag'] = data.canTag;
-			callback(null, {
-				req: req,
-				res: res,
-				templateData: {
-					disabled: !req.query.pid && !req.query.tid && !req.query.cid,
-					pid: parseInt(req.query.pid, 10),
-					tid: parseInt(req.query.tid, 10),
-					cid: parseInt(req.query.cid, 10) || (data.topicData ? data.topicData.cid : null),
-					action: action,
-					toPid: parseInt(req.query.toPid, 10),
-					discardRoute: discardRoute,
-
-					resizable: false,
-					allowTopicsThumbnail: parseInt(meta.config.allowTopicsThumbnail, 10) === 1 && data.isMain,
-
-					topicTitle: data.topicData ? data.topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
-					thumb: data.topicData ? data.topicData.thumb : '',
-					body: body,
-
-					isMain: data.isMain,
-					isTopicOrMain: !!req.query.cid || data.isMain,
-					minimumTagLength: meta.config.minimumTagLength || 3,
-					maximumTagLength: meta.config.maximumTagLength || 15,
-					tagWhitelist: data.tagWhitelist,
-					minTags: data.categoryData.minTags,
-					maxTags: data.categoryData.maxTags,
-
-					isTopic: !!req.query.cid,
-					isEditing: isEditing,
-					showHandleInput: parseInt(meta.config.allowGuestHandles, 10) === 1 && (req.uid === 0 || (isEditing && isGuestPost && (data.isAdmin || data.isMod))),
-					handle: data.postData ? data.postData.handle || '' : undefined,
-					formatting: data.formatting,
-					isAdminOrMod: data.isAdmin || data.isMod,
-					save_id: save_id,
-					privileges: data.privileges,
-				}
-			});
-		}
-	});
+	};
 };
 
-function getTagWhitelist(query, callback) {
-	async.waterfall([
-		function (next) {
-			if (query.cid) {
-				return next(null, query.cid)
-			} else if (query.tid) {
-				topics.getTopicField(query.tid, 'cid', next);
-			} else if (query.pid) {
-				posts.getCidByPid(query.pid, next);
-			} else {
-				next(null, null);
-			}
-		},
-		function (cid, next) {
-			categories.getTagWhitelist([cid], next);
-		},
-		function (tagWhitelist, next) {
-			next(null, tagWhitelist[0]);
-		},
-	], callback);
+function generateDiscardRoute(req, topicData) {
+	if (req.query.cid) {
+		return nconf.get('relative_path') + '/category/' + validator.escape(String(req.query.cid));
+	} else if ((req.query.tid || req.query.pid)) {
+		if (topicData) {
+			return nconf.get('relative_path') + '/topic/' + topicData.slug;
+		}
+		return nconf.get('relative_path') + '/';
+	}
+}
+
+async function generateBody(req, postData) {
+	// Quoted reply
+	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
+		const username = await user.getUserField(postData.uid, 'username');
+		const translated = await translator.translate('[[modules:composer.user_said, ' + username + ']]');
+		return translated + '\n' +
+			'> ' + (postData ? postData.content.replace(/\n/g, '\n> ') + '\n\n' : '');
+	} else if (req.query.body) {
+		return req.query.body;
+	}
+	return postData ? postData.content : '';
+}
+
+function generateSaveId(req) {
+	if (req.query.cid) {
+		return ['composer', req.uid, 'cid', req.query.cid].join(':');
+	} else if (req.query.tid) {
+		return ['composer', req.uid, 'tid', req.query.tid].join(':');
+	} else if (req.query.pid) {
+		return ['composer', req.uid, 'pid', req.query.pid].join(':');
+	}
+}
+
+async function getPostData(req) {
+	if (!req.query.pid && !req.query.toPid) {
+		return null;
+	}
+
+	return await posts.getPostData(req.query.pid || req.query.toPid);
+}
+
+async function getTopicData(req) {
+	if (req.query.tid) {
+		return await topics.getTopicData(req.query.tid);
+	} else if (req.query.pid) {
+		return await topics.getTopicDataByPid(req.query.pid);
+	}
+	return null;
+}
+
+async function isModerator(req) {
+	if (!req.loggedIn) {
+		return false;
+	}
+	const cid = cidFromQuery(req.query);
+	return await user.isModerator(req.uid, cid);
+}
+
+async function canTag(req) {
+	if (parseInt(req.query.cid, 10)) {
+		return await privileges.categories.can('topics:tag', req.query.cid, req.uid);
+	}
+	return true;
+}
+
+async function getTagWhitelist(query) {
+	const cid = await cidFromQuery(query);
+	const tagWhitelist = await categories.getTagWhitelist([cid]);
+	return tagWhitelist[0];
+}
+
+async function cidFromQuery(query) {
+	if (query.cid) {
+		return query.cid;
+	} else if (query.tid) {
+		return await topics.getTopicField(query.tid, 'cid');
+	} else if (query.pid) {
+		return await posts.getCidByPid(query.pid);
+	}
+	return null;
 }
