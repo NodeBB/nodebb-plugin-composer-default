@@ -1,95 +1,76 @@
-"use strict";
+'use strict';
 
-var async = require.main.require('async');
 const _ = require.main.require('lodash');
 
-var meta = require.main.require('./src/meta');
-var privileges = require.main.require('./src/privileges');
-var posts = require.main.require('./src/posts');
-var topics = require.main.require('./src/topics');
-var plugins = require.main.require('./src/plugins');
-var categories = require.main.require('./src/categories');
-var user = require.main.require('./src/user');
+const meta = require.main.require('./src/meta');
+const privileges = require.main.require('./src/privileges');
+const posts = require.main.require('./src/posts');
+const topics = require.main.require('./src/topics');
+const plugins = require.main.require('./src/plugins');
+const categories = require.main.require('./src/categories');
+const user = require.main.require('./src/user');
 
-var Sockets = module.exports;
+const Sockets = module.exports;
 
-Sockets.push = function(socket, pid, callback) {
-	var postData;
-	async.waterfall([
-		function (next) {
-			privileges.posts.can('topics:read', pid, socket.uid, next);
-		},
-		function (canRead, next) {
-			if (!canRead) {
-				return next(new Error('[[error:no-privileges]]'));
-			}
-			posts.getPostFields(pid, ['content', 'tid', 'uid', 'handle'], next);
-		},
-		function (_postData, next) {
-			postData = _postData;
-			if (!postData && !postData.content) {
-				return next(new Error('[[error:invalid-pid]]'));
-			}
-			async.parallel({
-				topic: function(next) {
-					topics.getTopicDataByPid(pid, next);
-				},
-				tags: function(next) {
-					topics.getTopicTags(postData.tid, next);
-				},
-				isMain: function(next) {
-					posts.isMain(pid, next);
-				}
-			}, next);
-		},
-		function (results, next) {
-			if (!results.topic) {
-				return next(new Error('[[error:no-topic]]'));
-			}
-			plugins.fireHook('filter:composer.push', {
-				pid: pid,
-				uid: postData.uid,
-				handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
-				body: postData.content,
-				title: results.topic.title,
-				thumb: results.topic.thumb,
-				tags: results.tags,
-				isMain: results.isMain
-			}, next);
-		},
-	], callback);
-};
-
-Sockets.editCheck = function(socket, pid, callback) {
-	posts.isMain(pid, function(err, isMain) {
-		callback(err, {
-			titleEditable: isMain
-		});
-	});
-};
-
-Sockets.renderPreview = function(socket, content, callback) {
-	plugins.fireHook('filter:parse.raw', content, callback);
-};
-
-Sockets.renderHelp = function(socket, data, callback) {
-	var helpText = meta.config['composer:customHelpText'] || '';
-
-	if (meta.config['composer:showHelpTab'] === '0') {
-		return callback(new Error('help-hidden'));
+Sockets.push = async function (socket, pid) {
+	const canRead = await privileges.posts.can('topics:read', pid, socket.uid);
+	if (!canRead) {
+		throw new Error('[[error:no-privileges]]');
 	}
 
-	plugins.fireHook('filter:parse.raw', helpText, function(err, helpText) {
-		if (!meta.config['composer:allowPluginHelp'] || meta.config['composer:allowPluginHelp'] === '1') {
-			plugins.fireHook('filter:composer.help', helpText, callback);
-		} else {
-			callback(null, helpText);
-		}
+	const postData = await posts.getPostFields(pid, ['content', 'tid', 'uid', 'handle']);
+	if (!postData && !postData.content) {
+		throw new Error('[[error:invalid-pid]]');
+	}
+
+	const [topic, tags, isMain] = await Promise.all([
+		topics.getTopicDataByPid(pid),
+		topics.getTopicTags(postData.tid),
+		posts.isMain(pid),
+	]);
+
+	if (!topic) {
+		throw new Error('[[error:no-topic]]');
+	}
+
+	const result = await plugins.fireHook('filter:composer.push', {
+		pid: pid,
+		uid: postData.uid,
+		handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
+		body: postData.content,
+		title: topic.title,
+		thumb: topic.thumb,
+		tags: tags,
+		isMain: isMain,
 	});
+	return result;
 };
 
-Sockets.getFormattingOptions = function(socket, data, callback) {
-	module.parent.exports.getFormattingOptions(callback);
+Sockets.editCheck = async function (socket, pid) {
+	const isMain = await posts.isMain(pid);
+	return { titleEditable: isMain };
+};
+
+Sockets.renderPreview = async function (socket, content) {
+	return await plugins.fireHook('filter:parse.raw', content);
+};
+
+Sockets.renderHelp = async function () {
+	const helpText = meta.config['composer:customHelpText'] || '';
+
+	if (meta.config['composer:showHelpTab'] === '0') {
+		throw new Error('help-hidden');
+	}
+
+	const parsed = await plugins.fireHook('filter:parse.raw', helpText);
+	if (!meta.config['composer:allowPluginHelp'] || meta.config['composer:allowPluginHelp'] === '1') {
+		return await plugins.fireHook('filter:composer.help', parsed);
+	}
+	return helpText;
+};
+
+Sockets.getFormattingOptions = async function () {
+	return await module.parent.exports.getFormattingOptions();
 };
 
 Sockets.getCategoriesForSelect = async function (socket) {

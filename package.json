@@ -23,10 +23,15 @@
   },
   "readmeFilename": "README.md",
   "nbbpm": {
-    "compatibility": "^1.13.0"
+    "compatibility": "^1.14.3"
   },
   "dependencies": {
     "screenfull": "^4.0.0",
-    "validator": "^11.0.0"
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "eslint": "7.10.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-plugin-import": "2.21.1"
   }
 }
