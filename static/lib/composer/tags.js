@@ -3,7 +3,7 @@
 
 /*globals ajaxify, define, config, socket, app, utils*/
 
-define('composer/tags', function() {
+define('composer/tags', [ 'autocomplete' ], function(autocomplete) {
 	var tags = {};
 
 	var tagsinputEl;
@@ -65,31 +65,7 @@ define('composer/tags', function() {
 		var input = postContainer.find('.bootstrap-tagsinput input');
 		toggleTagInput(postContainer, postData, ajaxify.data);
 
-		app.loadJQueryUI(function() {
-			input.autocomplete({
-				delay: 100,
-				position: { my: "left bottom", at: "left top", collision: "flip" },
-				appendTo: postContainer.find('.bootstrap-tagsinput'),
-				open: function() {
-					$(this).autocomplete('widget').css('z-index', 20000);
-				},
-				source: function(request, response) {
-					socket.emit('topics.autocompleteTags', {query: request.term, cid: postData.cid}, function(err, tags) {
-						if (err) {
-							return app.alertError(err.message);
-						}
-						if (tags) {
-							response(tags);
-						}
-						$('.ui-autocomplete a').attr('data-ajaxify', 'false');
-					});
-				},
-				select: function(event, ui) {
-					// when autocomplete is selected from the dropdown simulate a enter key down to turn it into a tag
-					triggerEnter(input);
-				}
-			});
-		});
+		autocomplete.tag(input);
 
 		input.attr('tabIndex', tagEl.attr('tabIndex'));
 		input.on('blur', function() {

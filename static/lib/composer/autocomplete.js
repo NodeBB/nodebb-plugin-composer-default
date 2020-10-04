@@ -18,7 +18,6 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 	autocomplete.init = function(postContainer, post_uuid) {
 		var element = postContainer.find('.write');
 		var dropdownClass = 'composer-autocomplete-dropdown-' + post_uuid;
-		var timer;
 
 		if (!element.length) {
 			/**
@@ -34,25 +33,13 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 			element: element,
 			strategies: [],
 			options: {
+				placement: 'auto',
 				style: {
 					'z-index': 20000,
 				},
 				className: dropdownClass + ' dropdown-menu textcomplete-dropdown',
 			}
 		};
-
-		element.on('keyup', function () {
-			clearTimeout(timer);
-			timer = setTimeout(function () {
-				var dropdown = document.querySelector('.' + dropdownClass);
-				var pos = dropdown.getBoundingClientRect();
-
-				var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
-
-				var offset = window.innerHeight + margin - 10 - pos.bottom;
-				dropdown.style.marginTop = Math.min(offset, 0) + 'px';
-			}, 0);
-		});
 
 		$(window).trigger('composer:autocomplete:init', data);
 
@@ -84,6 +71,15 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 		var textcomplete = new window.Textcomplete(editor, {
 			dropdown: data.options,
 		});
+
+		// hack till https://github.com/yuku/textcomplete/issues/166
+		var _getCursorOffset = editor.getCursorOffset;
+		editor.getCursorOffset = function () {
+			var offset = _getCursorOffset.apply(editor, arguments);
+			offset.clientTop = offset.top;
+			return offset;
+		};
+
 		textcomplete.register(data.strategies);
 		textcomplete.on('rendered', function () {
 			if (textcomplete.dropdown.items.length) {
