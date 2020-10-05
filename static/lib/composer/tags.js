@@ -1,16 +1,15 @@
 
 'use strict';
 
-/*globals ajaxify, define, config, socket, app, utils*/
+/* globals jQuery, ajaxify, define, config, socket, app, utils, $, window */
 
-define('composer/tags', function() {
+define('composer/tags', function () {
 	var tags = {};
 
-	var tagsinputEl;
 	var minTags;
 	var maxTags;
 
-	tags.init = function(postContainer, postData) {
+	tags.init = function (postContainer, postData) {
 		var tagEl = postContainer.find('.tags');
 		if (!tagEl.length) {
 			return;
@@ -19,13 +18,13 @@ define('composer/tags', function() {
 		minTags = ajaxify.data.hasOwnProperty('minTags') ? ajaxify.data.minTags : config.minimumTagsPerTopic;
 		maxTags = ajaxify.data.hasOwnProperty('maxTags') ? ajaxify.data.maxTags : config.maximumTagsPerTopic;
 
-		var tagsinput = tagEl.tagsinput({
+		tagEl.tagsinput({
 			confirmKeys: [13, 44],
-			trimValue: true
+			trimValue: true,
 		});
-		tagsinputEl = tagsinput[0];
+		var input = postContainer.find('.bootstrap-tagsinput input');
 
-		tagEl.on('beforeItemAdd', function(event) {
+		tagEl.on('beforeItemAdd', function (event) {
 			var reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
 			var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
 			var different = cleanTag !== event.item;
@@ -46,9 +45,9 @@ define('composer/tags', function() {
 			}
 		});
 
-		tagEl.on('itemAdded', function(event) {
+		tagEl.on('itemAdded', function (event) {
 			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
-			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function(err, allowed) {
+			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function (err, allowed) {
 				if (err) {
 					return app.alertError(err.message);
 				}
@@ -56,25 +55,27 @@ define('composer/tags', function() {
 					return tagEl.tagsinput('remove', event.item);
 				}
 				$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
-				input.autocomplete('close');
+				if (input.length) {
+					input.autocomplete('close');
+				}
 			});
 		});
 
-		addTags(postData.tags, tagEl);
-
-		var input = postContainer.find('.bootstrap-tagsinput input');
 		toggleTagInput(postContainer, postData, ajaxify.data);
 
-		app.loadJQueryUI(function() {
+		app.loadJQueryUI(function () {
 			input.autocomplete({
 				delay: 100,
-				position: { my: "left bottom", at: "left top", collision: "flip" },
+				position: { my: 'left bottom', at: 'left top', collision: 'flip' },
 				appendTo: postContainer.find('.bootstrap-tagsinput'),
-				open: function() {
+				open: function () {
 					$(this).autocomplete('widget').css('z-index', 20000);
 				},
-				source: function(request, response) {
-					socket.emit('topics.autocompleteTags', {query: request.term, cid: postData.cid}, function(err, tags) {
+				source: function (request, response) {
+					socket.emit('topics.autocompleteTags', {
+						query: request.term,
+						cid: postData.cid,
+					}, function (err, tags) {
 						if (err) {
 							return app.alertError(err.message);
 						}
@@ -84,15 +85,17 @@ define('composer/tags', function() {
 						$('.ui-autocomplete a').attr('data-ajaxify', 'false');
 					});
 				},
-				select: function(event, ui) {
+				select: function (/* event, ui */) {
 					// when autocomplete is selected from the dropdown simulate a enter key down to turn it into a tag
 					triggerEnter(input);
-				}
+				},
 			});
+
+			addTags(postData.tags, tagEl);
 		});
 
 		input.attr('tabIndex', tagEl.attr('tabIndex'));
-		input.on('blur', function() {
+		input.on('blur', function () {
 			triggerEnter(input);
 		});
 
@@ -179,21 +182,21 @@ define('composer/tags', function() {
 		var e = jQuery.Event('keypress');
 		e.which = 13;
 		e.keyCode = 13;
-		setTimeout(function() {
+		setTimeout(function () {
 			input.trigger(e);
 		}, 100);
 	}
 
 	function addTags(tags, tagEl) {
 		if (tags && tags.length) {
-			for (var i=0; i<tags.length; ++i) {
+			for (var i = 0; i < tags.length; ++i) {
 				tagEl.tagsinput('add', tags[i]);
 			}
 		}
 	}
 
-	tags.getTags = function(post_uuid) {
-		return $('.composer[data-uuid="' + post_uuid + '"]' + ' .tags').tagsinput('items');
+	tags.getTags = function (post_uuid) {
+		return $('.composer[data-uuid="' + post_uuid + '"] .tags').tagsinput('items');
 	};
 
 	return tags;
