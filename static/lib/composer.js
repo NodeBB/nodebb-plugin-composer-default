@@ -596,6 +596,9 @@ define('composer', [
 		}
 
 		composer.active = post_uuid;
+		$(window).trigger('action:composer.activate', {
+			post_uuid: post_uuid,
+		});
 	}
 
 	function focusElements(postContainer) {
