@@ -1,19 +1,17 @@
 'use strict';
 
-/* globals define */
+/* globals $, window, socket, app, define, localStorage, sessionStorage */
 
 define('composer/drafts', function () {
-
 	var drafts = {};
 	var	saveThrottleId;
-	var saving = false;
 
-	drafts.init = function(postContainer, postData) {
+	drafts.init = function (postContainer, postData) {
 		var draftIconEl = postContainer.find('.draft-icon');
 		function saveThrottle() {
 			resetTimeout();
 
-			saveThrottleId = setTimeout(function() {
+			saveThrottleId = setTimeout(function () {
 				saveDraft(postContainer, draftIconEl, postData);
 			}, 1000);
 		}
@@ -25,10 +23,11 @@ define('composer/drafts', function () {
 			$(this).toggleClass('active', false);
 		});
 
-		$(window).on('unload', function (e) {
+		$(window).on('unload', function () {
 			// Update visibility on all open composers
+			var open = [];
 			try {
-				var open = localStorage.getItem('drafts:open');
+				open = localStorage.getItem('drafts:open');
 				open = JSON.parse(open) || [];
 			} catch (e) {
 				console.warn('[composer/drafts] Could not read list of open/available drafts');
@@ -52,12 +51,12 @@ define('composer/drafts', function () {
 	}
 
 	// deprecated, for removal v1.14.x
-	drafts.getDraft = function(save_id) {
+	drafts.getDraft = function (save_id) {
 		console.warn('[composer/drafts] drafts.getDraft is deprecated! Use drafts.get() instead.');
 		return localStorage.getItem(save_id);
 	};
 
-	drafts.get = function(save_id) {
+	drafts.get = function (save_id) {
 		var uid = save_id.split(':')[1];
 		var storage = parseInt(uid, 10) ? localStorage : sessionStorage;
 		var draft = {
@@ -79,7 +78,7 @@ define('composer/drafts', function () {
 			storage: storage,
 		});
 		return draft;
-	}
+	};
 
 	function saveDraft(postContainer, draftIconEl, postData) {
 		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
@@ -120,7 +119,7 @@ define('composer/drafts', function () {
 		}
 	}
 
-	drafts.removeDraft = function(save_id) {
+	drafts.removeDraft = function (save_id) {
 		if (!save_id) {
 			return;
 		}
@@ -131,20 +130,19 @@ define('composer/drafts', function () {
 
 		const keys = Object.keys(localStorage).filter(key => key.startsWith(save_id));
 		keys.forEach(key => localStorage.removeItem(key));
-		return;
 	};
 
 	drafts.updateVisibility = function (set, save_id, add) {
 		if (!canSave(app.user.uid ? 'localStorage' : 'sessionStorage') || !save_id) {
 			return;
 		}
-
+		var open = [];
 		try {
-			var open = localStorage.getItem('drafts:' + set);
+			open = localStorage.getItem('drafts:' + set);
 			open = open ? JSON.parse(open) : [];
 		} catch (e) {
 			console.warn('[composer/drafts] Could not read list of open drafts');
-			var open = [];
+			open = [];
 		}
 		var idx = open.indexOf(save_id);
 
@@ -178,19 +176,21 @@ define('composer/drafts', function () {
 				sessionStorage.removeItem(key);
 			});
 
-			migrated.forEach(function(save_id) {
+			migrated.forEach(function (save_id) {
 				drafts.updateVisibility('available', save_id, 1);
 			});
 
 			return migrated;
 		}
-	}
+	};
 
 	drafts.loadOpen = function () {
 		// Load drafts if they were open
+		var available;
+		var open = [];
 		try {
-			var available = localStorage.getItem('drafts:available');
-			var open = localStorage.getItem('drafts:open');
+			available = localStorage.getItem('drafts:available');
+			open = localStorage.getItem('drafts:open');
 			available = JSON.parse(available) || [];
 			open = JSON.parse(open) || [];
 		} catch (e) {
@@ -200,45 +200,47 @@ define('composer/drafts', function () {
 		}
 
 		if (available.length && app.user && app.user.uid !== 0) {
-			require(['composer'], function (composer) {
-				// Deconstruct each save_id and open up composer
-				available.forEach(function (save_id) {
-					if (!save_id) {
-						return;
-					}
-					var saveObj = save_id.split(':');
-					var uid = saveObj[1];
-					var type = saveObj[2];
-					var id = saveObj[3];
-					var draft = drafts.get(save_id);
+			// Deconstruct each save_id and open up composer
+			available.forEach(function (save_id) {
+				if (!save_id) {
+					return;
+				}
+				var saveObj = save_id.split(':');
+				var uid = saveObj[1];
+				var type = saveObj[2];
+				var id = saveObj[3];
+				var draft = drafts.get(save_id);
 
-					// If draft is already open, do nothing
-					if (open.indexOf(save_id) !== -1) {
-						return;
-					}
+				// If draft is already open, do nothing
+				if (open.indexOf(save_id) !== -1) {
+					return;
+				}
 
-					// Don't open other peoples' drafts
-					if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
-						return;
-					}
+				// Don't open other peoples' drafts
+				if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
+					return;
+				}
 
-					if (!draft || (draft.text && draft.title && !draft.text.title && !draft.text.length)) {
-						// Empty content, remove from list of open drafts
-						drafts.updateVisibility('available', save_id);
-						drafts.updateVisibility('open', save_id);
-						return;
-					}
-
+				if (!draft || (draft.text && draft.title && !draft.text.title && !draft.text.length)) {
+					// Empty content, remove from list of open drafts
+					drafts.updateVisibility('available', save_id);
+					drafts.updateVisibility('open', save_id);
+					return;
+				}
+				require(['composer'], function (composer) {
 					if (type === 'cid') {
 						composer.newTopic({
 							cid: id,
 							title: draft.title,
 							body: draft.text,
-							tags: []
+							tags: [],
 						});
 					} else if (type === 'tid') {
 						socket.emit('topics.getTopic', id, function (err, topicObj) {
-							composer.newReply(id, undefined, topicObj.title, content.text);
+							if (err) {
+								return app.alertError(err.message);
+							}
+							composer.newReply(id, undefined, topicObj.title, draft.text);
 						});
 					} else if (type === 'pid') {
 						composer.editPost(id);
@@ -246,7 +248,7 @@ define('composer/drafts', function () {
 				});
 			});
 		}
-	}
+	};
 
 	// Feature detection courtesy of: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 	function canSave(type) {
@@ -257,8 +259,7 @@ define('composer/drafts', function () {
 			storage.setItem(x, x);
 			storage.removeItem(x);
 			return true;
-		}
-		catch(e) {
+		} catch (e) {
 			return e instanceof DOMException && (
 				// everything except Firefox
 				e.code === 22 ||
