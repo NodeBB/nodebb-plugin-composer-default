@@ -1,25 +1,25 @@
 'use strict';
 
-/* globals define, utils, config, app */
+/* globals $, window, document, ajaxify, FormData, define, utils, config, app */
 
 define('composer/uploads', [
 	'composer/preview',
 	'composer/categoryList',
 	'translator',
-], function(preview, categoryList, translator) {
+], function (preview, categoryList, translator) {
 	var uploads = {
-		inProgress: {}
+		inProgress: {},
 	};
 
 	var uploadingText = '';
 
-	uploads.initialize = function(post_uuid) {
+	uploads.initialize = function (post_uuid) {
 		initializeDragAndDrop(post_uuid);
 		initializePaste(post_uuid);
 
 		addChangeHandlers(post_uuid);
 		addTopicThumbHandlers(post_uuid);
-		translator.translate('[[modules:composer.uploading, ' + 0 + '%]]', function(translated) {
+		translator.translate('[[modules:composer.uploading, ' + 0 + '%]]', function (translated) {
 			uploadingText = translated;
 		});
 	};
@@ -27,16 +27,18 @@ define('composer/uploads', [
 	function addChangeHandlers(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 
-		postContainer.find('#files').on('change', function(e) {
-			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null);
+		postContainer.find('#files').on('change', function (e) {
+			var files = (e.target || {}).files ||
+				($(this).val() ? [{ name: $(this).val(), type: utils.fileMimeType($(this).val()) }] : null);
 			if (files) {
-				uploadContentFiles({files: files, post_uuid: post_uuid, route: '/api/post/upload'});
+				uploadContentFiles({ files: files, post_uuid: post_uuid, route: '/api/post/upload' });
 			}
 		});
 
-		postContainer.find('#topic-thumb-file').on('change', function(e) {
-			var files = (e.target || {}).files || ($(this).val() ? [{name: $(this).val(), type: utils.fileMimeType($(this).val())}] : null),
-				fd;
+		postContainer.find('#topic-thumb-file').on('change', function (e) {
+			var files = (e.target || {}).files ||
+				($(this).val() ? [{ name: $(this).val(), type: utils.fileMimeType($(this).val()) }] : null);
+			var fd;
 
 			if (files) {
 				if (window.FormData) {
@@ -45,7 +47,12 @@ define('composer/uploads', [
 						fd.append('files[]', files[i], files[i].name);
 					}
 				}
-				uploadTopicThumb({files: files, post_uuid: post_uuid, route: '/api/topic/thumb/upload', formData: fd});
+				uploadTopicThumb({
+					files: files,
+					post_uuid: post_uuid,
+					route: '/api/topic/thumb/upload',
+					formData: fd,
+				});
 			}
 		});
 	}
@@ -53,16 +60,16 @@ define('composer/uploads', [
 	function addTopicThumbHandlers(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 
-		postContainer.on('click', '.topic-thumb-clear-btn', function(e) {
+		postContainer.on('click', '.topic-thumb-clear-btn', function (e) {
 			postContainer.find('input#topic-thumb-url').val('').trigger('change');
 			resetInputFile(postContainer.find('input#topic-thumb-file'));
 			$(this).addClass('hide');
 			e.preventDefault();
 		});
 
-		postContainer.on('paste change keypress', 'input#topic-thumb-url', function() {
+		postContainer.on('paste change keypress', 'input#topic-thumb-url', function () {
 			var urlEl = $(this);
-			setTimeout(function(){
+			setTimeout(function () {
 				var url = urlEl.val();
 				if (url) {
 					postContainer.find('.topic-thumb-clear-btn').removeClass('hide');
@@ -75,13 +82,13 @@ define('composer/uploads', [
 		});
 	}
 
-	uploads.toggleThumbEls = function(postContainer, url) {
+	uploads.toggleThumbEls = function (postContainer, url) {
 		if (url) {
 			postContainer.find('.topic-thumb-clear-btn').removeClass('hide');
 		}
 		var thumbToggleBtnEl = postContainer.find('.topic-thumb-toggle-btn');
 		thumbToggleBtnEl.removeClass('hide');
-		thumbToggleBtnEl.off('click').on('click', function() {
+		thumbToggleBtnEl.off('click').on('click', function () {
 			var container = postContainer.find('.topic-thumb-container');
 			container.toggleClass('hide', !container.hasClass('hide'));
 		});
@@ -93,6 +100,9 @@ define('composer/uploads', [
 	}
 
 	function initializeDragAndDrop(post_uuid) {
+		var draggingDocument = false;
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		var drop = postContainer.find('.imagedrop');
 
 		function onDragEnter() {
 			if (draggingDocument) {
@@ -104,7 +114,7 @@ define('composer/uploads', [
 			drop.css('line-height', postContainer.height() + 'px');
 			drop.show();
 
-			drop.on('dragleave', function() {
+			drop.on('dragleave', function () {
 				drop.hide();
 				drop.off('dragleave');
 			});
@@ -127,7 +137,7 @@ define('composer/uploads', [
 					files: files,
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd
+					formData: fd,
 				});
 			}
 
@@ -140,16 +150,15 @@ define('composer/uploads', [
 			return false;
 		}
 
-		var draggingDocument = false;
-
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		var drop = postContainer.find('.imagedrop');
-
-		$(document).off('dragstart').on('dragstart', function() {
-			draggingDocument = true;
-		}).off('dragend').on('dragend', function() {
-			draggingDocument = false;
-		});
+		$(document)
+			.off('dragstart')
+			.on('dragstart', function () {
+				draggingDocument = true;
+			})
+			.off('dragend')
+			.on('dragend', function () {
+				draggingDocument = false;
+			});
 
 		postContainer.on('dragenter', onDragEnter);
 
@@ -160,10 +169,10 @@ define('composer/uploads', [
 
 	function initializePaste(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		postContainer.on('paste', function(event) {
+		postContainer.on('paste', function (event) {
 			var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
 
-			[].some.call(items, function(item) {
+			[].some.call(items, function (item) {
 				var blob = item.getAsFile();
 
 				if (!blob) {
@@ -183,7 +192,7 @@ define('composer/uploads', [
 					fileNames: [blobName],
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd
+					formData: fd,
 				});
 
 				return true;
@@ -192,7 +201,7 @@ define('composer/uploads', [
 	}
 
 	function escapeRegExp(text) {
-		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+		return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	}
 
 	function insertText(str, index, insert) {
@@ -200,7 +209,7 @@ define('composer/uploads', [
 	}
 
 	function uploadContentFiles(params) {
-		var files = [ ...params.files ];
+		var files = [...params.files];
 		var post_uuid = params.post_uuid;
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var textarea = postContainer.find('textarea');
@@ -213,9 +222,10 @@ define('composer/uploads', [
 		if (!cid && ajaxify.data.cid) {
 			cid = ajaxify.data.cid;
 		}
-
-		for (var i = 0; i < files.length; ++i) {
-			var isImage = files[i].type.match(/image./);
+		var i = 0;
+		var isImage = false;
+		for (i = 0; i < files.length; ++i) {
+			isImage = files[i].type.match(/image./);
 			if ((isImage && !app.user.privileges['upload:post:image']) || (!isImage && !app.user.privileges['upload:post:file'])) {
 				return app.alertError('[[error:no-privileges]]');
 			}
@@ -223,11 +233,11 @@ define('composer/uploads', [
 
 		var filenameMapping = [];
 
-		for (var i = 0; i < files.length; ++i) {
+		for (i = 0; i < files.length; ++i) {
 			// The filename map has datetime and iterator prepended so that they can be properly tracked even if the
 			// filenames are identical.
 			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
-			var isImage = files[i].type.match(/image./);
+			isImage = files[i].type.match(/image./);
 
 			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
@@ -247,19 +257,19 @@ define('composer/uploads', [
 				return {
 					filename: filename.replace(/^\d+_\d{13}_/, ''),
 					isImage: /image./.test(files[i].type),
-				}
+				};
 			}),
 			text: uploadingText,
 		});
 
-		uploadForm.off('submit').submit(function() {
+		uploadForm.off('submit').submit(function () {
 			function updateTextArea(filename, text, trim) {
 				var newFilename;
 				if (trim) {
 					newFilename = filename.replace(/^\d+_\d{13}_/, '');
 				}
 				var current = textarea.val();
-				var re = new RegExp(escapeRegExp(filename) + "]\\([^)]+\\)", 'g');
+				var re = new RegExp(escapeRegExp(filename) + ']\\([^)]+\\)', 'g');
 				textarea.val(current.replace(re, (newFilename || filename) + '](' + text + ')'));
 
 				$(window).trigger('action:composer.uploadUpdate', {
@@ -278,7 +288,7 @@ define('composer/uploads', [
 
 			$(this).ajaxSubmit({
 				headers: {
-					'x-csrf-token': config.csrf_token
+					'x-csrf-token': config.csrf_token,
 				},
 				resetForm: true,
 				clearForm: true,
@@ -290,21 +300,21 @@ define('composer/uploads', [
 					onUploadError(xhr, post_uuid);
 				},
 
-				uploadProgress: function(event, position, total, percent) {
-					translator.translate('[[modules:composer.uploading, ' + percent + '%]]', function(translated) {
+				uploadProgress: function (event, position, total, percent) {
+					translator.translate('[[modules:composer.uploading, ' + percent + '%]]', function (translated) {
 						if (doneUploading) {
 							return;
 						}
-						for (var i=0; i < files.length; ++i) {
+						for (var i = 0; i < files.length; ++i) {
 							updateTextArea(filenameMapping[i], translated);
 						}
 					});
 				},
 
-				success: function(uploads) {
+				success: function (uploads) {
 					doneUploading = true;
 					if (uploads && uploads.length) {
-						for (var i=0; i<uploads.length; ++i) {
+						for (var i = 0; i < uploads.length; ++i) {
 							uploads[i].filename = filenameMapping[i].replace(/^\d+_\d{13}_/, '');
 							uploads[i].isImage = /image./.test(files[i].type);
 							updateTextArea(filenameMapping[i], uploads[i].url, true);
@@ -319,10 +329,10 @@ define('composer/uploads', [
 					});
 				},
 
-				complete: function() {
+				complete: function () {
 					uploadForm[0].reset();
 					uploads.inProgress[post_uuid].pop();
-				}
+				},
 			});
 
 			return false;
@@ -332,14 +342,14 @@ define('composer/uploads', [
 	}
 
 	function uploadTopicThumb(params) {
-		var post_uuid = params.post_uuid,
-			postContainer = $('.composer[data-uuid="' + post_uuid + '"]'),
-			spinner = postContainer.find('.topic-thumb-spinner'),
-			thumbForm = postContainer.find('#thumbForm');
+		var post_uuid = params.post_uuid;
+		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		var spinner = postContainer.find('.topic-thumb-spinner');
+		var thumbForm = postContainer.find('#thumbForm');
 
 		thumbForm.attr('action', config.relative_path + params.route);
 
-		thumbForm.off('submit').submit(function() {
+		thumbForm.off('submit').submit(function () {
 			spinner.removeClass('hide');
 
 			uploads.inProgress[post_uuid] = uploads.inProgress[post_uuid] || [];
@@ -347,17 +357,17 @@ define('composer/uploads', [
 
 			$(this).ajaxSubmit({
 				headers: {
-					'x-csrf-token': config.csrf_token
+					'x-csrf-token': config.csrf_token,
 				},
 				formData: params.formData,
 				error: onUploadError,
-				success: function(uploads) {
+				success: function (uploads) {
 					postContainer.find('#topic-thumb-url').val((uploads[0] || {}).url || '').trigger('change');
 				},
-				complete: function() {
+				complete: function () {
 					uploads.inProgress[post_uuid].pop();
 					spinner.addClass('hide');
-				}
+				},
 			});
 			return false;
 		});
