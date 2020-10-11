@@ -6,6 +6,7 @@ define('composer/uploads', [
 	'composer/preview',
 	'composer/categoryList',
 	'translator',
+	'jquery-form',
 ], function (preview, categoryList, translator) {
 	var uploads = {
 		inProgress: {},
