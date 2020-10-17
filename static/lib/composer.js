@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals define, socket, app, config, ajaxify, utils, bootbox, screenfull */
+/* globals $, window, history, localStorage, document, define, socket, app, config, ajaxify, utils, bootbox, screenfull */
 
 define('composer', [
 	'taskbar',
@@ -14,8 +14,8 @@ define('composer', [
 	'composer/preview',
 	'composer/resize',
 	'composer/autocomplete',
-	'scrollStop'
-], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
+	'scrollStop',
+], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -27,14 +27,14 @@ define('composer', [
 	$(document).off('keyup', onKeyUp).on('keyup', onKeyUp);
 	onWindowResize();
 
-	$(window).on('action:composer.topics.post', function(ev, data) {
+	$(window).on('action:composer.topics.post', function (ev, data) {
 		localStorage.removeItem('category:' + data.data.cid + ':bookmark');
 		localStorage.removeItem('category:' + data.data.cid + ':bookmark:clicked');
 	});
 
-	$(window).on('popstate', function() {
+	$(window).on('popstate', function () {
 		var env = utils.findBootstrapEnvironment();
-		if (composer.active && (env === 'xs' || env ==='sm')) {
+		if (composer.active && (env === 'xs' || env === 'sm')) {
 			if (!composer.posts[composer.active].modified) {
 				composer.discard(composer.active);
 				if (composer.discardConfirm && composer.discardConfirm.length) {
@@ -44,8 +44,8 @@ define('composer', [
 				return;
 			}
 
-			translator.translate('[[modules:composer.discard]]', function(translated) {
-				composer.discardConfirm = bootbox.confirm(translated, function(confirm) {
+			translator.translate('[[modules:composer.discard]]', function (translated) {
+				composer.discardConfirm = bootbox.confirm(translated, function (confirm) {
 					if (confirm) {
 						composer.discard(composer.active);
 					} else {
@@ -59,7 +59,7 @@ define('composer', [
 
 	function removeComposerHistory() {
 		var env = composer.bsEnvironment;
-		if (ajaxify.data.template.compose === true || env === 'xs' || env ==='sm') {
+		if (ajaxify.data.template.compose === true || env === 'xs' || env === 'sm') {
 			history.back();
 		}
 	}
@@ -100,15 +100,16 @@ define('composer', [
 	function onKeyUp(event) {
 		if (composer.active) {
 			var keycode = (event.which ? event.which : event.keyCode);
-			if (keycode === 27) {// escape
-				composer.minimize(composer.active)
+			if (keycode === 27) { // escape
+				composer.minimize(composer.active);
 			}
 		}
 	}
 
 	function alreadyOpen(post) {
 		// If a composer for the same cid/tid/pid is already open, return the uuid, else return bool false
-		var	type, id;
+		var	type;
+		var id;
 
 		if (post.hasOwnProperty('cid')) {
 			type = 'cid';
@@ -121,7 +122,7 @@ define('composer', [
 		id = post[type];
 
 		// Find a match
-		for(var uuid in composer.posts) {
+		for (var uuid in composer.posts) {
 			if (composer.posts[uuid].hasOwnProperty(type) && id === composer.posts[uuid][type]) {
 				return uuid;
 			}
@@ -132,8 +133,8 @@ define('composer', [
 	}
 
 	function push(post) {
-		var uuid = utils.generateUUID(),
-			existingUUID = alreadyOpen(post);
+		var uuid = utils.generateUUID();
+		var existingUUID = alreadyOpen(post);
 
 		if (existingUUID) {
 			taskbar.updateActive(existingUUID);
@@ -147,9 +148,9 @@ define('composer', [
 			actionText = '[[topic:composer.editing]]';
 		}
 
-		translator.translate(actionText, function(translatedAction) {
+		translator.translate(actionText, function (translatedAction) {
 			taskbar.push('composer', uuid, {
-				title: translatedAction.replace('%1', '"' + post.title + '"')
+				title: translatedAction.replace('%1', '"' + post.title + '"'),
 			});
 		});
 
@@ -173,13 +174,13 @@ define('composer', [
 			timeout: 3000,
 			title: '',
 			message: message,
-			alert_id: 'post_error'
+			alert_id: 'post_error',
 		});
 	}
 
-	composer.findByTid = function(tid) {
+	composer.findByTid = function (tid) {
 		// Iterates through the initialised composers and returns the uuid of the matching composer
-		for(var uuid in composer.posts) {
+		for (var uuid in composer.posts) {
 			if (composer.posts.hasOwnProperty(uuid) && composer.posts[uuid].hasOwnProperty('tid') && parseInt(composer.posts[uuid].tid, 10) === parseInt(tid, 10)) {
 				return uuid;
 			}
@@ -188,33 +189,38 @@ define('composer', [
 		return null;
 	};
 
-	composer.addButton = function(iconClass, onClick, title) {
+	composer.addButton = function (iconClass, onClick, title) {
 		formatting.addButton(iconClass, onClick, title);
 	};
 
-	composer.newTopic = function(data) {
+	composer.newTopic = function (data) {
 		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
-			modified: ((data.title && data.title.length) || (data.body && data.body.length)) ? true : false,
-			isMain: true
+			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
+			isMain: true,
 		};
 
 		$(window).trigger('filter:composer.topic.push', {
 			data: data,
-			pushData: pushData
+			pushData: pushData,
 		});
 
 		push(pushData);
 	};
 
-	composer.addQuote = function(tid, toPid, selectedPid, title, username, text, uuid) {
+	composer.addQuote = function (tid, toPid, selectedPid, title, username, text, uuid) {
 		uuid = uuid || composer.active;
 
-		var escapedTitle = (title || '').replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1').replace(/\[/g, '&#91;').replace(/\]/g, '&#93;').replace(/%/g, '&#37;').replace(/,/g, '&#44;');
+		var escapedTitle = (title || '')
+			.replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1')
+			.replace(/\[/g, '&#91;')
+			.replace(/\]/g, '&#93;')
+			.replace(/%/g, '&#37;')
+			.replace(/,/g, '&#44;');
 
 		if (text) {
 			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
@@ -249,22 +255,22 @@ define('composer', [
 		}
 	};
 
-	composer.newReply = function(tid, toPid, title, text) {
-		translator.translate(text, config.defaultLang, function(translated) {
+	composer.newReply = function (tid, toPid, title, text) {
+		translator.translate(text, config.defaultLang, function (translated) {
 			push({
 				action: 'posts.reply',
 				tid: tid,
 				toPid: toPid,
 				title: title,
 				body: translated,
-				modified: ((title && title.length) || (translated && translated.length)) ? true : false,
-				isMain: false
+				modified: !!((title && title.length) || (translated && translated.length)),
+				isMain: false,
 			});
 		});
 	};
 
-	composer.editPost = function(pid) {
-		socket.emit('plugins.composer.push', pid, function(err, threadData) {
+	composer.editPost = function (pid) {
+		socket.emit('plugins.composer.push', pid, function (err, threadData) {
 			if (err) {
 				return app.alertError(err.message);
 			}
@@ -275,26 +281,27 @@ define('composer', [
 		});
 	};
 
-	composer.load = function(post_uuid) {
+	composer.load = function (post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		if (postContainer.length) {
 			activate(post_uuid);
 			resize.reposition(postContainer);
 			focusElements(postContainer);
 			onShow();
+		} else if (composer.formatting) {
+			createNewComposer(post_uuid);
 		} else {
-			if (composer.formatting) {
+			socket.emit('plugins.composer.getFormattingOptions', function (err, options) {
+				if (err) {
+					return app.alertError(err);
+				}
+				composer.formatting = options;
 				createNewComposer(post_uuid);
-			} else {
-				socket.emit('plugins.composer.getFormattingOptions', function(err, options) {
-					composer.formatting = options;
-					createNewComposer(post_uuid);
-				});
-			}
+			});
 		}
 	};
 
-	composer.enhance = function(postContainer, post_uuid, postData) {
+	composer.enhance = function (postContainer, post_uuid, postData) {
 		/*
 			This method enhances a composer container with client-side sugar (preview, etc)
 			Everything in here also applies to the /compose route
@@ -302,7 +309,8 @@ define('composer', [
 
 		if (!post_uuid && !postData) {
 			post_uuid = utils.generateUUID();
-			composer.posts[post_uuid] = postData = ajaxify.data;
+			composer.posts[post_uuid] = ajaxify.data;
+			postData = ajaxify.data;
 			postContainer.attr('data-uuid', post_uuid);
 		}
 
@@ -336,7 +344,7 @@ define('composer', [
 
 		autocomplete.init(postContainer, post_uuid);
 
-		postContainer.on('change', 'input, textarea', function() {
+		postContainer.on('change', 'input, textarea', function () {
 			composer.posts[post_uuid].modified = true;
 
 			// Post is modified, save to list of opened drafts
@@ -344,7 +352,7 @@ define('composer', [
 			drafts.updateVisibility('open', composer.posts[post_uuid].save_id, true);
 		});
 
-		submitBtn.on('click', function(e) {
+		submitBtn.on('click', function (e) {
 			e.preventDefault();
 			e.stopPropagation();	// Other click events bring composer back to active state which is undesired on submit
 
@@ -359,7 +367,7 @@ define('composer', [
 			});
 		});
 
-		postContainer.find('.composer-discard').on('click', function(e) {
+		postContainer.find('.composer-discard').on('click', function (e) {
 			e.preventDefault();
 
 			if (!composer.posts[post_uuid].modified) {
@@ -368,8 +376,8 @@ define('composer', [
 			}
 
 			var btn = $(this).prop('disabled', true);
-			translator.translate('[[modules:composer.discard]]', function(translated) {
-				bootbox.confirm(translated, function(confirm) {
+			translator.translate('[[modules:composer.discard]]', function (translated) {
+				bootbox.confirm(translated, function (confirm) {
 					if (confirm) {
 						composer.discard(post_uuid);
 						removeComposerHistory();
@@ -385,15 +393,15 @@ define('composer', [
 			composer.minimize(post_uuid);
 		});
 
-		bodyEl.on('input propertychange', function() {
+		bodyEl.on('input propertychange', function () {
 			preview.render(postContainer);
 		});
 
-		bodyEl.on('scroll', function() {
+		bodyEl.on('scroll', function () {
 			preview.matchScroll(postContainer);
 		});
 
-		preview.render(postContainer, function() {
+		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
 		});
 
@@ -432,11 +440,11 @@ define('composer', [
 	function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
-		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain,
-			isTopic = postData ? postData.hasOwnProperty('cid') : false,
-			isMain = postData ? !!postData.isMain : false,
-			isEditing = postData ? !!postData.pid : false,
-			isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
+		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain;
+		var isTopic = postData ? postData.hasOwnProperty('cid') : false;
+		var isMain = postData ? !!postData.isMain : false;
+		var isEditing = postData ? !!postData.pid : false;
+		var isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
 
 		// see
 		// https://github.com/NodeBB/NodeBB/issues/2994 and
@@ -456,7 +464,7 @@ define('composer', [
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
 			isEditing: isEditing,
-			showHandleInput:  config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
+			showHandleInput: config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
 			tagWhitelist: ajaxify.data.tagWhitelist,
@@ -473,10 +481,10 @@ define('composer', [
 
 		$(window).trigger('filter:composer.create', {
 			postData: postData,
-			createData: data
+			createData: data,
 		});
 
-		app.parseAndTranslate('composer', data, function(composerTemplate) {
+		app.parseAndTranslate('composer', data, function (composerTemplate) {
 			if ($('.composer.composer[data-uuid="' + post_uuid + '"]').length) {
 				return;
 			}
@@ -504,7 +512,7 @@ define('composer', [
 
 			activate(post_uuid);
 
-			postContainer.on('click', function() {
+			postContainer.on('click', function () {
 				if (!taskbar.isActive(post_uuid)) {
 					taskbar.updateActive(post_uuid);
 				}
@@ -513,15 +521,15 @@ define('composer', [
 			resize.handleResize(postContainer);
 
 			if (composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-				var submitBtns = postContainer.find('.composer-submit'),
-					mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit'),
-					textareaEl = postContainer.find('.write'),
-					idx = textareaEl.attr('tabindex');
+				var submitBtns = postContainer.find('.composer-submit');
+				var mobileSubmitBtn = postContainer.find('.mobile-navbar .composer-submit');
+				var textareaEl = postContainer.find('.write');
+				var idx = textareaEl.attr('tabindex');
 
 				submitBtns.removeAttr('tabindex');
-				mobileSubmitBtn.attr('tabindex', parseInt(idx, 10)+1);
+				mobileSubmitBtn.attr('tabindex', parseInt(idx, 10) + 1);
 
-				$('.category-name-container').on('click', function() {
+				$('.category-name-container').on('click', function () {
 					$('.category-selector').toggleClass('open');
 				});
 			}
@@ -536,12 +544,11 @@ define('composer', [
 			focusElements(postContainer);
 			onShow();
 		});
-
 	}
 
 	function mobileHistoryAppend() {
-		var path = 'compose?p=' + window.location.pathname,
-			returnPath = window.location.pathname.slice(1);
+		var path = 'compose?p=' + window.location.pathname;
+		var returnPath = window.location.pathname.slice(1);
 
 		// Remove relative path from returnPath
 		if (returnPath.startsWith(config.relative_path.slice(1))) {
@@ -551,21 +558,21 @@ define('composer', [
 		// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
 		window.history.replaceState({
 			url: null,
-			returnPath: returnPath
+			returnPath: returnPath,
 		}, returnPath, config.relative_path + '/' + returnPath);
 
 		// Update address bar in case f5 is pressed
 		window.history.pushState({
-			url: path
+			url: path,
 		}, path, config.relative_path + '/' + path);
 	}
 
 	function handleHelp(postContainer) {
 		var helpBtn = postContainer.find('.help');
-		socket.emit('plugins.composer.renderHelp', function(err, html) {
+		socket.emit('plugins.composer.renderHelp', function (err, html) {
 			if (!err && html && html.length > 0) {
 				helpBtn.removeClass('hidden');
-				helpBtn.on('click', function() {
+				helpBtn.on('click', function () {
 					bootbox.alert(html);
 				});
 			}
@@ -591,7 +598,7 @@ define('composer', [
 	}
 
 	function activate(post_uuid) {
-		if(composer.active && composer.active !== post_uuid) {
+		if (composer.active && composer.active !== post_uuid) {
 			composer.minimize(composer.active);
 		}
 
@@ -602,7 +609,7 @@ define('composer', [
 	}
 
 	function focusElements(postContainer) {
-		setTimeout(function() {
+		setTimeout(function () {
 			var title = postContainer.find('input.title');
 
 			if (title.length) {
@@ -670,14 +677,14 @@ define('composer', [
 				content: bodyEl.val(),
 				thumb: thumbEl.val() || '',
 				cid: categoryList.getSelectedCid(),
-				tags: tags.getTags(post_uuid)
+				tags: tags.getTags(post_uuid),
 			};
 		} else if (action === 'posts.reply') {
 			composerData = {
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
-				toPid: postData.toPid
+				toPid: postData.toPid,
 			};
 		} else if (action === 'posts.edit') {
 			composerData = {
@@ -686,7 +693,7 @@ define('composer', [
 				content: bodyEl.val(),
 				title: titleEl.val(),
 				thumb: thumbEl.val() || '',
-				tags: tags.getTags(post_uuid)
+				tags: tags.getTags(post_uuid),
 			};
 		}
 		var submitHookData = {
@@ -695,7 +702,7 @@ define('composer', [
 			composerData: composerData,
 			postData: postData,
 			redirect: true,
-		}
+		};
 		$(window).trigger('action:composer.submit', submitHookData);
 
 		// Minimize composer (and set textarea as readonly) while submitting
@@ -723,23 +730,21 @@ define('composer', [
 
 			if (data.queued) {
 				bootbox.alert(data.message);
-			} else {
-				if (action === 'topics.post') {
-					if (submitHookData.redirect) {
-						ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
-					}
-				} else if (action === 'posts.reply') {
-					if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-						window.history.back();
-					} else if (submitHookData.redirect &&
-						((ajaxify.data.template.name !== 'topic') ||
-						(ajaxify.data.template.topic && parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)))
-					) {
-						ajaxify.go('post/' + data.pid);
-					}
-				} else {
-					removeComposerHistory();
+			} else if (action === 'topics.post') {
+				if (submitHookData.redirect) {
+					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm'));
 				}
+			} else if (action === 'posts.reply') {
+				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+					window.history.back();
+				} else if (submitHookData.redirect &&
+					((ajaxify.data.template.name !== 'topic') ||
+					(ajaxify.data.template.topic && parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)))
+				) {
+					ajaxify.go('post/' + data.pid);
+				}
+			} else {
+				removeComposerHistory();
 			}
 
 			$(window).trigger('action:composer.' + action, { composerData: composerData, data: data });
@@ -756,7 +761,7 @@ define('composer', [
 		app.toggleNavbar(true);
 	}
 
-	composer.discard = function(post_uuid) {
+	composer.discard = function (post_uuid) {
 		if (composer.posts[post_uuid]) {
 			var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 			postContainer.remove();
@@ -777,7 +782,7 @@ define('composer', [
 	// Alias to .discard();
 	composer.close = composer.discard;
 
-	composer.minimize = function(post_uuid) {
+	composer.minimize = function (post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		postContainer.css('visibility', 'hidden');
 		composer.active = undefined;
