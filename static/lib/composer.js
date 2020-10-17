@@ -15,7 +15,8 @@ define('composer', [
 	'composer/resize',
 	'composer/autocomplete',
 	'scrollStop',
-], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop) {
+	'api',
+], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, api) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -628,6 +629,7 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var thumbEl = postContainer.find('input#topic-thumb-url');
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
+		const submitBtn = postContainer.find('.composer-submit');
 
 		titleEl.val(titleEl.val().trim());
 		bodyEl.val(utils.rtrim(bodyEl.val()));
@@ -669,8 +671,11 @@ define('composer', [
 		}
 
 		var composerData = {};
+		let method = 'post';
+		let route = '';
 
 		if (action === 'topics.post') {
+			route = '/topics';
 			composerData = {
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
@@ -680,6 +685,7 @@ define('composer', [
 				tags: tags.getTags(post_uuid),
 			};
 		} else if (action === 'posts.reply') {
+			route = `/topics/${postData.tid}`;
 			composerData = {
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
@@ -687,6 +693,8 @@ define('composer', [
 				toPid: postData.toPid,
 			};
 		} else if (action === 'posts.edit') {
+			method = 'put';
+			route = `/posts/${postData.pid}`;
 			composerData = {
 				pid: postData.pid,
 				handle: handleEl ? handleEl.val() : undefined,
@@ -712,43 +720,45 @@ define('composer', [
 		composer.minimize(post_uuid);
 		textareaEl.prop('readonly', true);
 
-		socket.emit(action, composerData, function (err, data) {
-			postContainer.find('.composer-submit').removeAttr('disabled');
-			if (err) {
+		api[method](route, composerData)
+			.then((data) => {
+				postContainer.find('.composer-submit').removeAttr('disabled');
+
+				composer.discard(post_uuid);
+				drafts.removeDraft(postData.save_id);
+
+				if (data.queued) {
+					bootbox.alert(data.message);
+				} else {
+					if (action === 'topics.post') {
+						if (submitHookData.redirect) {
+							ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
+						}
+					} else if (action === 'posts.reply') {
+						if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
+							window.history.back();
+						} else if (submitHookData.redirect &&
+							((ajaxify.data.template.name !== 'topic') ||
+							(ajaxify.data.template.topic && parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)))
+						) {
+							ajaxify.go('post/' + data.pid);
+						}
+					} else {
+						removeComposerHistory();
+					}
+				}
+
+				$(window).trigger('action:composer.' + action, { composerData: composerData, data: data });
+			})
+			.catch((err) => {
 				// Restore composer on error
 				composer.load(post_uuid);
 				textareaEl.prop('readonly', false);
+				submitBtn.prop('disabled', false);
 				if (err.message === '[[error:email-not-confirmed]]') {
 					return app.showEmailConfirmWarning(err);
 				}
-
-				return app.alertError(err.message);
-			}
-
-			composer.discard(post_uuid);
-			drafts.removeDraft(postData.save_id);
-
-			if (data.queued) {
-				bootbox.alert(data.message);
-			} else if (action === 'topics.post') {
-				if (submitHookData.redirect) {
-					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm'));
-				}
-			} else if (action === 'posts.reply') {
-				if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
-					window.history.back();
-				} else if (submitHookData.redirect &&
-					((ajaxify.data.template.name !== 'topic') ||
-					(ajaxify.data.template.topic && parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)))
-				) {
-					ajaxify.go('post/' + data.pid);
-				}
-			} else {
-				removeComposerHistory();
-			}
-
-			$(window).trigger('action:composer.' + action, { composerData: composerData, data: data });
-		});
+			});
 	}
 
 	function onShow() {
