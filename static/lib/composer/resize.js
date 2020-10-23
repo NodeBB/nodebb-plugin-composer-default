@@ -63,7 +63,8 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		var adjustedMinimum = Math.max(minHeight / window.innerHeight, minimumRatio);
 
 		if (bounds.width >= mediumMin) {
-			ratio = Math.min(Math.max(ratio, adjustedMinimum), 1);
+			const boundedDifference = (bounds.height - bounds.boundedHeight) / bounds.height;
+			ratio = Math.min(Math.max(ratio, adjustedMinimum + boundedDifference), 1);
 
 			var top = ratio * bounds.boundedHeight / bounds.height;
 			elem.style.top = ((1 - top) * 100).toString() + '%';
