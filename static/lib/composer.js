@@ -16,7 +16,7 @@ define('composer', [
 	'composer/autocomplete',
 	'scrollStop',
 	'api',
-], function(taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, api) {
+], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, api) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -756,6 +756,7 @@ define('composer', [
 				if (err.message === '[[error:email-not-confirmed]]') {
 					return app.showEmailConfirmWarning(err);
 				}
+				app.alertError(err);
 			});
 	}
 
