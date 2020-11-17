@@ -141,7 +141,7 @@
 
 					<ul class="dropdown-menu">
 						<!-- BEGIN tagWhitelist -->
-						<li data-tag="@value"><a href="#">@value</a></li>
+						<li data-tag="{@value}"><a href="#">{@value}</a></li>
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>
