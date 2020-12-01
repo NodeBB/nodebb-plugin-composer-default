@@ -2,7 +2,7 @@
 
 /* globals app, define, screenfull */
 
-define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize'], function(controls, preview, resize) {
+define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize', 'uploader'], function(controls, preview, resize, uploader) {
 
 	var formatting = {};
 
@@ -15,6 +15,25 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 		upload: function () {
 			var postContainer = this;
 			postContainer.find('#files').click();
+		},
+
+		thumbs: function () {
+			var postContainer = this;
+			require(['composer'], function (composer) {
+				const uuid = postContainer.get(0).getAttribute('data-uuid');
+				const composerObj = composer.posts[uuid];
+				console.log(composerObj);
+				if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
+					uploader.show({
+						title: '[[topic:composer.thumb_title]]',
+						method: 'put',
+						route: config.relative_path + `/api/v3/topics/${uuid}/thumbs`,
+					}, function () {
+						console.log(arguments);
+						// update composer to do stuff here
+					});
+				}
+			});
 		},
 
 		tags: function() {

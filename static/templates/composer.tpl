@@ -62,52 +62,22 @@
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
 
-					<!--[if gte IE 9]><!-->
-						<!-- IF privileges.upload:post:image -->
-						<li class="img-upload-btn hide" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
-							<i class="fa fa-file-image-o"></i>
-						</li>
-						<!-- ENDIF privileges.upload:post:image -->
-						<!-- IF privileges.upload:post:file -->
-						<li class="file-upload-btn hide" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
-							<span class="fa-stack">
-								<i class="fa fa-file-o fa-stack-1x"></i>
-								<i class="fa fa-arrow-up fa-stack-1x"></i>
-							</span>
-						</li>
-						<!-- ENDIF privileges.upload:post:file -->
-					<!--<![endif]-->
-
-					<!-- IF allowTopicsThumbnail -->
-					<li tabindex="-1">
-						<i class="fa fa-th-large topic-thumb-btn topic-thumb-toggle-btn hide" title="[[topic:composer.thumb_title]]"></i>
+					<!-- IF privileges.upload:post:image -->
+					<li class="img-upload-btn" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
+						<i class="fa fa-file-image-o"></i>
 					</li>
-					<div class="topic-thumb-container center-block hide">
-						<form id="thumbForm" method="post" class="topic-thumb-form form-inline" enctype="multipart/form-data">
-							<img class="topic-thumb-preview" {{{if thumb}}}src="{thumb}"{{{end}}}></img>
-							<div class="form-group">
-								<label for="topic-thumb-url">[[topic:composer.thumb_url_label]]</label>
-								<input type="text" id="topic-thumb-url" class="form-control" placeholder="[[topic:composer.thumb_url_placeholder]]" {{{if thumb}}}value="{thumb}"{{{end}}}/>
-							</div>
-							<div class="form-group">
-								<label for="topic-thumb-file">[[topic:composer.thumb_file_label]]</label>
-								<input type="file" id="topic-thumb-file" class="form-control" />
-							</div>
-							<div class="form-group topic-thumb-ctrl">
-								<i class="fa fa-spinner fa-spin hide topic-thumb-spinner" title="[[topic:composer.uploading]]"></i>
-								<i class="fa fa-times topic-thumb-btn hide topic-thumb-clear-btn" title="[[topic:composer.thumb_remove]]"></i>
-							</div>
-						</form>
-					</div>
-					<!-- ENDIF allowTopicsThumbnail -->
+					<!-- ENDIF privileges.upload:post:image -->
+					<!-- IF privileges.upload:post:file -->
+					<li class="file-upload-btn" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
+						<span class="fa-stack">
+							<i class="fa fa-file-o fa-stack-1x"></i>
+							<i class="fa fa-arrow-up fa-stack-1x"></i>
+						</span>
+					</li>
+					<!-- ENDIF privileges.upload:post:file -->
 
 					<form id="fileForm" method="post" enctype="multipart/form-data">
-						<!--[if gte IE 9]><!-->
-							<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>
-						<!--<![endif]-->
-						<!--[if lt IE 9]>
-							<input type="file" id="files" name="files[]" class="lt-ie9 hide" value="Upload"/>
-						<![endif]-->
+						<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>
 					</form>
 				</ul>
 			</div>

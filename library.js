@@ -64,12 +64,17 @@ plugin.addPrefetchTags = async function (hookData) {
 };
 
 plugin.getFormattingOptions = async function () {
-	const payload = await plugins.fireHook('filter:composer.formatting', {
+	let payload = {
 		options: [
-			{ name: 'tags', className: 'fa fa-tags', mobile: true },
-			{ name: 'zen', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false },
+			{ name: 'tags', title: '[[global:tags.tags]]', className: 'fa fa-tags', mobile: true },
+			{ name: 'zen', title: '[[modules:composer.zen_mode]]', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false },
 		],
-	});
+	};
+	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
+			payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-window-maximize', mobile: false });
+	}
+
+	payload = await plugins.fireHook('filter:composer.formatting', payload);
 	return payload ? payload.options : null;
 };
 

@@ -35,27 +35,6 @@ define('composer/uploads', [
 				uploadContentFiles({ files: files, post_uuid: post_uuid, route: '/api/post/upload' });
 			}
 		});
-
-		postContainer.find('#topic-thumb-file').on('change', function (e) {
-			var files = (e.target || {}).files ||
-				($(this).val() ? [{ name: $(this).val(), type: utils.fileMimeType($(this).val()) }] : null);
-			var fd;
-
-			if (files) {
-				if (window.FormData) {
-					fd = new FormData();
-					for (var i = 0; i < files.length; ++i) {
-						fd.append('files[]', files[i], files[i].name);
-					}
-				}
-				uploadTopicThumb({
-					files: files,
-					post_uuid: post_uuid,
-					route: '/api/topic/thumb/upload',
-					formData: fd,
-				});
-			}
-		});
 	}
 
 	function addTopicThumbHandlers(post_uuid) {
@@ -340,39 +319,6 @@ define('composer/uploads', [
 		});
 
 		uploadForm.submit();
-	}
-
-	function uploadTopicThumb(params) {
-		var post_uuid = params.post_uuid;
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		var spinner = postContainer.find('.topic-thumb-spinner');
-		var thumbForm = postContainer.find('#thumbForm');
-
-		thumbForm.attr('action', config.relative_path + params.route);
-
-		thumbForm.off('submit').submit(function () {
-			spinner.removeClass('hide');
-
-			uploads.inProgress[post_uuid] = uploads.inProgress[post_uuid] || [];
-			uploads.inProgress[post_uuid].push(1);
-
-			$(this).ajaxSubmit({
-				headers: {
-					'x-csrf-token': config.csrf_token,
-				},
-				formData: params.formData,
-				error: onUploadError,
-				success: function (uploads) {
-					postContainer.find('#topic-thumb-url').val((uploads[0] || {}).url || '').trigger('change');
-				},
-				complete: function () {
-					uploads.inProgress[post_uuid].pop();
-					spinner.addClass('hide');
-				},
-			});
-			return false;
-		});
-		thumbForm.submit();
 	}
 
 	function onUploadError(xhr, post_uuid) {

@@ -327,14 +327,6 @@ define('composer', [
 		formatting.addComposerButtons();
 		preview.handleToggler(postContainer);
 
-		postContainer.find('.img-upload-btn').removeClass('hide');
-		postContainer.find('#files.lt-ie9').removeClass('hide');
-
-		if (app.user.privileges['upload:post:file']) {
-			postContainer.find('.file-upload-btn').removeClass('hide');
-			postContainer.find('#files.lt-ie9').removeClass('hide');
-		}
-
 		uploads.initialize(post_uuid);
 
 		if (config.allowTopicsThumbnail && postData.isMain) {
@@ -670,13 +662,16 @@ define('composer', [
 			return composerAlert(post_uuid, '[[error:not-enough-tags, ' + tags.minTagCount() + ']]');
 		}
 
-		var composerData = {};
+		let composerData = {
+			uuid: post_uuid,
+		};
 		let method = 'post';
 		let route = '';
 
 		if (action === 'topics.post') {
 			route = '/topics';
 			composerData = {
+				...composerData,
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
 				content: bodyEl.val(),
@@ -687,6 +682,7 @@ define('composer', [
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;
 			composerData = {
+				...composerData,
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
@@ -696,6 +692,7 @@ define('composer', [
 			method = 'put';
 			route = `/posts/${postData.pid}`;
 			composerData = {
+				...composerData,
 				pid: postData.pid,
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
