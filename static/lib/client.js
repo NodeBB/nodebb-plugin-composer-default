@@ -1,20 +1,22 @@
 'use strict';
 
-/* globals config, ajaxify */
+/* globals window, document, $, config, ajaxify */
 
-$(document).ready(function() {
-	require(['composer/drafts'], function (drafts) {
-		drafts.loadOpen();
+$(document).ready(function () {
+	$(window).on('action:app.load', function () {
+		require(['composer/drafts'], function (drafts) {
+			drafts.loadOpen();
+		});
 	});
 
-	$(window).on('action:composer.topic.new', function(ev, data) {
+	$(window).on('action:composer.topic.new', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
-			require(['composer'], function(composer) {
+			require(['composer'], function (composer) {
 				composer.newTopic({
 					cid: data.cid,
 					title: data.title || '',
 					body: data.body || '',
-					tags: data.tags || []
+					tags: data.tags || [],
 				});
 			});
 		} else {
@@ -26,9 +28,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$(window).on('action:composer.post.edit', function(ev, data) {
+	$(window).on('action:composer.post.edit', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
-			require(['composer'], function(composer) {
+			require(['composer'], function (composer) {
 				composer.editPost(data.pid);
 			});
 		} else {
@@ -36,9 +38,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$(window).on('action:composer.post.new', function(ev, data) {
+	$(window).on('action:composer.post.new', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
-			require(['composer'], function(composer) {
+			require(['composer'], function (composer) {
 				composer.newReply(data.tid, data.pid, data.topicName, data.text);
 			});
 		} else {
@@ -51,9 +53,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$(window).on('action:composer.addQuote', function(ev, data) {
+	$(window).on('action:composer.addQuote', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
-			require(['composer'], function(composer) {
+			require(['composer'], function (composer) {
 				var topicUUID = composer.findByTid(data.tid);
 				composer.addQuote(data.tid, data.pid, data.selectedPid, data.topicName, data.username, data.text, topicUUID);
 			});
@@ -62,10 +64,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$(window).on('action:composer.enhance', function(ev, data) {
-		require(['composer'], function(composer) {
+	$(window).on('action:composer.enhance', function (ev, data) {
+		require(['composer'], function (composer) {
 			composer.enhance(data.container);
 		});
 	});
-
 });
