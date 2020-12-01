@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals $, window, socket, app, define, localStorage, sessionStorage */
+/* globals $, window, socket, app, define, localStorage, sessionStorage, ajaxify */
 
 define('composer/drafts', function () {
 	var drafts = {};
@@ -185,6 +185,9 @@ define('composer/drafts', function () {
 	};
 
 	drafts.loadOpen = function () {
+		if (ajaxify.data.template.login || ajaxify.data.template.register) {
+			return;
+		}
 		// Load drafts if they were open
 		var available;
 		var open = [];
