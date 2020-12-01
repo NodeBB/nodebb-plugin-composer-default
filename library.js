@@ -103,7 +103,6 @@ plugin.getFormattingOptions = async function () {
 			...option.visibility || {},
 		}
 		if (option.hasOwnProperty('mobile')) {
-			console.log(option.name, option.mobile);
 			winston.warn('[composer/formatting] `mobile` is no longer supported as a formatting option, use `visibility` instead (default values are passed in payload)');
 			option.visibility.mobile = option.mobile;
 			option.visibility.desktop = !option.mobile;
