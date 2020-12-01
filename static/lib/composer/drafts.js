@@ -56,9 +56,13 @@ define('composer/drafts', function () {
 		return localStorage.getItem(save_id);
 	};
 
+	function getStorage(uid) {
+		return parseInt(uid, 10) > 0 ? localStorage : sessionStorage;
+	}
+
 	drafts.get = function (save_id) {
 		var uid = save_id.split(':')[1];
-		var storage = parseInt(uid, 10) ? localStorage : sessionStorage;
+		var storage = getStorage(uid);
 		var draft = {
 			text: storage.getItem(save_id),
 		};
@@ -85,7 +89,7 @@ define('composer/drafts', function () {
 			const titleEl = postContainer.find('input.title');
 			const title = titleEl && titleEl.val();
 			var raw = postContainer.find('textarea').val();
-			var storage = app.user.uid ? localStorage : sessionStorage;
+			var storage = getStorage(app.user.uid);
 
 			if (postData.hasOwnProperty('cid') && !postData.save_id.endsWith(':cid:' + postData.cid)) {
 				// A new cid was selected, the save_id needs updating
@@ -127,9 +131,10 @@ define('composer/drafts', function () {
 		// Remove save_id from list of open and available drafts
 		drafts.updateVisibility('available', save_id);
 		drafts.updateVisibility('open', save_id);
-
-		const keys = Object.keys(localStorage).filter(key => key.startsWith(save_id));
-		keys.forEach(key => localStorage.removeItem(key));
+		var uid = save_id.split(':')[1];
+		var storage = getStorage(uid);
+		const keys = Object.keys(storage).filter(key => key.startsWith(save_id));
+		keys.forEach(key => storage.removeItem(key));
 	};
 
 	drafts.updateVisibility = function (set, save_id, add) {
