@@ -57,13 +57,12 @@ Sockets.renderPreview = async function (socket, content) {
 
 Sockets.renderHelp = async function () {
 	const helpText = meta.config['composer:customHelpText'] || '';
-
-	if (meta.config['composer:showHelpTab'] === '0') {
+	if (!meta.config['composer:showHelpTab']) {
 		throw new Error('help-hidden');
 	}
 
 	const parsed = await plugins.fireHook('filter:parse.raw', helpText);
-	if (!meta.config['composer:allowPluginHelp'] || meta.config['composer:allowPluginHelp'] === '1') {
+	if (meta.config['composer:allowPluginHelp']) {
 		return await plugins.fireHook('filter:composer.help', parsed);
 	}
 	return helpText;
