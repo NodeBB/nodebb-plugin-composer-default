@@ -56,9 +56,9 @@
 						<!-- IF formatting.spacer -->
 						<li class="spacer"></li>
 						<!-- ELSE -->
-						<!-- IF !formatting.mobile -->
+						{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 						<li tabindex="-1" data-format="{formatting.name}" title="{formatting.title}"><i class="{formatting.className}"></i></li>
-						<!-- ENDIF !formatting.mobile -->
+						{{{ end }}}
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
 

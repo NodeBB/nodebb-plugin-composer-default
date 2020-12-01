@@ -2,7 +2,8 @@
 
 const url = require('url');
 
-const nconf = module.parent.require('nconf');
+const nconf = require.main.require('nconf');
+const winston = require.main.require('winston');
 const validator = require('validator');
 
 const plugins = require.main.require('./src/plugins');
@@ -64,17 +65,54 @@ plugin.addPrefetchTags = async function (hookData) {
 };
 
 plugin.getFormattingOptions = async function () {
+	const defaultVisibility = {
+		mobile: true,
+		desktop: true,
+
+		// op or reply
+		main: true,
+		reply: true,
+	}
 	let payload = {
+		defaultVisibility,
 		options: [
-			{ name: 'tags', title: '[[global:tags.tags]]', className: 'fa fa-tags', mobile: true },
-			{ name: 'zen', title: '[[modules:composer.zen_mode]]', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', mobile: false },
+			{ name: 'tags', title: '[[global:tags.tags]]', className: 'fa fa-tags',
+				visibility: {
+					...defaultVisibility,
+					desktop: false,
+				}
+			},
+			{ name: 'zen', title: '[[modules:composer.zen_mode]]', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', visibility: defaultVisibility },
 		],
 	};
 	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
-			payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-window-maximize', mobile: false });
+		payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-window-maximize',
+			visibility: {
+				...defaultVisibility,
+				reply: false,
+			},
+		});
 	}
 
 	payload = await plugins.fireHook('filter:composer.formatting', payload);
+
+	// TODO: Backwards compatibility -- remove in v1.16.0
+	payload.options = payload.options.map((option) => {
+		option.visibility = {
+			...defaultVisibility,
+			...option.visibility || {},
+		}
+		if (option.hasOwnProperty('mobile')) {
+			console.log(option.name, option.mobile);
+			winston.warn('[composer/formatting] `mobile` is no longer supported as a formatting option, use `visibility` instead (default values are passed in payload)');
+			option.visibility.mobile = option.mobile;
+			option.visibility.desktop = !option.mobile;
+		}
+
+		return option;
+	});
+	// end
+
 	return payload ? payload.options : null;
 };
 

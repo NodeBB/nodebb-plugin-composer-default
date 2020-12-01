@@ -43,9 +43,9 @@
 						<!-- IF formatting.spacer -->
 						<li class="spacer"></li>
 						<!-- ELSE -->
-						<!-- IF !formatting.mobile -->
+						<!-- IF ../visibility.desktop -->
 						<li tabindex="-1" data-format="{formatting.name}"><i class="{formatting.className}"></i></li>
-						<!-- ENDIF !formatting.mobile -->
+						<!-- ENDIF ../visibility.desktop -->
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
 
