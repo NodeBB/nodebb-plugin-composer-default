@@ -86,7 +86,7 @@ plugin.getFormattingOptions = async function () {
 		],
 	};
 	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
-		payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-window-maximize',
+		payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-address-card-o',
 			visibility: {
 				...defaultVisibility,
 				reply: false,
