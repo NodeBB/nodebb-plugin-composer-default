@@ -22,7 +22,6 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 			require(['composer'], function (composer) {
 				const uuid = postContainer.get(0).getAttribute('data-uuid');
 				const composerObj = composer.posts[uuid];
-				console.log(composerObj);
 				if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
 					uploader.show({
 						title: '[[topic:composer.thumb_title]]',

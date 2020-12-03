@@ -62,18 +62,6 @@ define('composer/uploads', [
 		});
 	}
 
-	uploads.toggleThumbEls = function (postContainer, url) {
-		if (url) {
-			postContainer.find('.topic-thumb-clear-btn').removeClass('hide');
-		}
-		var thumbToggleBtnEl = postContainer.find('.topic-thumb-toggle-btn');
-		thumbToggleBtnEl.removeClass('hide');
-		thumbToggleBtnEl.off('click').on('click', function () {
-			var container = postContainer.find('.topic-thumb-container');
-			container.toggleClass('hide', !container.hasClass('hide'));
-		});
-	};
-
 	function resetInputFile($el) {
 		$el.wrap('<form />').closest('form').get(0).reset();
 		$el.unwrap();

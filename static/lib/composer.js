@@ -328,13 +328,7 @@ define('composer', [
 		preview.handleToggler(postContainer);
 
 		uploads.initialize(post_uuid);
-
-		if (config.allowTopicsThumbnail && postData.isMain) {
-			uploads.toggleThumbEls(postContainer, composer.posts[post_uuid].thumb || '');
-		}
-
 		tags.init(postContainer, composer.posts[post_uuid]);
-
 		autocomplete.init(postContainer, post_uuid);
 
 		postContainer.on('change', 'input, textarea', function () {
@@ -433,7 +427,6 @@ define('composer', [
 	function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
-		var allowTopicsThumbnail = config.allowTopicsThumbnail && postData.isMain;
 		var isTopic = postData ? postData.hasOwnProperty('cid') : false;
 		var isMain = postData ? !!postData.isMain : false;
 		var isEditing = postData ? !!postData.pid : false;
@@ -451,7 +444,6 @@ define('composer', [
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
-			allowTopicsThumbnail: allowTopicsThumbnail,
 			isTopicOrMain: isTopic || isMain,
 			minimumTagLength: config.minimumTagLength,
 			maximumTagLength: config.maximumTagLength,
