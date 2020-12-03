@@ -15,8 +15,9 @@ define('composer', [
 	'composer/resize',
 	'composer/autocomplete',
 	'scrollStop',
+	'topicThumbs',
 	'api',
-], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, api) {
+], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -764,6 +765,7 @@ define('composer', [
 			var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 			postContainer.remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
+			topicThumbs.deleteAll(post_uuid);
 
 			delete composer.posts[post_uuid];
 			composer.active = undefined;
