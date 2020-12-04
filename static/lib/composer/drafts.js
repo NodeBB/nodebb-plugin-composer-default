@@ -2,7 +2,7 @@
 
 /* globals $, window, socket, app, define, localStorage, sessionStorage, ajaxify */
 
-define('composer/drafts', function () {
+define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
 	var drafts = {};
 	var	saveThrottleId;
 
@@ -18,6 +18,7 @@ define('composer/drafts', function () {
 
 		postContainer.on('keyup', 'textarea, input.handle, input.title', saveThrottle);
 		postContainer.on('click', 'input[type="checkbox"]', saveThrottle);
+		postContainer.on('thumb.uploaded', saveThrottle);
 
 		draftIconEl.on('animationend', function () {
 			$(this).toggleClass('active', false);
@@ -41,6 +42,7 @@ define('composer/drafts', function () {
 		});
 
 		drafts.migrateGuest();
+		drafts.migrateThumbs(...arguments);
 	};
 
 	function resetTimeout() {
@@ -66,7 +68,7 @@ define('composer/drafts', function () {
 		var draft = {
 			text: storage.getItem(save_id),
 		};
-		['cid', 'title', 'tags'].forEach(function (key) {
+		['cid', 'title', 'tags', 'uuid'].forEach(function (key) {
 			const value = storage.getItem(save_id + ':' + key);
 			if (value) {
 				draft[key] = value;
@@ -99,6 +101,7 @@ define('composer/drafts', function () {
 
 			if (raw.length || (title && title.length)) {
 				storage.setItem(postData.save_id, raw);
+				storage.setItem(`${postData.save_id}:uuid`, postContainer.attr('data-uuid'));
 
 				if (postData.hasOwnProperty('cid')) {
 					// New topic only
@@ -186,6 +189,20 @@ define('composer/drafts', function () {
 			});
 
 			return migrated;
+		}
+	};
+
+	drafts.migrateThumbs = function (postContainer, postData) {
+		console.log('migratethumb called');
+		// If any thumbs were uploaded, migrate them to this new composer's uuid
+		const newUUID = postContainer.attr('data-uuid');
+		const draft = drafts.get(postData.save_id);
+
+		if (draft && draft.uuid) {
+			console.log('migrating from', draft.uuid, 'to', newUUID);
+			api.put(`/topics/${draft.uuid}/thumbs`, {
+				tid: newUUID,
+			});
 		}
 	};
 

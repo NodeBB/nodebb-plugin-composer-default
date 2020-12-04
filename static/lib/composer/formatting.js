@@ -28,8 +28,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 						method: 'put',
 						route: config.relative_path + `/api/v3/topics/${uuid}/thumbs`,
 					}, function () {
-						console.log(arguments);
-						// update composer to do stuff here
+						postContainer.trigger('thumb.uploaded');
 					});
 				}
 			});
