@@ -193,15 +193,17 @@ define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
 	};
 
 	drafts.migrateThumbs = function (postContainer, postData) {
-		console.log('migratethumb called');
 		// If any thumbs were uploaded, migrate them to this new composer's uuid
 		const newUUID = postContainer.attr('data-uuid');
 		const draft = drafts.get(postData.save_id);
 
 		if (draft && draft.uuid) {
-			console.log('migrating from', draft.uuid, 'to', newUUID);
 			api.put(`/topics/${draft.uuid}/thumbs`, {
 				tid: newUUID,
+			}).then(() => {
+				require(['composer'], function (composer) {
+					composer.updateThumbCount(newUUID, postContainer);
+				});
 			});
 		}
 	};

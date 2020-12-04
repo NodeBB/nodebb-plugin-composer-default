@@ -2,7 +2,7 @@
 
 /* globals app, define, screenfull */
 
-define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize', 'uploader'], function(controls, preview, resize, uploader) {
+define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize', 'uploader', 'topicThumbs'], function(controls, preview, resize, uploader, topicThumbs) {
 
 	var formatting = {};
 
@@ -22,13 +22,17 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 			require(['composer'], function (composer) {
 				const uuid = postContainer.get(0).getAttribute('data-uuid');
 				const composerObj = composer.posts[uuid];
+
 				if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
 					uploader.show({
 						title: '[[topic:composer.thumb_title]]',
 						method: 'put',
 						route: config.relative_path + `/api/v3/topics/${uuid}/thumbs`,
 					}, function () {
-						postContainer.trigger('thumb.uploaded');
+						postContainer.trigger('thumb.uploaded');	// toggle draft save
+
+						// Update client-side with count
+						composer.updateThumbCount(uuid, postContainer);
 					});
 				}
 			});

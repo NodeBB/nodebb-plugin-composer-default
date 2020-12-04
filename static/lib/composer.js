@@ -794,5 +794,28 @@ define('composer', [
 		onHide();
 	};
 
+	composer.updateThumbCount = function (uuid, postContainer) {
+		const composerObj = composer.posts[uuid];
+		if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
+			const calls = [
+				topicThumbs.get(uuid),
+			];
+			if (composerObj.pid) {
+				calls.push(topicThumbs.getByPid(composerObj.pid));
+			}
+			Promise.all(calls).then((thumbs) => {
+				thumbs = thumbs.reduce((memo, cur) => {
+					memo = memo.concat(cur);
+					return memo;
+				});
+
+				if (thumbs.length) {
+					const formatEl = postContainer.find('[data-format="thumbs"]');
+					formatEl.attr('data-count', thumbs.length);
+				}
+			});
+		}
+	}
+
 	return composer;
 });

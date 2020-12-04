@@ -136,10 +136,24 @@
 				padding: 10px 15px;
 				cursor: pointer;
 				color: #333;
+				position: relative;
 
 				&:focus, &:hover {
 					outline: none;
 					background-color: darken(#fff, 10%);
+				}
+
+				&[data-format="thumbs"][data-count]:after {
+					content: attr(data-count);
+					background: @brand-info;
+					color: white;
+					font-weight: 600;
+					position: absolute;
+					top: 5px;
+					left: 2.5em;
+					padding: 0px 5px;
+					border-radius: 5px;
+					font-size: 0.75em;
 				}
 			}
 		}
