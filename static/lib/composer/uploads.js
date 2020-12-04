@@ -279,7 +279,8 @@ define('composer/uploads', [
 					});
 				},
 
-				success: function (uploads) {
+				success: function (res) {
+					const uploads = res.response.images;
 					doneUploading = true;
 					if (uploads && uploads.length) {
 						for (var i = 0; i < uploads.length; ++i) {
