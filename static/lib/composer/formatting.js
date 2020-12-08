@@ -24,11 +24,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 				const composerObj = composer.posts[uuid];
 
 				if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
-					uploader.show({
-						title: '[[topic:composer.thumb_title]]',
-						method: 'put',
-						route: config.relative_path + `/api/v3/topics/${uuid}/thumbs`,
-					}, function () {
+					topicThumbs.modal.open({ id: uuid, pid: composerObj.pid }).then(() => {
 						postContainer.trigger('thumb.uploaded');	// toggle draft save
 
 						// Update client-side with count

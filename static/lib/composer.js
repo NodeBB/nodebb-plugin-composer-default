@@ -394,6 +394,7 @@ define('composer', [
 		});
 
 		drafts.init(postContainer, postData);
+
 		var draft = drafts.get(postData.save_id);
 		if (draft && draft.title) {
 			titleEl.val(draft.title);
@@ -412,6 +413,9 @@ define('composer', [
 		handleHelp(postContainer);
 		handleSearch(postContainer);
 		focusElements(postContainer);
+		if (postData.action === 'post.edit') {
+			composer.updateThumbCount(post_uuid, postContainer);
+		}
 
 		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
 		if (typeof screenfull !== 'undefined' && !screenfull.enabled) {
