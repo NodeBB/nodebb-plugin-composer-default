@@ -413,7 +413,7 @@ define('composer', [
 		handleHelp(postContainer);
 		handleSearch(postContainer);
 		focusElements(postContainer);
-		if (postData.action === 'post.edit') {
+		if (postData.action === 'posts.edit') {
 			composer.updateThumbCount(post_uuid, postContainer);
 		}
 
