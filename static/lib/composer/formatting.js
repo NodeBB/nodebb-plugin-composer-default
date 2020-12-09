@@ -57,12 +57,11 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 					postContainer.find('.write').focus();
 
 					$(window).on('resize', onResize);
-
 					$(window).one('action:composer.topics.post action:composer.posts.reply action:composer.posts.edit action:composer.discard', screenfull.exit);
 				}
 			});
 
-			screenfull.toggle();
+			screenfull.request(postContainer.get(0));
 		}
 	};
 

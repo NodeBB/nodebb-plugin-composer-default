@@ -418,7 +418,7 @@ define('composer', [
 		}
 
 		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
-		if (typeof screenfull !== 'undefined' && !screenfull.enabled) {
+		if (!screenfull.isEnabled) {
 			$('[data-format="zen"]').addClass('hidden');
 		}
 
