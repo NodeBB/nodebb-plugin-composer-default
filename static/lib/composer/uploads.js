@@ -311,7 +311,10 @@ define('composer/uploads', [
 	}
 
 	function onUploadError(xhr, post_uuid) {
-		var msg = (xhr.responseJSON && xhr.responseJSON.error) || '[[error:parse-error]]';
+		var msg = (xhr.responseJSON &&
+			(xhr.responseJSON.error || (xhr.responseJSON.status && xhr.responseJSON.status.message))) ||
+			'[[error:parse-error]]';
+
 		if (xhr && xhr.status === 413) {
 			msg = xhr.statusText || 'Request Entity Too Large';
 		}
