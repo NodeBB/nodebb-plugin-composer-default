@@ -723,6 +723,7 @@ define('composer', [
 		api[method](route, composerData)
 			.then((data) => {
 				postContainer.find('.composer-submit').removeAttr('disabled');
+				postData.submitted = true;
 
 				composer.discard(post_uuid);
 				drafts.removeDraft(postData.save_id);
@@ -772,18 +773,20 @@ define('composer', [
 
 	composer.discard = function (post_uuid) {
 		if (composer.posts[post_uuid]) {
+			var postData = composer.posts[post_uuid];
 			var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 			postContainer.remove();
 			drafts.removeDraft(composer.posts[post_uuid].save_id);
 
-			delete composer.posts[post_uuid];
-			composer.active = undefined;
 			taskbar.discard('composer', post_uuid);
 			$('[data-action="post"]').removeAttr('disabled');
 
 			$(window).trigger('action:composer.discard', {
 				post_uuid: post_uuid,
+				postData: postData,
 			});
+			delete composer.posts[post_uuid];
+			composer.active = undefined;
 		}
 		onHide();
 	};
