@@ -33,7 +33,7 @@ Sockets.push = async function (socket, pid) {
 		throw new Error('[[error:no-topic]]');
 	}
 
-	const result = await plugins.fireHook('filter:composer.push', {
+	const result = await plugins.hooks.fire('filter:composer.push', {
 		pid: pid,
 		uid: postData.uid,
 		handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
@@ -52,7 +52,7 @@ Sockets.editCheck = async function (socket, pid) {
 };
 
 Sockets.renderPreview = async function (socket, content) {
-	return await plugins.fireHook('filter:parse.raw', content);
+	return await plugins.hooks.fire('filter:parse.raw', content);
 };
 
 Sockets.renderHelp = async function () {
@@ -61,9 +61,9 @@ Sockets.renderHelp = async function () {
 		throw new Error('help-hidden');
 	}
 
-	const parsed = await plugins.fireHook('filter:parse.raw', helpText);
+	const parsed = await plugins.hooks.fire('filter:parse.raw', helpText);
 	if (meta.config['composer:allowPluginHelp']) {
-		return await plugins.fireHook('filter:composer.help', parsed);
+		return await plugins.hooks.fire('filter:composer.help', parsed);
 	}
 	return helpText;
 };
@@ -81,7 +81,7 @@ Sockets.getCategoriesForSelect = async function (socket) {
 		user.isAdministrator(socket.uid),
 	]);
 
-	const filtered = await plugins.fireHook('filter:composer.getCategoriesForSelect', {
+	const filtered = await plugins.hooks.fire('filter:composer.getCategoriesForSelect', {
 		uid: socket.uid,
 		allowed: allowed,
 		categoriesData: categoriesData,

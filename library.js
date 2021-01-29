@@ -94,7 +94,7 @@ plugin.getFormattingOptions = async function () {
 		});
 	}
 
-	payload = await plugins.fireHook('filter:composer.formatting', payload);
+	payload = await plugins.hooks.fire('filter:composer.formatting', payload);
 
 	// TODO: Backwards compatibility -- remove in v1.16.0
 	payload.options = payload.options.map((option) => {
