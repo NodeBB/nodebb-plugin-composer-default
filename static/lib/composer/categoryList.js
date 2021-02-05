@@ -50,6 +50,7 @@ define('composer/categoryList', [
 						privilege: 'topics:create',
 						states: ['watching', 'notwatching', 'ignoring'],
 						openOnLoad: true,
+						showLinks: false,
 						onSelect: function (selectedCategory) {
 							postContainer.find('.category-name').text(selectedCategory.name);
 							selector.selectCategory(selectedCategory.cid);
