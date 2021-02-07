@@ -1,9 +1,11 @@
 
 'use strict';
 
-/*globals define, socket, app*/
+/* globals define, app, $, window */
 
-define('composer/categoryList', ['categorySelector', 'taskbar'], function (categorySelector, taskbar) {
+define('composer/categoryList', [
+	'categorySelector', 'taskbar', 'api',
+], function (categorySelector, taskbar, api) {
 	var categoryList = {};
 
 	var selector;
@@ -18,59 +20,48 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function (categ
 			toggleDropDirection(postContainer);
 		});
 
-		socket.emit('plugins.composer.getCategoriesForSelect', {}, function (err, categories) {
-			if (err) {
-				return app.alertError(err.message);
-			}
-			// Save hash for queries
-			categoryList._map = categories.reduce(function (memo, cur) {
-				memo[cur.cid] = cur;
-				return memo;
-			}, {});
+		categoryList.updateTaskbar(postContainer, postData);
 
-			categories.forEach(function (category) {
-				if (!category.disabledClass) {
-					$('<li data-cid="' + category.cid + '">' + category.name + '</li>').translateText(category.name).appendTo($('.category-selector'));
-				}
-			});
-
-			categoryList.updateTaskbar(postContainer, postData);
-
-			app.parseAndTranslate('partials/category-selector', {
-				categories: categories,
-				pullRight: false,
-			}, function (html) {
-				listContainer.append(html);
-				selector = categorySelector.init(listContainer.find('[component="category-selector"]'), function (selectedCategory) {
+		app.parseAndTranslate('partials/category-selector', {
+			pullRight: false,
+		}, function (html) {
+			listContainer.append(html);
+			selector = categorySelector.init(listContainer.find('[component="category-selector"]'), {
+				privilege: 'topics:create',
+				states: ['watching', 'notwatching', 'ignoring'],
+				onSelect: function (selectedCategory) {
 					if (postData.hasOwnProperty('cid')) {
 						changeCategory(postContainer, postData, selectedCategory.cid);
 					}
+				},
+			});
+
+			if (postData.cid) {
+				selector.selectCategory(postData.cid);
+			}
+
+			var selectedCategory = selector.getSelectedCategory();
+
+			// this is the mobile category selector
+			postContainer.find('.category-name')
+				.translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]')
+				.on('click', function () {
+					categorySelector.modal({
+						privilege: 'topics:create',
+						states: ['watching', 'notwatching', 'ignoring'],
+						openOnLoad: true,
+						showLinks: false,
+						onSelect: function (selectedCategory) {
+							postContainer.find('.category-name').text(selectedCategory.name);
+							selector.selectCategory(selectedCategory.cid);
+							if (postData.hasOwnProperty('cid')) {
+								changeCategory(postContainer, postData, selectedCategory.cid);
+							}
+						},
+					});
 				});
 
-				if (postData.cid) {
-					selector.selectCategory(postData.cid);
-				}
-
-				var selectedCategory = selector.getSelectedCategory();
-
-				postContainer.find('.category-name').translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]');
-				postContainer.find('.category-selector').find('li[data-cid="' + postData.cid + '"]').addClass('active');
-
-				toggleDropDirection(postContainer);
-			});
-		});
-
-
-		$('.category-selector').on('click', 'li', function () {
-			$('.category-name').text($(this).text());
-			$('.category-selector').removeClass('open');
-			$('.category-selector li').removeClass('active');
-			$(this).addClass('active');
-			var selectedCid = $(this).attr('data-cid');
-			selector.selectCategory(selectedCid);
-			if (postData.hasOwnProperty('cid')) {
-				changeCategory(postContainer, postData, selectedCid);
-			}
+			toggleDropDirection(postContainer);
 		});
 	};
 
@@ -87,16 +78,19 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function (categ
 	};
 
 	categoryList.updateTaskbar = function (postContainer, postData) {
-		var uuid = postContainer.attr('data-uuid');
-		var category = categoryList._map[postData.cid];
-		if (category) {
-			taskbar.update('composer', uuid, {
-				image: category.backgroundImage,
-				'background-color': category.bgColor,
-				icon: category.icon.slice(3),
+		if (parseInt(postData.cid, 10)) {
+			var uuid = postContainer.attr('data-uuid');
+			api.get(`/categories/${postData.cid}`, {}).then(function (category) {
+				if (category && category.icon) {
+					taskbar.update('composer', uuid, {
+						image: category.backgroundImage,
+						'background-color': category.bgColor,
+						icon: category.icon.slice(3),
+					});
+				}
 			});
 		}
-	}
+	};
 
 	function changeCategory(postContainer, postData, cid) {
 		postData.cid = cid;

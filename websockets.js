@@ -1,14 +1,10 @@
 'use strict';
 
-const _ = require.main.require('lodash');
-
 const meta = require.main.require('./src/meta');
 const privileges = require.main.require('./src/privileges');
 const posts = require.main.require('./src/posts');
 const topics = require.main.require('./src/topics');
 const plugins = require.main.require('./src/plugins');
-const categories = require.main.require('./src/categories');
-const user = require.main.require('./src/user');
 
 const Sockets = module.exports;
 
@@ -71,55 +67,3 @@ Sockets.renderHelp = async function () {
 Sockets.getFormattingOptions = async function () {
 	return await module.parent.exports.getFormattingOptions();
 };
-
-Sockets.getCategoriesForSelect = async function (socket) {
-	const cids = await categories.getAllCidsFromSet('categories:cid');
-	let [allowed, categoriesData, isModerator, isAdmin] = await Promise.all([
-		privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid),
-		categories.getCategoriesData(cids),
-		user.isModerator(socket.uid, cids),
-		user.isAdministrator(socket.uid),
-	]);
-
-	const filtered = await plugins.hooks.fire('filter:composer.getCategoriesForSelect', {
-		uid: socket.uid,
-		allowed: allowed,
-		categoriesData: categoriesData,
-		isModerator: isModerator,
-		isAdmin: isAdmin,
-	});
-	({ allowed, categoriesData, isModerator, isAdmin } = filtered);
-
-	categories.getTree(categoriesData);
-
-	const cidToAllowed = _.zipObject(cids, allowed.map((allowed, i) => isAdmin || isModerator[i] || allowed));
-	const cidToCategory = _.zipObject(cids, categoriesData);
-
-	const visibleCategories = categoriesData.filter(function (c) {
-		if (!c) {
-			return false;
-		}
-
-		const hasPostableChildren = checkPostableChildren(c, cidToAllowed);
-		const shouldBeRemoved = !hasPostableChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
-		const shouldBeDisaplayedAsDisabled = hasPostableChildren && (!cidToAllowed[c.cid] || c.link || c.disabled);
-		if (shouldBeDisaplayedAsDisabled) {
-			c.disabledClass = true;
-		}
-
-		if (shouldBeRemoved && c.parent && c.parent.cid && cidToCategory[c.parent.cid]) {
-			cidToCategory[c.parent.cid].children = cidToCategory[c.parent.cid].children.filter(child => child.cid !== c.cid);
-		}
-
-		return !shouldBeRemoved;
-	});
-
-	return categories.buildForSelectCategories(visibleCategories, ['disabledClass']);
-};
-
-function checkPostableChildren(category, cidToAllowed) {
-	if (!Array.isArray(category.children) || !category.children.length) {
-		return false;
-	}
-	return category.children.some(c => c && !c.disabled && (cidToAllowed[c.cid] || checkPostableChildren(c, cidToAllowed)));
-}
