@@ -17,7 +17,7 @@
 
 		<div class="title-container row">
 			<!-- IF isTopic -->
-			<div class="category-list-container"></div>
+			<div class="category-list-container"><!-- IMPORT partials/category-selector.tpl --></div>
 			<!-- ENDIF isTopic -->
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">

@@ -20,7 +20,9 @@
 		</nav>
 		<div class="row title-container">
 			<!-- IF isTopic -->
-			<div class="category-list-container hidden-sm hidden-xs"></div>
+			<div class="category-list-container hidden-sm hidden-xs">
+				<!-- IMPORT partials/category-selector.tpl -->
+			</div>
 			<!-- ENDIF isTopic -->
 
 			<!-- IF showHandleInput -->

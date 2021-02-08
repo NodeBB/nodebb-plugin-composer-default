@@ -1,7 +1,7 @@
 
 'use strict';
 
-/* globals define, app, $, window */
+/* globals define, $, window */
 
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
@@ -22,45 +22,42 @@ define('composer/categoryList', [
 
 		categoryList.updateTaskbar(postContainer, postData);
 
-		app.parseAndTranslate('partials/category-selector', {}, function (html) {
-			listContainer.append(html);
-			selector = categorySelector.init(listContainer.find('[component="category-selector"]'), {
-				privilege: 'topics:create',
-				states: ['watching', 'notwatching', 'ignoring'],
-				onSelect: function (selectedCategory) {
-					if (postData.hasOwnProperty('cid')) {
-						changeCategory(postContainer, postData, selectedCategory.cid);
-					}
-				},
+		selector = categorySelector.init(listContainer.find('[component="category-selector"]'), {
+			privilege: 'topics:create',
+			states: ['watching', 'notwatching', 'ignoring'],
+			onSelect: function (selectedCategory) {
+				if (postData.hasOwnProperty('cid')) {
+					changeCategory(postContainer, postData, selectedCategory.cid);
+				}
+			},
+		});
+
+		if (postData.cid) {
+			selector.selectCategory(postData.cid);
+		}
+
+		var selectedCategory = selector.getSelectedCategory();
+
+		// this is the mobile category selector
+		postContainer.find('.category-name')
+			.translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]')
+			.on('click', function () {
+				categorySelector.modal({
+					privilege: 'topics:create',
+					states: ['watching', 'notwatching', 'ignoring'],
+					openOnLoad: true,
+					showLinks: false,
+					onSelect: function (selectedCategory) {
+						postContainer.find('.category-name').text(selectedCategory.name);
+						selector.selectCategory(selectedCategory.cid);
+						if (postData.hasOwnProperty('cid')) {
+							changeCategory(postContainer, postData, selectedCategory.cid);
+						}
+					},
+				});
 			});
 
-			if (postData.cid) {
-				selector.selectCategory(postData.cid);
-			}
-
-			var selectedCategory = selector.getSelectedCategory();
-
-			// this is the mobile category selector
-			postContainer.find('.category-name')
-				.translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]')
-				.on('click', function () {
-					categorySelector.modal({
-						privilege: 'topics:create',
-						states: ['watching', 'notwatching', 'ignoring'],
-						openOnLoad: true,
-						showLinks: false,
-						onSelect: function (selectedCategory) {
-							postContainer.find('.category-name').text(selectedCategory.name);
-							selector.selectCategory(selectedCategory.cid);
-							if (postData.hasOwnProperty('cid')) {
-								changeCategory(postContainer, postData, selectedCategory.cid);
-							}
-						},
-					});
-				});
-
-			toggleDropDirection(postContainer);
-		});
+		toggleDropDirection(postContainer);
 	};
 
 	function toggleDropDirection(postContainer) {
