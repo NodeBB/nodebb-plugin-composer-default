@@ -22,9 +22,7 @@ define('composer/categoryList', [
 
 		categoryList.updateTaskbar(postContainer, postData);
 
-		app.parseAndTranslate('partials/category-selector', {
-			pullRight: false,
-		}, function (html) {
+		app.parseAndTranslate('partials/category-selector', {}, function (html) {
 			listContainer.append(html);
 			selector = categorySelector.init(listContainer.find('[component="category-selector"]'), {
 				privilege: 'topics:create',
