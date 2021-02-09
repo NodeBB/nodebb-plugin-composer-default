@@ -464,6 +464,14 @@ define('composer', [
 			formatting: composer.formatting,
 			tagWhitelist: ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
+			selectedCategory: ajaxify.data.template.category ? {
+				icon: ajaxify.data.icon,
+				color: ajaxify.data.color,
+				bgColor: ajaxify.data.bgColor,
+				backgroundImage: ajaxify.data.backgroundImage,
+				imageClass: ajaxify.data.imageClass,
+				name: ajaxify.data.name,
+			} : null,
 		};
 
 		if (data.mobile) {

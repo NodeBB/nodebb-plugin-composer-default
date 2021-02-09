@@ -1,7 +1,7 @@
 
 'use strict';
 
-/* globals define, $, window */
+/* globals define, $, window, ajaxify */
 
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
@@ -32,8 +32,8 @@ define('composer/categoryList', [
 			},
 		});
 
-		if (postData.cid) {
-			selector.selectCategory(postData.cid);
+		if (postData.cid && ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
+			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
 		}
 
 		var selectedCategory = selector.getSelectedCategory();
