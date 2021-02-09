@@ -1,11 +1,10 @@
 'use strict';
 
-/* globals $, window, history, localStorage, document, define, socket, app, config, ajaxify, utils, bootbox, screenfull */
+/* globals $, window, history, localStorage, document, define, socket, app, config, ajaxify, utils, screenfull */
 
 define('composer', [
 	'taskbar',
 	'translator',
-	'composer/controls',
 	'composer/uploads',
 	'composer/formatting',
 	'composer/drafts',
@@ -17,7 +16,8 @@ define('composer', [
 	'scrollStop',
 	'topicThumbs',
 	'api',
-], function (taskbar, translator, controls, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api) {
+	'bootbox',
+], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api, bootbox) {
 	var composer = {
 		active: undefined,
 		posts: {},
