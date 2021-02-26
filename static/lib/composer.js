@@ -17,7 +17,8 @@ define('composer', [
 	'topicThumbs',
 	'api',
 	'bootbox',
-], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api, bootbox) {
+	'hooks',
+], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api, bootbox, hooks) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -427,7 +428,7 @@ define('composer', [
 			$('[data-format="zen"]').addClass('hidden');
 		}
 
-		$(window).trigger('action:composer.enhanced', {
+		hooks.fire('action:composer.enhanced', {
 			postContainer: postContainer,
 			postData: postData,
 			draft: draft,
@@ -789,7 +790,7 @@ define('composer', [
 			taskbar.discard('composer', post_uuid);
 			$('[data-action="post"]').removeAttr('disabled');
 
-			$(window).trigger('action:composer.discard', {
+			hooks.fire('action:composer.discard', {
 				post_uuid: post_uuid,
 				postData: postData,
 			});
