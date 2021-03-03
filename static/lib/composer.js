@@ -568,7 +568,7 @@ define('composer', [
 		// Update address bar in case f5 is pressed
 		window.history.pushState({
 			url: path,
-		}, path, config.relative_path + '/' + path);
+		}, path, `${config.relative_path}/${returnPath}`);
 	}
 
 	function handleHelp(postContainer) {
