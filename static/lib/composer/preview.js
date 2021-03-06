@@ -1,14 +1,14 @@
 'use strict';
 
-/* globals define, socket*/
+/* globals define, socket, $, window, utils, localStorage */
 
-define('composer/preview', function() {
+define('composer/preview', function () {
 	var preview = {};
 
 	var timeoutId = 0;
 
-	preview.render = function(postContainer, callback) {
-		callback = callback || function() {};
+	preview.render = function (postContainer, callback) {
+		callback = callback || function () {};
 		if (!postContainer.find('.preview-container').is(':visible')) {
 			return callback();
 		}
@@ -19,8 +19,8 @@ define('composer/preview', function() {
 		}
 		var textarea = postContainer.find('textarea');
 
-		timeoutId = setTimeout(function() {
-			socket.emit('plugins.composer.renderPreview', textarea.val(), function(err, preview) {
+		timeoutId = setTimeout(function () {
+			socket.emit('plugins.composer.renderPreview', textarea.val(), function (err, preview) {
 				timeoutId = 0;
 				if (err) {
 					return;
@@ -34,7 +34,7 @@ define('composer/preview', function() {
 		}, 250);
 	};
 
-	preview.matchScroll = function(postContainer) {
+	preview.matchScroll = function (postContainer) {
 		if (!postContainer.find('.preview-container').is(':visible')) {
 			return;
 		}
@@ -54,25 +54,29 @@ define('composer/preview', function() {
 		}
 	};
 
-	preview.handleToggler = function(postContainer) {
+	preview.handleToggler = function (postContainer) {
 		preview.env = utils.findBootstrapEnvironment();
+		var showBtn = postContainer.find('.write-container .toggle-preview');
+		var hideBtn = postContainer.find('.preview-container .toggle-preview');
+		var previewContainer = $('.preview-container');
+		var writeContainer = $('.write-container');
 
 		function hidePreview() {
 			togglePreview(false);
-			if (preview.env !== 'xs' && preview.env !=='sm') {
+			if (preview.env !== 'xs' && preview.env !== 'sm') {
 				localStorage.setItem('composer:previewToggled', true);
 			}
 		}
 
 		function showPreview() {
 			togglePreview(true);
-			if (preview.env !== 'xs' && preview.env !=='sm') {
+			if (preview.env !== 'xs' && preview.env !== 'sm') {
 				localStorage.removeItem('composer:previewToggled');
 			}
 		}
 
 		function togglePreview(show) {
-			if (preview.env === 'xs' || preview.env ==='sm') {
+			if (preview.env === 'xs' || preview.env === 'sm') {
 				previewContainer.toggleClass('hide', false);
 				writeContainer.toggleClass('maximized', false);
 				showBtn.toggleClass('hide', true);
@@ -94,15 +98,10 @@ define('composer/preview', function() {
 		}
 		preview.toggle = togglePreview;
 
-		var showBtn = postContainer.find('.write-container .toggle-preview'),
-			hideBtn = postContainer.find('.preview-container .toggle-preview'),
-			previewContainer = $('.preview-container'),
-			writeContainer = $('.write-container');
-
 		hideBtn.on('click', hidePreview);
 		showBtn.on('click', showPreview);
 
-		if (localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env ==='sm')) {
+		if (localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env === 'sm')) {
 			hidePreview();
 		} else {
 			showPreview();
