@@ -91,15 +91,20 @@ define('composer/preview', function () {
 				previewContainer.toggleClass('hide', !show);
 				writeContainer.toggleClass('maximized', !show);
 				showBtn.toggleClass('hide', show);
-				$('.write').focus();
 			}
 
 			preview.matchScroll(postContainer);
 		}
 		preview.toggle = togglePreview;
 
-		hideBtn.on('click', hidePreview);
-		showBtn.on('click', showPreview);
+		hideBtn.on('click', function () {
+			hidePreview();
+			postContainer.find('.write').focus();
+		});
+		showBtn.on('click', function () {
+			showPreview();
+			postContainer.find('.write').focus();
+		});
 
 		if (localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env === 'sm')) {
 			hidePreview();
