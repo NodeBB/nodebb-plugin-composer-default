@@ -170,15 +170,20 @@ define('composer', [
 		composer.load(uuid);
 	}
 
-	function composerAlert(post_uuid, message) {
+	async function composerAlert(post_uuid, message) {
 		$('.composer[data-uuid="' + post_uuid + '"]').find('.composer-submit').removeAttr('disabled');
-		app.alert({
-			type: 'danger',
-			timeout: 3000,
-			title: '',
-			message: message,
-			alert_id: 'post_error',
-		});
+
+		const { showAlert } = await hooks.fire('filter:composer.error', { post_uuid, message, showAlert: true });
+
+		if (showAlert) {
+			app.alert({
+				type: 'danger',
+				timeout: 3000,
+				title: '',
+				message: message,
+				alert_id: 'post_error',
+			});
+		}
 	}
 
 	composer.findByTid = function (tid) {
@@ -761,11 +766,10 @@ define('composer', [
 				// Restore composer on error
 				composer.load(post_uuid);
 				textareaEl.prop('readonly', false);
-				submitBtn.prop('disabled', false);
 				if (err.message === '[[error:email-not-confirmed]]') {
 					return app.showEmailConfirmWarning(err);
 				}
-				app.alertError(err);
+				composerAlert(post_uuid, err.message);
 			});
 	}
 
