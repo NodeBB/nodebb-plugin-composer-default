@@ -735,7 +735,7 @@ define('composer', [
 
 		api[method](route, composerData)
 			.then((data) => {
-				postContainer.find('.composer-submit').removeAttr('disabled');
+				submitBtn.removeAttr('disabled');
 				postData.submitted = true;
 
 				composer.discard(post_uuid);
