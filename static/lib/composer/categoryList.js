@@ -31,7 +31,9 @@ define('composer/categoryList', [
 				}
 			},
 		});
-
+		if (!selector) {
+			return;
+		}
 		if (postData.cid && ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
 			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
 		}
