@@ -36,13 +36,14 @@ define('composer/categoryList', [
 		}
 		if (postData.cid && ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
 			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
+		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
+			// separate composer route
+			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
 		}
-
-		var selectedCategory = selector.getSelectedCategory();
 
 		// this is the mobile category selector
 		postContainer.find('.category-name')
-			.translateText(selectedCategory ? selectedCategory.name : '[[modules:composer.select_category]]')
+			.translateText(selector.selectedCategory ? selector.selectedCategory.name : '[[modules:composer.select_category]]')
 			.on('click', function () {
 				categorySelector.modal({
 					privilege: 'topics:create',

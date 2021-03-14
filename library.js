@@ -149,7 +149,9 @@ plugin.filterComposerBuild = async function (hookData) {
 		posts.isMain(req.query.pid),
 		getPostData(req),
 		getTopicData(req),
-		categories.getCategoryFields(req.query.cid, ['minTags', 'maxTags']),
+		categories.getCategoryFields(req.query.cid, [
+			'name', 'icon', 'color', 'bgColor', 'backgroundImage', 'imageClass', 'minTags', 'maxTags',
+		]),
 		user.isAdministrator(req.uid),
 		isModerator(req),
 		plugin.getFormattingOptions(),
@@ -198,6 +200,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			minimumTagLength: meta.config.minimumTagLength || 3,
 			maximumTagLength: meta.config.maximumTagLength || 15,
 			tagWhitelist: tagWhitelist,
+			selectedCategory: categoryData,
 			minTags: categoryData.minTags,
 			maxTags: categoryData.maxTags,
 
