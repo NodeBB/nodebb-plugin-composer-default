@@ -176,6 +176,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		isMain = true;
 	}
 	globalPrivileges['topics:tag'] = canTagTopics;
+	const cid = parseInt(req.query.cid, 10);
 	return {
 		req: req,
 		res: res,
@@ -183,7 +184,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			disabled: !req.query.pid && !req.query.tid && !req.query.cid,
 			pid: parseInt(req.query.pid, 10),
 			tid: parseInt(req.query.tid, 10),
-			cid: parseInt(req.query.cid, 10) || (topicData ? topicData.cid : null),
+			cid: cid || (topicData ? topicData.cid : null),
 			action: action,
 			toPid: parseInt(req.query.toPid, 10),
 			discardRoute: discardRoute,
@@ -200,7 +201,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			minimumTagLength: meta.config.minimumTagLength || 3,
 			maximumTagLength: meta.config.maximumTagLength || 15,
 			tagWhitelist: tagWhitelist,
-			selectedCategory: categoryData,
+			selectedCategory: cid ? categoryData : null,
 			minTags: categoryData.minTags,
 			maxTags: categoryData.maxTags,
 
