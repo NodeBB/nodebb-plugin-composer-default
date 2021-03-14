@@ -61,7 +61,7 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 				}
 			});
 
-			screenfull.request(postContainer.get(0));
+			screenfull.toggle(postContainer.get(0));
 		}
 	};
 
