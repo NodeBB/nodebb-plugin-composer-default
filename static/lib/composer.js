@@ -724,7 +724,7 @@ define('composer', [
 			postData: postData,
 			redirect: true,
 		};
-		$(window).trigger('action:composer.submit', submitHookData);
+		hooks.fire('action:composer.submit', submitHookData);
 
 		// Minimize composer (and set textarea as readonly) while submitting
 		var taskbarIconEl = $('#taskbar .composer[data-uuid="' + post_uuid + '"] i');
