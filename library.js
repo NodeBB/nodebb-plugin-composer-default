@@ -177,6 +177,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	}
 	globalPrivileges['topics:tag'] = canTagTopics;
 	const cid = parseInt(req.query.cid, 10);
+	const topicTitle = topicData ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '';
 	return {
 		req: req,
 		res: res,
@@ -192,12 +193,17 @@ plugin.filterComposerBuild = async function (hookData) {
 			resizable: false,
 			allowTopicsThumbnail: parseInt(meta.config.allowTopicsThumbnail, 10) === 1 && isMain,
 
-			topicTitle: topicData ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '',
+			// can't use title property as that is used for page title
+			topicTitle: topicTitle,
+			titleLength: topicTitle.length,
+
 			thumb: topicData ? topicData.thumb : '',
 			body: body,
 
 			isMain: isMain,
 			isTopicOrMain: !!req.query.cid || isMain,
+			maximumTitleLength: meta.config.maximumTitleLength,
+			maximumPostLength: meta.config.maximumPostLength,
 			minimumTagLength: meta.config.minimumTagLength || 3,
 			maximumTagLength: meta.config.maximumTagLength || 15,
 			tagWhitelist: tagWhitelist,

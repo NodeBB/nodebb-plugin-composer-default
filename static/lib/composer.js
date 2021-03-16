@@ -457,10 +457,13 @@ define('composer', [
 
 		var data = {
 			title: title,
+			titleLength: title.length,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
 			isTopicOrMain: isTopic || isMain,
+			maximumTitleLength: config.maximumTitleLength,
+			maximumPostLength: config.maximumPostLength,
 			minimumTagLength: config.minimumTagLength,
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
