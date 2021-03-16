@@ -145,6 +145,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		tagWhitelist,
 		globalPrivileges,
 		canTagTopics,
+		canScheduleTopics,
 	] = await Promise.all([
 		posts.isMain(req.query.pid),
 		getPostData(req),
@@ -158,6 +159,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		getTagWhitelist(req.query),
 		privileges.global.get(req.uid),
 		canTag(req),
+		canSchedule(req),
 	]);
 
 	const isEditing = !!req.query.pid;
@@ -213,6 +215,7 @@ plugin.filterComposerBuild = async function (hookData) {
 
 			isTopic: !!req.query.cid,
 			isEditing: isEditing,
+			canSchedule: canScheduleTopics,
 			showHandleInput: meta.config.allowGuestHandles === 1 && (req.uid === 0 || (isEditing && isGuestPost && (isAdmin || isMod))),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: formatting,
@@ -287,6 +290,13 @@ async function canTag(req) {
 		return await privileges.categories.can('topics:tag', req.query.cid, req.uid);
 	}
 	return true;
+}
+
+async function canSchedule(req) {
+	if (parseInt(req.query.cid, 10)) {
+		return await privileges.categories.can('topics:schedule', req.query.cid, req.uid);
+	}
+	return false;
 }
 
 async function getTagWhitelist(query) {

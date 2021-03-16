@@ -1,7 +1,7 @@
 
 'use strict';
 
-/* globals define, $, window, ajaxify */
+/* globals define, $, window, ajaxify, config */
 
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
@@ -27,7 +27,7 @@ define('composer/categoryList', [
 			states: ['watching', 'notwatching', 'ignoring'],
 			onSelect: function (selectedCategory) {
 				if (postData.hasOwnProperty('cid')) {
-					changeCategory(postContainer, postData, selectedCategory.cid);
+					changeCategory(postContainer, postData, selectedCategory);
 				}
 			},
 		});
@@ -54,7 +54,7 @@ define('composer/categoryList', [
 						postContainer.find('.category-name').text(selectedCategory.name);
 						selector.selectCategory(selectedCategory.cid);
 						if (postData.hasOwnProperty('cid')) {
-							changeCategory(postContainer, postData, selectedCategory.cid);
+							changeCategory(postContainer, postData, selectedCategory);
 						}
 					},
 				});
@@ -90,11 +90,13 @@ define('composer/categoryList', [
 		}
 	};
 
-	function changeCategory(postContainer, postData, cid) {
-		postData.cid = cid;
+	async function changeCategory(postContainer, postData, selectedCategory) {
+		postData.cid = selectedCategory.cid;
+		const categoryData = await window.fetch(`${config.relative_path}/api/category/${selectedCategory.cid}`).then(r => r.json());
 
-		require(['composer/tags'], function (tags) {
-			tags.onChangeCategory(postContainer, postData, cid);
+		require(['composer/scheduler', 'composer/tags'], function (scheduler, tags) {
+			scheduler.onChangeCategory(categoryData);
+			tags.onChangeCategory(postContainer, postData, selectedCategory.cid, categoryData);
 		});
 
 		categoryList.updateTaskbar(postContainer, postData);

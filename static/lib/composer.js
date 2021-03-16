@@ -13,12 +13,13 @@ define('composer', [
 	'composer/preview',
 	'composer/resize',
 	'composer/autocomplete',
+	'composer/scheduler',
 	'scrollStop',
 	'topicThumbs',
 	'api',
 	'bootbox',
 	'hooks',
-], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scrollStop, topicThumbs, api, bootbox, hooks) {
+], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -319,6 +320,7 @@ define('composer', [
 		var submitBtn = postContainer.find('.composer-submit');
 
 		categoryList.init(postContainer, composer.posts[post_uuid]);
+		scheduler.init(postContainer);
 
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
@@ -458,6 +460,7 @@ define('composer', [
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
 			isEditing: isEditing,
+			canSchedule: !!(ajaxify.data.privileges && ajaxify.data.privileges['topics:schedule']),
 			showHandleInput: config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
@@ -669,6 +672,8 @@ define('composer', [
 			return composerAlert(post_uuid, '[[error:content-too-long, ' + config.maximumPostLength + ']]');
 		} else if (checkTitle && !tags.isEnoughTags(post_uuid)) {
 			return composerAlert(post_uuid, '[[error:not-enough-tags, ' + tags.minTagCount() + ']]');
+		} else if (scheduler.isActive() && scheduler.getTimestamp() <= Date.now()) {
+			return composerAlert(post_uuid, '[[error:scheduling-to-past]]');
 		}
 
 		let composerData = {
@@ -687,6 +692,7 @@ define('composer', [
 				thumb: thumbEl.val() || '',
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
+				timestamp: scheduler.getTimestamp(),
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;
@@ -794,6 +800,7 @@ define('composer', [
 			delete composer.posts[post_uuid];
 			composer.active = undefined;
 		}
+		scheduler.reset();
 		onHide();
 	};
 
