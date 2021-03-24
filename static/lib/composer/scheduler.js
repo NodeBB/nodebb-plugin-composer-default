@@ -134,8 +134,10 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 
 	function toggleItems() {
 		displayBtns.forEach(btn => btn.classList.toggle('active'));
-		submitIcon.classList.toggle('fa-check');
-		submitIcon.classList.toggle('fa-clock-o');
+		if (submitIcon) {
+			submitIcon.classList.toggle('fa-check');
+			submitIcon.classList.toggle('fa-clock-o');
+		}
 		// Toggle submit button text
 		const prevText = submitBtn.lastChild.textContent;
 		const nextText = submitBtn.getAttribute('data-text-variant');
