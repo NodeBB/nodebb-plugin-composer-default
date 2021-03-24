@@ -24,6 +24,7 @@
 		"composer/formatting.js": "./static/lib/composer/formatting.js",
 		"composer/preview.js": "./static/lib/composer/preview.js",
 		"composer/resize.js": "./static/lib/composer/resize.js",
+		"composer/scheduler.js": "./static/lib/composer/scheduler.js",
 		"composer/tags.js": "./static/lib/composer/tags.js",
 		"composer/uploads.js": "./static/lib/composer/uploads.js",
 		"composer/autocomplete.js": "./static/lib/composer/autocomplete.js"

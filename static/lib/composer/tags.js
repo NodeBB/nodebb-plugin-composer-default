@@ -116,21 +116,19 @@ define('composer/tags', function () {
 		return minTags;
 	};
 
-	tags.onChangeCategory = function (postContainer, postData, cid) {
-		$.get(config.relative_path + '/api/category/' + cid, function (data) {
-			var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
-			if (!tagDropdown.length) {
-				return;
-			}
+	tags.onChangeCategory = function (postContainer, postData, cid, categoryData) {
+		var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
+		if (!tagDropdown.length) {
+			return;
+		}
 
-			toggleTagInput(postContainer, postData, data);
-			tagDropdown.toggleClass('hidden', !data.tagWhitelist || !data.tagWhitelist.length);
-			if (data.tagWhitelist) {
-				app.parseAndTranslate('composer', 'tagWhitelist', { tagWhitelist: data.tagWhitelist }, function (html) {
-					tagDropdown.find('.dropdown-menu').html(html);
-				});
-			}
-		});
+		toggleTagInput(postContainer, postData, categoryData);
+		tagDropdown.toggleClass('hidden', !categoryData.tagWhitelist || !categoryData.tagWhitelist.length);
+		if (categoryData.tagWhitelist) {
+			app.parseAndTranslate('composer', 'tagWhitelist', { tagWhitelist: categoryData.tagWhitelist }, function (html) {
+				tagDropdown.find('.dropdown-menu').html(html);
+			});
+		}
 	};
 
 	function toggleTagInput(postContainer, postData, data) {
