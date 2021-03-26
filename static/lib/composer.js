@@ -656,7 +656,12 @@ define('composer', [
 			bodyEl: bodyEl,
 			bodyLen: bodyEl.val().length,
 		};
-		$(window).trigger('action:composer.check', payload);
+
+		hooks.fire('action:composer.check', payload);
+
+		if (payload.error) {
+			return composerAlert(post_uuid, payload.error);
+		}
 
 		if (uploads.inProgress[post_uuid] && uploads.inProgress[post_uuid].length) {
 			return composerAlert(post_uuid, '[[error:still-uploading]]');
