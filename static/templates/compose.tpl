@@ -18,10 +18,12 @@
 		<div class="title-container row">
 			<!-- IF isTopic -->
 			<div class="category-list-container"><!-- IMPORT partials/category-selector.tpl --></div>
+			<!-- ENDIF isTopic -->
+			<!-- IF isTopicOrMain -->
 			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
-			<!-- ENDIF isTopic -->
+			<!-- ENDIF isTopicOrMain -->
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
 				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />

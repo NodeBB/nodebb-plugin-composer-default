@@ -1,25 +1,39 @@
 'use strict';
 
-/* globals define, app */
+/* globals $, app, define, window */
 
 define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bootbox) {
 	const scheduler = {};
 	const state = {
 		timestamp: 0,
 		open: false,
+		edit: false,
+		posts: {},
 	};
 	let displayBtnCons = [];
 	let displayBtns;
-	let submitBtn;
-	let submitIcon;
+	const submitBtn = {
+		el: null,
+		icon: null,
+		defaultText: '',
+		activeText: '',
+	};
 	let dateInput;
 	let timeInput;
 
-	scheduler.init = function ($postContainer) {
+	$(window).on('action:composer.activate', handleOnActivate);
+
+	scheduler.init = function ($postContainer, posts) {
+		state.timestamp = 0;
+		state.posts = posts;
+
 		displayBtnCons = $postContainer[0].querySelectorAll('.display-scheduler');
 		displayBtns = $postContainer[0].querySelectorAll('.display-scheduler i');
-		submitBtn = $postContainer[0].querySelector('.composer-submit:not(.btn-sm)');
-		submitIcon = submitBtn.querySelector('i');
+
+		submitBtn.el = $postContainer[0].querySelector('.composer-submit:not(.btn-sm)');
+		submitBtn.icon = submitBtn.el.querySelector('i');
+		submitBtn.defaultText = submitBtn.el.lastChild.textContent;
+		submitBtn.activeText = submitBtn.el.getAttribute('data-text-variant');
 
 		displayBtns.forEach(el => el.addEventListener('click', openModal));
 	};
@@ -45,9 +59,7 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 
 	scheduler.onChangeCategory = function (categoryData) {
 		toggleDisplayButtons(categoryData.privileges['topics:schedule']);
-		if (state.timestamp > 0) {
-			toggleItems();
-		}
+		toggleItems(false);
 		scheduler.reset();
 	};
 
@@ -63,7 +75,7 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 			buttons: {
 				cancel: {
 					label: state.timestamp ? '[[modules:composer.cancel-scheduling]]' : '[[modules:bootbox.cancel]]',
-					className: state.timestamp ? 'btn-warning' : 'btn-default',
+					className: (state.timestamp ? 'btn-warning' : 'btn-default') + (state.edit ? ' hidden' : ''),
 					callback: cancelScheduling,
 				},
 				set: {
@@ -85,6 +97,17 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 
 	function handleOnHidden() {
 		state.open = false;
+	}
+
+	function handleOnActivate(ev, { post_uuid }) {
+		state.edit = false;
+
+		const postData = state.posts[post_uuid];
+		if (postData && postData.isMain && postData.timestamp > Date.now()) {
+			state.timestamp = postData.timestamp;
+			state.edit = true;
+			toggleItems();
+		}
 	}
 
 	function initDateTimeInputs() {
@@ -117,7 +140,7 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 			return false;
 		}
 		if (!state.timestamp) {
-			toggleItems();
+			toggleItems(true);
 		}
 		state.timestamp = timestamp;
 	}
@@ -132,17 +155,14 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 		state.timestamp = 0;
 	}
 
-	function toggleItems() {
-		displayBtns.forEach(btn => btn.classList.toggle('active'));
-		if (submitIcon) {
-			submitIcon.classList.toggle('fa-check');
-			submitIcon.classList.toggle('fa-clock-o');
+	function toggleItems(active = true) {
+		displayBtns.forEach(btn => btn.classList.toggle('active', active));
+		if (submitBtn.icon) {
+			submitBtn.icon.classList.toggle('fa-check', !active);
+			submitBtn.icon.classList.toggle('fa-clock-o', active);
 		}
 		// Toggle submit button text
-		const prevText = submitBtn.lastChild.textContent;
-		const nextText = submitBtn.getAttribute('data-text-variant');
-		submitBtn.setAttribute('data-text-variant', prevText);
-		submitBtn.lastChild.textContent = nextText;
+		submitBtn.el.lastChild.textContent = active ? submitBtn.activeText : submitBtn.defaultText;
 	}
 
 	function toggleDisplayButtons(show) {
