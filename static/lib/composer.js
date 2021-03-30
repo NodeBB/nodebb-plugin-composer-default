@@ -320,7 +320,7 @@ define('composer', [
 		var submitBtn = postContainer.find('.composer-submit');
 
 		categoryList.init(postContainer, composer.posts[post_uuid]);
-		scheduler.init(postContainer);
+		scheduler.init(postContainer, composer.posts);
 
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
@@ -439,6 +439,7 @@ define('composer', [
 		var isMain = postData ? !!postData.isMain : false;
 		var isEditing = postData ? !!postData.pid : false;
 		var isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
+		const isScheduled = postData.timestamp > Date.now();
 
 		// see
 		// https://github.com/NodeBB/NodeBB/issues/2994 and
@@ -460,7 +461,8 @@ define('composer', [
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
 			isEditing: isEditing,
-			canSchedule: !!(ajaxify.data.privileges && ajaxify.data.privileges['topics:schedule']),
+			canSchedule: !!(ajaxify.data.privileges &&
+				(ajaxify.data.privileges['topics:schedule'] || (isMain && isScheduled && ajaxify.data.privileges.view_scheduled))),
 			showHandleInput: config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
@@ -719,6 +721,7 @@ define('composer', [
 				title: titleEl.val(),
 				thumb: thumbEl.val() || '',
 				tags: tags.getTags(post_uuid),
+				timestamp: scheduler.getTimestamp(),
 			};
 		}
 		var submitHookData = {
