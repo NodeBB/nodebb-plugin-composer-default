@@ -22,11 +22,11 @@
 			</div>
 		</nav>
 		<div class="row title-container">
-			<!-- IF isTopic -->
+			{{{ if isTopic }}}
 			<div class="category-list-container hidden-sm hidden-xs">
 				<!-- IMPORT partials/category-selector.tpl -->
 			</div>
-			<!-- ENDIF isTopic -->
+			{{{ end }}}
 
 			<!-- IF showHandleInput -->
 			<div data-component="composer/handle">
