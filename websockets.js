@@ -72,7 +72,7 @@ Sockets.getFormattingOptions = async function () {
 	return await module.parent.exports.getFormattingOptions();
 };
 
-Sockets.getCategoriesForSelect = async function (socket) {
+Sockets.getCategoriesForSelect = async function (socket, data) {
 	const cids = await categories.getAllCidsFromSet('categories:cid');
 	let [allowed, categoriesData, isModerator, isAdmin] = await Promise.all([
 		privileges.categories.isUserAllowedTo('topics:create', cids, socket.uid),
@@ -87,6 +87,7 @@ Sockets.getCategoriesForSelect = async function (socket) {
 		categoriesData: categoriesData,
 		isModerator: isModerator,
 		isAdmin: isAdmin,
+		query: data.query || {},
 	});
 	({ allowed, categoriesData, isModerator, isAdmin } = filtered);
 

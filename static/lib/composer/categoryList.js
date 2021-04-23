@@ -1,7 +1,7 @@
 
 'use strict';
 
-/*globals define, socket, app*/
+/* globals define, socket, app, utils */
 
 define('composer/categoryList', ['categorySelector', 'taskbar'], function (categorySelector, taskbar) {
 	var categoryList = {};
@@ -18,7 +18,7 @@ define('composer/categoryList', ['categorySelector', 'taskbar'], function (categ
 			toggleDropDirection(postContainer);
 		});
 
-		socket.emit('plugins.composer.getCategoriesForSelect', {}, function (err, categories) {
+		socket.emit('plugins.composer.getCategoriesForSelect', { query: utils.params() }, function (err, categories) {
 			if (err) {
 				return app.alertError(err.message);
 			}
