@@ -149,9 +149,7 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 		if (!state.timestamp) {
 			return;
 		}
-		if (state.timestamp > 0) {
-			toggleItems();
-		}
+		toggleItems(false);
 		state.timestamp = 0;
 	}
 
