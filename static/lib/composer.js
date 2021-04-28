@@ -543,7 +543,7 @@ define('composer', [
 
 	function mobileHistoryAppend() {
 		var path = 'compose?p=' + window.location.pathname;
-		var returnPath = window.location.pathname.slice(1);
+		var returnPath = window.location.pathname.slice(1) + window.location.search;
 
 		// Remove relative path from returnPath
 		if (returnPath.startsWith(config.relative_path.slice(1))) {
