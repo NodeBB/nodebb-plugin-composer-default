@@ -432,7 +432,7 @@ define('composer', [
 		});
 	};
 
-	function createNewComposer(post_uuid) {
+	async function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
 		var isTopic = postData ? postData.hasOwnProperty('cid') : false;
@@ -486,10 +486,10 @@ define('composer', [
 
 		postData.mobile = composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm';
 
-		$(window).trigger('filter:composer.create', {
+		({ postData, createData: data } = await hooks.fire('filter:composer.create', {
 			postData: postData,
 			createData: data,
-		});
+		}));
 
 		app.parseAndTranslate('composer', data, function (composerTemplate) {
 			if ($('.composer.composer[data-uuid="' + post_uuid + '"]').length) {
