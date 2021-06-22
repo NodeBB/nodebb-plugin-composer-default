@@ -72,21 +72,32 @@ plugin.getFormattingOptions = async function () {
 		// op or reply
 		main: true,
 		reply: true,
-	}
+	};
 	let payload = {
 		defaultVisibility,
 		options: [
-			{ name: 'tags', title: '[[global:tags.tags]]', className: 'fa fa-tags',
+			{
+				name: 'tags',
+				title: '[[global:tags.tags]]',
+				className: 'fa fa-tags',
 				visibility: {
 					...defaultVisibility,
 					desktop: false,
-				}
+				},
 			},
-			{ name: 'zen', title: '[[modules:composer.zen_mode]]', className: 'fa fa-arrows-alt', title: '[[modules:composer.zen_mode]]', visibility: defaultVisibility },
+			{
+				name: 'zen',
+				title: '[[modules:composer.zen_mode]]',
+				className: 'fa fa-arrows-alt',
+				visibility: defaultVisibility,
+			},
 		],
 	};
 	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
-		payload.options.push({ name: 'thumbs', title: '[[topic:composer.thumb_title]]', className: 'fa fa-address-card-o',
+		payload.options.push({
+			name: 'thumbs',
+			title: '[[topic:composer.thumb_title]]',
+			className: 'fa fa-address-card-o',
 			visibility: {
 				...defaultVisibility,
 				reply: false,
@@ -101,7 +112,7 @@ plugin.getFormattingOptions = async function () {
 		option.visibility = {
 			...defaultVisibility,
 			...option.visibility || {},
-		}
+		};
 		if (option.hasOwnProperty('mobile')) {
 			winston.warn('[composer/formatting] `mobile` is no longer supported as a formatting option, use `visibility` instead (default values are passed in payload)');
 			option.visibility.mobile = option.mobile;
@@ -156,7 +167,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		user.isAdministrator(req.uid),
 		isModerator(req),
 		plugin.getFormattingOptions(),
-		getTagWhitelist(req.query),
+		getTagWhitelist(req.query, req.uid),
 		privileges.global.get(req.uid),
 		canTag(req),
 		canSchedule(req),
@@ -299,10 +310,13 @@ async function canSchedule(req) {
 	return false;
 }
 
-async function getTagWhitelist(query) {
+async function getTagWhitelist(query, uid) {
 	const cid = await cidFromQuery(query);
-	const tagWhitelist = await categories.getTagWhitelist([cid]);
-	return tagWhitelist[0];
+	const [tagWhitelist, isAdminOrMod] = await Promise.all([
+		categories.getTagWhitelist([cid]),
+		privileges.categories.isAdminOrMod(cid, uid),
+	]);
+	return categories.filterTagWhitelist(tagWhitelist[0], isAdminOrMod);
 }
 
 async function cidFromQuery(query) {
