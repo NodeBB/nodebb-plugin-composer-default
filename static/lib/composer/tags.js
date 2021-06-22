@@ -77,23 +77,28 @@ define('composer/tags', function () {
 				}
 			});
 
-			var readdSystemTag = false;
+			var skipAddCheck = false;
+			var skipRemoveCheck = false;
 			tagEl.on('itemRemoved', function (event) {
+				if (skipRemoveCheck) {
+					skipRemoveCheck = false;
+					return;
+				}
 				socket.emit('topics.canRemoveTag', { tag: event.item }, function (err, allowed) {
 					if (err) {
 						return app.alertError(err.message);
 					}
 					if (!allowed) {
 						app.alertError('[[error:cant-remove-system-tag]]');
-						readdSystemTag = true;
+						skipAddCheck = true;
 						tagEl.tagsinput('add', event.item);
 					}
 				});
 			});
 
 			tagEl.on('itemAdded', function (event) {
-				if (readdSystemTag) {
-					readdSystemTag = false;
+				if (skipAddCheck) {
+					skipAddCheck = false;
 					return;
 				}
 				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
@@ -102,6 +107,7 @@ define('composer/tags', function () {
 						return app.alertError(err.message);
 					}
 					if (!allowed) {
+						skipRemoveCheck = true;
 						return tagEl.tagsinput('remove', event.item);
 					}
 					$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
