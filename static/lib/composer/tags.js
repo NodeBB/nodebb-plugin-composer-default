@@ -24,43 +24,6 @@ define('composer/tags', function () {
 		});
 		var input = postContainer.find('.bootstrap-tagsinput input');
 
-		tagEl.on('beforeItemAdd', function (event) {
-			var reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
-			var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
-			var different = cleanTag !== event.item;
-			event.cancel = different ||
-				event.item.length < config.minimumTagLength ||
-				event.item.length > config.maximumTagLength ||
-				reachedMaxTags;
-
-			if (event.item.length < config.minimumTagLength) {
-				return app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
-			} else if (event.item.length > config.maximumTagLength) {
-				return app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
-			} else if (reachedMaxTags) {
-				return app.alertError('[[error:too-many-tags, ' + maxTags + ']]');
-			}
-			if (different) {
-				tagEl.tagsinput('add', cleanTag);
-			}
-		});
-
-		tagEl.on('itemAdded', function (event) {
-			var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
-			socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function (err, allowed) {
-				if (err) {
-					return app.alertError(err.message);
-				}
-				if (!allowed) {
-					return tagEl.tagsinput('remove', event.item);
-				}
-				$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
-				if (input.length) {
-					input.autocomplete('close');
-				}
-			});
-		});
-
 		toggleTagInput(postContainer, postData, ajaxify.data);
 
 		app.loadJQueryUI(function () {
@@ -92,6 +55,61 @@ define('composer/tags', function () {
 			});
 
 			addTags(postData.tags, tagEl);
+
+			tagEl.on('beforeItemAdd', function (event) {
+				var reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
+				var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
+				var different = cleanTag !== event.item;
+				event.cancel = different ||
+					event.item.length < config.minimumTagLength ||
+					event.item.length > config.maximumTagLength ||
+					reachedMaxTags;
+
+				if (event.item.length < config.minimumTagLength) {
+					return app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
+				} else if (event.item.length > config.maximumTagLength) {
+					return app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
+				} else if (reachedMaxTags) {
+					return app.alertError('[[error:too-many-tags, ' + maxTags + ']]');
+				}
+				if (different) {
+					tagEl.tagsinput('add', cleanTag);
+				}
+			});
+
+			var readdSystemTag = false;
+			tagEl.on('itemRemoved', function (event) {
+				socket.emit('topics.canRemoveTag', { tag: event.item }, function (err, allowed) {
+					if (err) {
+						return app.alertError(err.message);
+					}
+					if (!allowed) {
+						app.alertError('[[error:cant-remove-system-tag]]');
+						readdSystemTag = true;
+						tagEl.tagsinput('add', event.item);
+					}
+				});
+			});
+
+			tagEl.on('itemAdded', function (event) {
+				if (readdSystemTag) {
+					readdSystemTag = false;
+					return;
+				}
+				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
+				socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function (err, allowed) {
+					if (err) {
+						return app.alertError(err.message);
+					}
+					if (!allowed) {
+						return tagEl.tagsinput('remove', event.item);
+					}
+					$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
+					if (input.length) {
+						input.autocomplete('close');
+					}
+				});
+			});
 		});
 
 		input.attr('tabIndex', tagEl.attr('tabIndex'));
