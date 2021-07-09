@@ -84,6 +84,10 @@ define('composer/tags', function () {
 					skipRemoveCheck = false;
 					return;
 				}
+
+				if (!event.item) {
+					return;
+				}
 				socket.emit('topics.canRemoveTag', { tag: event.item }, function (err, allowed) {
 					if (err) {
 						return app.alertError(err.message);
