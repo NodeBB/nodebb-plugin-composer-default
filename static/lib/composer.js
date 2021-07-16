@@ -627,7 +627,7 @@ define('composer', [
 		}, 20);
 	}
 
-	function post(post_uuid) {
+	async function post(post_uuid) {
 		var postData = composer.posts[post_uuid];
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		var handleEl = postContainer.find('.handle');
@@ -659,7 +659,8 @@ define('composer', [
 			bodyLen: bodyEl.val().length,
 		};
 
-		hooks.fire('action:composer.check', payload);
+		await hooks.fire('filter:composer.check', payload);
+		$(window).trigger('action:composer.check', payload);
 
 		if (payload.error) {
 			return composerAlert(post_uuid, payload.error);
@@ -731,7 +732,9 @@ define('composer', [
 			postData: postData,
 			redirect: true,
 		};
-		hooks.fire('action:composer.submit', submitHookData);
+
+		await hooks.fire('filter:composer.submit', submitHookData);
+		hooks.fire('action:composer.submit', Object.freeze(submitHookData));
 
 		// Minimize composer (and set textarea as readonly) while submitting
 		var taskbarIconEl = $('#taskbar .composer[data-uuid="' + post_uuid + '"] i');
