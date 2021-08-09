@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals define, socket, $, window, utils, localStorage */
-
 define('composer/preview', ['hooks'], function (hooks) {
 	var preview = {};
 

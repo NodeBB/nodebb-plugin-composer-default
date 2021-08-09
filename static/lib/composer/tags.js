@@ -1,8 +1,6 @@
 
 'use strict';
 
-/* globals jQuery, ajaxify, define, config, socket, app, utils, $, window */
-
 define('composer/tags', function () {
 	var tags = {};
 
@@ -189,8 +187,7 @@ define('composer/tags', function () {
 
 		postContainer.find('.tags-container').toggleClass('hidden', (
 			data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) ||
-			(maxTags === 0 && !postData.tags.length)
-		);
+			(maxTags === 0 && !postData.tags.length));
 
 		if (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) {
 			tagEl.tagsinput('removeAll');

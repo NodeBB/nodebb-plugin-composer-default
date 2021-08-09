@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals $, window, history, localStorage, document, define, socket, app, config, ajaxify, utils, screenfull */
+/* globals screenfull */
 
 define('composer', [
 	'taskbar',
@@ -19,7 +19,8 @@ define('composer', [
 	'api',
 	'bootbox',
 	'hooks',
-], function (taskbar, translator, uploads, formatting, drafts, tags, categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks) {
+], function (taskbar, translator, uploads, formatting, drafts, tags,
+	categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -215,7 +216,7 @@ define('composer', [
 		uuid = uuid || composer.active;
 
 		var escapedTitle = (title || '')
-			.replace(/([\\`*_{}\[\]()#+\-.!])/g, '\\$1')
+			.replace(/([\\`*_{}[\]()#+\-.!])/g, '\\$1')
 			.replace(/\[/g, '&#91;')
 			.replace(/\]/g, '&#93;')
 			.replace(/%/g, '&#37;')
@@ -463,7 +464,8 @@ define('composer', [
 			isEditing: isEditing,
 			canSchedule: !!(ajaxify.data.privileges &&
 				(ajaxify.data.privileges['topics:schedule'] || (isMain && isScheduled && ajaxify.data.privileges.view_scheduled))),
-			showHandleInput: config.allowGuestHandles && (app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
+			showHandleInput: config.allowGuestHandles &&
+				(app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
 			tagWhitelist: ajaxify.data.tagWhitelist,

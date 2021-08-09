@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals $, app, define, window */
-
 define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bootbox) {
 	const scheduler = {};
 	const state = {

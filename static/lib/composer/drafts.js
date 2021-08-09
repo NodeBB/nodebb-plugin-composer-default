@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals $, window, socket, app, define, localStorage, sessionStorage, ajaxify */
-
 define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
 	var drafts = {};
 	var	saveThrottleId;

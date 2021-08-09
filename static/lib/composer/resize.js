@@ -1,9 +1,7 @@
 
 'use strict';
 
-/* globals define */
-
-define('composer/resize', ['taskbar'], function(taskbar) {
+define('composer/resize', ['taskbar'], function (taskbar) {
 	var resize = {};
 	var oldRatio = 0;
 	var minimumRatio = 0.3;
@@ -14,7 +12,6 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 	var $window = $(window);
 	var $headerMenu = $('[component="navbar"]');
 
-	var html = document.documentElement;
 	var body = document.body;
 	var header = $headerMenu[0];
 
@@ -90,8 +87,8 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		window.mozRequestAnimationFrame;
 
 	if (raf) {
-		resizeIt = function(postContainer, ratio) {
-			raf(function() {
+		resizeIt = function (postContainer, ratio) {
+			raf(function () {
 				doResize(postContainer, ratio);
 
 				setTimeout(function () {
@@ -102,7 +99,7 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		};
 	}
 
-	resize.reposition = function(postContainer) {
+	resize.reposition = function (postContainer) {
 		var	ratio = getSavedRatio();
 
 		if (ratio >= 1 - snapMargin) {
@@ -113,7 +110,7 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		resizeIt(postContainer, ratio);
 	};
 
-	resize.maximize = function(postContainer, state) {
+	resize.maximize = function (postContainer, state) {
 		if (state) {
 			resizeIt(postContainer, 1);
 		} else {
@@ -121,7 +118,7 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		}
 	};
 
-	resize.handleResize = function(postContainer) {
+	resize.handleResize = function (postContainer) {
 		var resizeOffset = 0;
 		var resizeBegin = 0;
 		var resizeEnd = 0;
@@ -182,11 +179,11 @@ define('composer/resize', ['taskbar'], function(taskbar) {
 		}
 
 		$resizer
-			.on('mousedown', function(e) {
+			.on('mousedown', function (e) {
 				e.preventDefault();
 				resizeStart(e);
 			})
-			.on('touchstart', function(e) {
+			.on('touchstart', function (e) {
 				e.preventDefault();
 				resizeStart(e.touches[0]);
 			})
