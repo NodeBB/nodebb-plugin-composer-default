@@ -1,6 +1,6 @@
 'use strict';
 
-define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
+define('composer/drafts', ['api'], function (api) {
 	var drafts = {};
 	var	saveThrottleId;
 

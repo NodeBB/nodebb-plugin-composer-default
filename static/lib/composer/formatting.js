@@ -2,7 +2,7 @@
 
 /* globals screenfull */
 
-define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize', 'uploader', 'topicThumbs'], function (controls, preview, resize, uploader, topicThumbs) {
+define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThumbs'], function (preview, resize, topicThumbs) {
 	var formatting = {};
 
 	var formattingDispatchTable = {
