@@ -1,9 +1,8 @@
 'use strict';
 
-/* globals app, define, screenfull */
+/* globals screenfull */
 
-define('composer/formatting', ['composer/controls', 'composer/preview', 'composer/resize', 'uploader', 'topicThumbs'], function(controls, preview, resize, uploader, topicThumbs) {
-
+define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThumbs'], function (preview, resize, topicThumbs) {
 	var formatting = {};
 
 	var formattingDispatchTable = {
@@ -34,14 +33,14 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 			});
 		},
 
-		tags: function() {
+		tags: function () {
 			var postContainer = this;
 			postContainer.find('.tags-container').toggleClass('hidden');
 		},
 
-		zen: function() {
+		zen: function () {
 			var postContainer = this;
-			$(window).one('resize', function() {
+			$(window).one('resize', function () {
 				function onResize() {
 					if (!screenfull.isFullscreen) {
 						app.toggleNavbar(true);
@@ -62,25 +61,23 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 			});
 
 			screenfull.toggle(postContainer.get(0));
-		}
+		},
 	};
 
 	var buttons = [];
 
-	formatting.addComposerButtons = function() {
-		for(var x=0,numButtons=buttons.length;x<numButtons;x++) {
+	formatting.addComposerButtons = function () {
+		for (var x = 0, numButtons = buttons.length; x < numButtons; x++) {
 			$('.formatting-bar .formatting-group #fileForm').before('<li tabindex="-1" data-format="' + buttons[x].name + '" title="' + (buttons[x].title || '') + '"><i class="' + buttons[x].iconClass + '"></i></li>');
 		}
 	};
 
-	formatting.addButton = function(iconClass, onClick, title, name) {
-		var name = name || iconClass.replace('fa fa-', '');
-
+	formatting.addButton = function (iconClass, onClick, title, name) {
 		formattingDispatchTable[name] = onClick;
 		buttons.push({
-			name: name,
+			name: name || iconClass.replace('fa fa-', ''),
 			iconClass: iconClass,
-			title: title
+			title: title,
 		});
 	};
 
@@ -88,17 +85,19 @@ define('composer/formatting', ['composer/controls', 'composer/preview', 'compose
 		return formattingDispatchTable;
 	};
 
-	formatting.addButtonDispatch = function(name, onClick) {
+	formatting.addButtonDispatch = function (name, onClick) {
 		formattingDispatchTable[name] = onClick;
 	};
 
-	formatting.addHandler = function(postContainer) {
+	formatting.addHandler = function (postContainer) {
 		postContainer.on('click', '.formatting-bar li', function (event) {
-			var format = $(this).attr('data-format'),
-				textarea = $(this).parents('[component="composer"]').find('textarea')[0];
+			var format = $(this).attr('data-format');
+			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 
-			if(formattingDispatchTable.hasOwnProperty(format)){
-				formattingDispatchTable[format].call(postContainer, textarea, textarea.selectionStart, textarea.selectionEnd, event);
+			if (formattingDispatchTable.hasOwnProperty(format)) {
+				formattingDispatchTable[format].call(
+					postContainer, textarea, textarea.selectionStart, textarea.selectionEnd, event
+				);
 				preview.render(postContainer);
 			}
 		});

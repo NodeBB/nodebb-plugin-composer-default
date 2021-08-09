@@ -1,8 +1,8 @@
 'use strict';
 
-var Controllers = {};
+const Controllers = {};
 
-Controllers.renderAdminPage = function (req, res, next) {
+Controllers.renderAdminPage = function (req, res) {
 	res.render('admin/plugins/composer-default', {});
 };
 

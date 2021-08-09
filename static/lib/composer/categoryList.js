@@ -1,7 +1,4 @@
-
 'use strict';
-
-/* globals define, $, window, ajaxify, config */
 
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
@@ -34,7 +31,8 @@ define('composer/categoryList', [
 		if (!selector) {
 			return;
 		}
-		if (postData.cid && ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
+		if (postData.cid && ajaxify.data.template.category &&
+			parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
 			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
 		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
 			// separate composer route

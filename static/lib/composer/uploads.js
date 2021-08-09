@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals $, window, document, ajaxify, FormData, define, utils, config, app */
-
 define('composer/uploads', [
 	'composer/preview',
 	'composer/categoryList',

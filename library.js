@@ -49,17 +49,15 @@ plugin.addPrefetchTags = async function (hookData) {
 		'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
 		'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
 		'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
-		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/topic.json',
-		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/modules.json',
-		'/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/tags.json',
+		`/assets/language/${meta.config.defaultLang || 'en-GB'}/topic.json`,
+		`/assets/language/${meta.config.defaultLang || 'en-GB'}/modules.json`,
+		`/assets/language/${meta.config.defaultLang || 'en-GB'}/tags.json`,
 	];
 
-	hookData.links = hookData.links.concat(prefetch.map(function (path) {
-		return {
-			rel: 'prefetch',
-			href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster'],
-		};
-	}));
+	hookData.links = hookData.links.concat(prefetch.map(path => ({
+		rel: 'prefetch',
+		href: `${nconf.get('relative_path') + path}?${meta.config['cache-buster']}`,
+	})));
 
 	return hookData;
 };
@@ -127,18 +125,18 @@ plugin.getFormattingOptions = async function () {
 };
 
 plugin.filterComposerBuild = async function (hookData) {
-	const req = hookData.req;
-	const res = hookData.res;
+	const { req } = hookData;
+	const { res } = hookData;
 
 	if (req.query.p) {
 		if (!res.locals.isAPI) {
-			var a;
+			let a;
 			try {
 				a = url.parse(req.query.p, true, true);
 			} catch (e) {
 				return helpers.redirect(res, '/');
 			}
-			return helpers.redirect(res, '/' + (a.path || '').replace(/^\/*/, ''));
+			return helpers.redirect(res, `/${(a.path || '').replace(/^\/*/, '')}`);
 		}
 		res.render('', {});
 		return;
@@ -179,7 +177,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	const discardRoute = generateDiscardRoute(req, topicData);
 	const body = await generateBody(req, postData);
 
-	var action = 'topics.post';
+	let action = 'topics.post';
 	let isMain = isMainPost;
 	if (req.query.tid) {
 		action = 'posts.reply';
@@ -227,7 +225,8 @@ plugin.filterComposerBuild = async function (hookData) {
 			isTopic: !!req.query.cid,
 			isEditing: isEditing,
 			canSchedule: canScheduleTopics,
-			showHandleInput: meta.config.allowGuestHandles === 1 && (req.uid === 0 || (isEditing && isGuestPost && (isAdmin || isMod))),
+			showHandleInput: meta.config.allowGuestHandles === 1 &&
+				(req.uid === 0 || (isEditing && isGuestPost && (isAdmin || isMod))),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: formatting,
 			isAdminOrMod: isAdmin || isMod,
@@ -239,12 +238,12 @@ plugin.filterComposerBuild = async function (hookData) {
 
 function generateDiscardRoute(req, topicData) {
 	if (req.query.cid) {
-		return nconf.get('relative_path') + '/category/' + validator.escape(String(req.query.cid));
+		return `${nconf.get('relative_path')}/category/${validator.escape(String(req.query.cid))}`;
 	} else if ((req.query.tid || req.query.pid)) {
 		if (topicData) {
-			return nconf.get('relative_path') + '/topic/' + topicData.slug;
+			return `${nconf.get('relative_path')}/topic/${topicData.slug}`;
 		}
-		return nconf.get('relative_path') + '/';
+		return `${nconf.get('relative_path')}/`;
 	}
 }
 
@@ -252,9 +251,9 @@ async function generateBody(req, postData) {
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
-		const translated = await translator.translate('[[modules:composer.user_said, ' + username + ']]');
-		return translated + '\n' +
-			'> ' + (postData ? postData.content.replace(/\n/g, '\n> ') + '\n\n' : '');
+		const translated = await translator.translate(`[[modules:composer.user_said, ${username}]]`);
+		return `${translated}\n` +
+			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body) {
 		return req.query.body;
 	}

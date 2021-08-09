@@ -1,14 +1,12 @@
-"use strict";
+'use strict';
 
-/*global define*/
-
-define('composer/controls', ['composer/preview'], function(preview) {
+define('composer/controls', ['composer/preview'], function (preview) {
 	var controls = {};
 
-	/*************************************************/
+	/** ********************************************** */
 	/* Rich Textarea Controls                        */
-	/*************************************************/
-	controls.insertIntoTextarea = function(textarea, value) {
+	/** ********************************************** */
+	controls.insertIntoTextarea = function (textarea, value) {
 		var payload = {
 			context: this,
 			textarea: textarea,
@@ -34,7 +32,7 @@ define('composer/controls', ['composer/preview'], function(preview) {
 		preview.render(postContainer);
 	};
 
-	controls.wrapSelectionInTextareaWith = function(textarea, leading, trailing) {
+	controls.wrapSelectionInTextareaWith = function (textarea, leading, trailing) {
 		var payload = {
 			context: this,
 			textarea: textarea,
@@ -75,7 +73,7 @@ define('composer/controls', ['composer/preview'], function(preview) {
 		return [matches[1].length, matches[3].length];
 	};
 
-	controls.updateTextareaSelection = function(textarea, start, end) {
+	controls.updateTextareaSelection = function (textarea, start, end) {
 		var payload = {
 			context: this,
 			textarea: textarea,
@@ -96,7 +94,7 @@ define('composer/controls', ['composer/preview'], function(preview) {
 	controls.getBlockData = function (textareaEl, query, selectionStart) {
 		// Determines whether the cursor is sitting inside a block-type element (bold, italic, etc.)
 		var value = textareaEl.value;
-		query = query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+		query = query.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 		var regex = new RegExp(query, 'g');
 		var match;
 		var matchIndices = [];
@@ -111,14 +109,14 @@ define('composer/controls', ['composer/preview'], function(preview) {
 			memo = selectionStart <= line.length ? line : null;
 
 			if (memo === null) {
-				selectionStart = selectionStart - (line.length + 1);
+				selectionStart -= (line.length + 1);
 			}
 
 			return memo;
 		}, null);
 
 		// Find query characters and determine return payload
-		while((match = regex.exec(value)) !== null) {
+		while ((match = regex.exec(value)) !== null) {
 			matchIndices.push(match.index);
 		}
 
@@ -137,11 +135,11 @@ define('composer/controls', ['composer/preview'], function(preview) {
 
 				return selectionStart === cur;
 			}, false),
-		}
+		};
 
 		payload.atEnd = payload.in ? payload.atEnd : false;
 		return payload;
-	}
+	};
 
 	return controls;
 });
