@@ -262,8 +262,13 @@ define('composer/uploads', [
 				data: { cid: cid },
 
 				error: function (xhr) {
+					doneUploading = true;
 					postContainer.find('[data-action="post"]').prop('disabled', false);
-					onUploadError(xhr, post_uuid);
+					const errorMsg = onUploadError(xhr, post_uuid);
+					for (var i = 0; i < files.length; ++i) {
+						updateTextArea(filenameMapping[i], errorMsg, true);
+					}
+					preview.render(postContainer);
 				},
 
 				uploadProgress: function (event, position, total, percent) {
@@ -321,6 +326,7 @@ define('composer/uploads', [
 			post_uuid: post_uuid,
 			message: msg,
 		});
+		return msg;
 	}
 
 	return uploads;
