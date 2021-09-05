@@ -73,11 +73,12 @@ define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThum
 	};
 
 	formatting.addButton = function (iconClass, onClick, title, name) {
+		name = name || iconClass.replace('fa fa-', '')
 		formattingDispatchTable[name] = onClick;
 		buttons.push({
-			name: name || iconClass.replace('fa fa-', ''),
-			iconClass: iconClass,
-			title: title,
+			name,
+			iconClass,
+			title,
 		});
 	};
 
