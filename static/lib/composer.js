@@ -433,6 +433,24 @@ define('composer', [
 		});
 	};
 
+	async function getSelectedCategory(postData) {
+		if (ajaxify.data.template.category) {
+			return {
+				icon: ajaxify.data.icon,
+				color: ajaxify.data.color,
+				bgColor: ajaxify.data.bgColor,
+				backgroundImage: ajaxify.data.backgroundImage,
+				imageClass: ajaxify.data.imageClass,
+				name: ajaxify.data.name,
+			};
+		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
+			return ajaxify.data.selectedCategory;
+		} else if (postData.cid) {
+			return await api.get(`/categories/${postData.cid}`, {});
+		}
+		return null;
+	}
+
 	async function createNewComposer(post_uuid) {
 		var postData = composer.posts[post_uuid];
 
@@ -448,7 +466,7 @@ define('composer', [
 		// remove when 1951 is resolved
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
-
+		postData.category = await getSelectedCategory(postData);
 		var data = {
 			title: title,
 			titleLength: title.length,
@@ -470,14 +488,7 @@ define('composer', [
 			formatting: composer.formatting,
 			tagWhitelist: ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
-			selectedCategory: ajaxify.data.template.category ? {
-				icon: ajaxify.data.icon,
-				color: ajaxify.data.color,
-				bgColor: ajaxify.data.bgColor,
-				backgroundImage: ajaxify.data.backgroundImage,
-				imageClass: ajaxify.data.imageClass,
-				name: ajaxify.data.name,
-			} : null,
+			selectedCategory: postData.category,
 		};
 
 		if (data.mobile) {
@@ -544,6 +555,7 @@ define('composer', [
 			}
 
 			$(window).trigger('action:composer.loaded', {
+				postContainer: postContainer,
 				post_uuid: post_uuid,
 				composerData: composer.posts[post_uuid],
 				formatting: composer.formatting,

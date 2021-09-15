@@ -31,9 +31,8 @@ define('composer/categoryList', [
 		if (!selector) {
 			return;
 		}
-		if (postData.cid && ajaxify.data.template.category &&
-			parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
-			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
+		if (postData.cid && postData.category) {
+			selector.selectedCategory = { cid: postData.cid, name: postData.category.name };
 		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
 			// separate composer route
 			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
@@ -95,7 +94,7 @@ define('composer/categoryList', [
 	async function changeCategory(postContainer, postData, selectedCategory) {
 		postData.cid = selectedCategory.cid;
 		const categoryData = await window.fetch(`${config.relative_path}/api/category/${selectedCategory.cid}`).then(r => r.json());
-
+		postData.category = categoryData;
 		updateTaskbarByCategory(postContainer, categoryData);
 		require(['composer/scheduler', 'composer/tags'], function (scheduler, tags) {
 			scheduler.onChangeCategory(categoryData);
