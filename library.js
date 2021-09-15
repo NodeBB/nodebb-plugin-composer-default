@@ -207,7 +207,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			// can't use title property as that is used for page title
 			topicTitle: topicTitle,
 			titleLength: topicTitle.length,
-
+			topic: topicData,
 			thumb: topicData ? topicData.thumb : '',
 			body: body,
 
