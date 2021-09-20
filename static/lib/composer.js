@@ -435,18 +435,10 @@ define('composer', [
 
 	async function getSelectedCategory(postData) {
 		if (ajaxify.data.template.category) {
-			return {
-				icon: ajaxify.data.icon,
-				color: ajaxify.data.color,
-				bgColor: ajaxify.data.bgColor,
-				backgroundImage: ajaxify.data.backgroundImage,
-				imageClass: ajaxify.data.imageClass,
-				name: ajaxify.data.name,
-			};
-		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
-			return ajaxify.data.selectedCategory;
+			// no need to load data if we are already on the category page
+			return ajaxify.data;
 		} else if (postData.cid) {
-			return await api.get(`/categories/${postData.cid}`, {});
+			return await api.get(`/api/category/${postData.cid}`, {});
 		}
 		return null;
 	}
@@ -467,6 +459,7 @@ define('composer', [
 
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 		postData.category = await getSelectedCategory(postData);
+		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
 		var data = {
 			title: title,
 			titleLength: title.length,
@@ -480,13 +473,13 @@ define('composer', [
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
 			isEditing: isEditing,
-			canSchedule: !!(ajaxify.data.privileges &&
-				(ajaxify.data.privileges['topics:schedule'] || (isMain && isScheduled && ajaxify.data.privileges.view_scheduled))),
+			canSchedule: !!(privileges &&
+				((privileges['topics:schedule'] && !isEditing) || (isMain && isScheduled && privileges.view_scheduled))),
 			showHandleInput: config.allowGuestHandles &&
 				(app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
 			formatting: composer.formatting,
-			tagWhitelist: ajaxify.data.tagWhitelist,
+			tagWhitelist: postData.category ? postData.category.tagWhitelist : ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
 			selectedCategory: postData.category,
 		};
