@@ -473,8 +473,8 @@ define('composer', [
 			maximumTagLength: config.maximumTagLength,
 			isTopic: isTopic,
 			isEditing: isEditing,
-			canSchedule: !!(privileges &&
-				((privileges['topics:schedule'] && !isEditing) || (isMain && isScheduled && privileges.view_scheduled))),
+			canSchedule: !!(isMain && privileges &&
+				((privileges['topics:schedule'] && !isEditing) || (isScheduled && privileges.view_scheduled))),
 			showHandleInput: config.allowGuestHandles &&
 				(app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
