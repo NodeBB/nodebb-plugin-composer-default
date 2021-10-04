@@ -385,15 +385,11 @@ define('composer', [
 			composer.minimize(post_uuid);
 		});
 
-		bodyEl.on('input propertychange', function () {
+		bodyEl.on('input propertychange', utils.debounce(function () {
 			preview.render(postContainer);
-		});
+		}, 250));
 
 		bodyEl.on('scroll', function () {
-			preview.matchScroll(postContainer);
-		});
-
-		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
 		});
 
@@ -413,6 +409,10 @@ define('composer', [
 			});
 		}
 		bodyEl.val(draft.text ? draft.text : postData.body);
+
+		preview.render(postContainer, function () {
+			preview.matchScroll(postContainer);
+		});
 
 		handleHelp(postContainer);
 		handleSearch(postContainer);
@@ -437,7 +437,7 @@ define('composer', [
 		if (ajaxify.data.template.category) {
 			// no need to load data if we are already on the category page
 			return ajaxify.data;
-		} else if (postData.cid) {
+		} else if (parseInt(postData.cid, 10)) {
 			return await api.get(`/api/category/${postData.cid}`, {});
 		}
 		return null;
