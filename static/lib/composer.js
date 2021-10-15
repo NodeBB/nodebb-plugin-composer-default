@@ -837,6 +837,12 @@ define('composer', [
 		onHide();
 	};
 
+	composer.minimizeActive = function () {
+		if (composer.active) {
+			composer.miminize(composer.active);
+		}
+	};
+
 	composer.updateThumbCount = function (uuid, postContainer) {
 		const composerObj = composer.posts[uuid];
 		if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
