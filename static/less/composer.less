@@ -107,6 +107,14 @@
 		.composer-submit, .composer-discard {
 			min-width: 106px;
 		}
+
+		.action-bar {
+			.dropdown-menu:empty {
+				& ~ .dropdown-toggle {
+					display: none;
+				}
+			}
+		}
 	}
 
 	.display-scheduler {

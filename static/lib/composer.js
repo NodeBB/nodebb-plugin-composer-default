@@ -482,6 +482,13 @@ define('composer', [
 			tagWhitelist: postData.category ? postData.category.tagWhitelist : ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
 			selectedCategory: postData.category,
+			submitOptions: [
+				// Add items using `filter:composer.create`, or just add them to the <ul> in DOM
+				// {
+				// 	action: 'foobar',
+				// 	text: 'Text Label',
+				// }
+			],
 		};
 
 		if (data.mobile) {
