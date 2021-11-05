@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "screenfull": "^5.0.2",
-    "validator": "^13.1.17"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
