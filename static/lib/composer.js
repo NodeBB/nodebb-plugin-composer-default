@@ -19,8 +19,9 @@ define('composer', [
 	'api',
 	'bootbox',
 	'hooks',
+	'messages',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks) {
+	categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks, messagesModule) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -791,7 +792,7 @@ define('composer', [
 				composer.load(post_uuid);
 				textareaEl.prop('readonly', false);
 				if (err.message === '[[error:email-not-confirmed]]') {
-					return app.showEmailConfirmWarning(err);
+					return messagesModule.showEmailConfirmWarning(err.message);
 				}
 				composerAlert(post_uuid, err.message);
 			});
