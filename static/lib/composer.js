@@ -20,8 +20,11 @@ define('composer', [
 	'bootbox',
 	'hooks',
 	'messages',
+	'search',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, scrollStop, topicThumbs, api, bootbox, hooks, messagesModule) {
+	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
+	topicThumbs, api, bootbox, hooks, messagesModule, search
+) {
 	var composer = {
 		active: undefined,
 		posts: {},
@@ -610,7 +613,7 @@ define('composer', [
 			return;
 		}
 
-		app.enableTopicSearch({
+		search.enableQuickSearch({
 			searchElements: {
 				inputEl: postContainer.find('input.title'),
 				resultEl: postContainer.find('.quick-search-container'),
