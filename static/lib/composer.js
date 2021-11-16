@@ -107,7 +107,7 @@ define('composer', [
 
 	function alreadyOpen(post) {
 		// If a composer for the same cid/tid/pid is already open, return the uuid, else return bool false
-		var	type;
+		var type;
 		var id;
 
 		if (post.hasOwnProperty('cid')) {

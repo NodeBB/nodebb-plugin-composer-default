@@ -100,7 +100,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	}
 
 	resize.reposition = function (postContainer) {
-		var	ratio = getSavedRatio();
+		var ratio = getSavedRatio();
 
 		if (ratio >= 1 - snapMargin) {
 			ratio = 1;

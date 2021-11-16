@@ -2,7 +2,7 @@
 
 define('composer/drafts', ['api'], function (api) {
 	var drafts = {};
-	var	saveThrottleId;
+	var saveThrottleId;
 
 	drafts.init = function (postContainer, postData) {
 		var draftIconEl = postContainer.find('.draft-icon');
