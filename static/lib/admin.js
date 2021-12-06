@@ -1,6 +1,6 @@
 'use strict';
 
-define('admin/plugins/composer-default', ['settings'], function (Settings) {
+define('admin/plugins/composer-default', ['settings', 'alerts'], function (Settings, alerts) {
 	var ACP = {};
 
 	ACP.init = function () {
@@ -8,7 +8,7 @@ define('admin/plugins/composer-default', ['settings'], function (Settings) {
 
 		$('#save').on('click', function () {
 			Settings.save('composer-default', $('.composer-default-settings'), function () {
-				app.alert({
+				alerts.alert({
 					type: 'success',
 					alert_id: 'composer-default-saved',
 					title: 'Settings Saved',
