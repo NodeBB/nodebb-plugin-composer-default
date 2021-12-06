@@ -1,7 +1,7 @@
 
 'use strict';
 
-define('composer/tags', function () {
+define('composer/tags', ['alerts'], function (alerts) {
 	var tags = {};
 
 	var minTags;
@@ -38,7 +38,7 @@ define('composer/tags', function () {
 						cid: postData.cid,
 					}, function (err, tags) {
 						if (err) {
-							return app.alertError(err.message);
+							return alerts.error(err);
 						}
 						if (tags) {
 							response(tags);
@@ -64,11 +64,11 @@ define('composer/tags', function () {
 					reachedMaxTags;
 
 				if (event.item.length < config.minimumTagLength) {
-					return app.alertError('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
+					return alerts.error('[[error:tag-too-short, ' + config.minimumTagLength + ']]');
 				} else if (event.item.length > config.maximumTagLength) {
-					return app.alertError('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
+					return alerts.error('[[error:tag-too-long, ' + config.maximumTagLength + ']]');
 				} else if (reachedMaxTags) {
-					return app.alertError('[[error:too-many-tags, ' + maxTags + ']]');
+					return alerts.error('[[error:too-many-tags, ' + maxTags + ']]');
 				}
 				if (different) {
 					tagEl.tagsinput('add', cleanTag);
@@ -88,10 +88,10 @@ define('composer/tags', function () {
 				}
 				socket.emit('topics.canRemoveTag', { tag: event.item }, function (err, allowed) {
 					if (err) {
-						return app.alertError(err.message);
+						return alerts.error(err);
 					}
 					if (!allowed) {
-						app.alertError('[[error:cant-remove-system-tag]]');
+						alerts.error('[[error:cant-remove-system-tag]]');
 						skipAddCheck = true;
 						tagEl.tagsinput('add', event.item);
 					}
@@ -106,7 +106,7 @@ define('composer/tags', function () {
 				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
 				socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function (err, allowed) {
 					if (err) {
-						return app.alertError(err.message);
+						return alerts.error(err);
 					}
 					if (!allowed) {
 						skipRemoveCheck = true;

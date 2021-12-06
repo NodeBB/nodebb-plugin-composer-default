@@ -4,8 +4,9 @@ define('composer/uploads', [
 	'composer/preview',
 	'composer/categoryList',
 	'translator',
+	'alerts',
 	'jquery-form',
-], function (preview, categoryList, translator) {
+], function (preview, categoryList, translator, alerts) {
 	var uploads = {
 		inProgress: {},
 	};
@@ -193,7 +194,7 @@ define('composer/uploads', [
 		for (i = 0; i < files.length; ++i) {
 			isImage = files[i].type.match(/image./);
 			if ((isImage && !app.user.privileges['upload:post:image']) || (!isImage && !app.user.privileges['upload:post:file'])) {
-				return app.alertError('[[error:no-privileges]]');
+				return alerts.error('[[error:no-privileges]]');
 			}
 		}
 
@@ -207,7 +208,7 @@ define('composer/uploads', [
 
 			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
-				return app.alertError('[[error:file-too-big, ' + config.maximumFileSize + ']]');
+				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
 
 			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
@@ -321,7 +322,7 @@ define('composer/uploads', [
 		if (xhr && xhr.status === 413) {
 			msg = xhr.statusText || 'Request Entity Too Large';
 		}
-		app.alertError(msg);
+		alerts.error(msg);
 		$(window).trigger('action:composer.uploadError', {
 			post_uuid: post_uuid,
 			message: msg,

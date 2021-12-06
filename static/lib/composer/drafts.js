@@ -1,6 +1,6 @@
 'use strict';
 
-define('composer/drafts', ['api'], function (api) {
+define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	var drafts = {};
 	var saveThrottleId;
 
@@ -263,7 +263,7 @@ define('composer/drafts', ['api'], function (api) {
 					} else if (type === 'tid') {
 						socket.emit('topics.getTopic', id, function (err, topicObj) {
 							if (err) {
-								return app.alertError(err.message);
+								return alerts.error(err);
 							}
 							composer.newReply(id, undefined, topicObj.title, draft.text);
 						});

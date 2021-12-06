@@ -277,7 +277,7 @@ define('composer', [
 	composer.editPost = function (pid) {
 		socket.emit('plugins.composer.push', pid, function (err, threadData) {
 			if (err) {
-				return app.alertError(err.message);
+				return alerts.error(err);
 			}
 			threadData.action = 'posts.edit';
 			threadData.pid = pid;
@@ -298,7 +298,7 @@ define('composer', [
 		} else {
 			socket.emit('plugins.composer.getFormattingOptions', function (err, options) {
 				if (err) {
-					return app.alertError(err);
+					return alerts.error(err);
 				}
 				composer.formatting = options;
 				createNewComposer(post_uuid);
