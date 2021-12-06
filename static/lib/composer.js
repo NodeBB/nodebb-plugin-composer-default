@@ -18,12 +18,13 @@ define('composer', [
 	'topicThumbs',
 	'api',
 	'bootbox',
+	'alerts',
 	'hooks',
 	'messages',
 	'search',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
-	topicThumbs, api, bootbox, hooks, messagesModule, search
+	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search
 ) {
 	var composer = {
 		active: undefined,
@@ -172,7 +173,7 @@ define('composer', [
 		const { showAlert } = await hooks.fire('filter:composer.error', { post_uuid, message, showAlert: true });
 
 		if (showAlert) {
-			app.alert({
+			alerts.alert({
 				type: 'danger',
 				timeout: 3000,
 				title: '',
