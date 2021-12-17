@@ -777,7 +777,7 @@ define('composer', [
 						message: data.message,
 						timeout: 10000,
 						clickfn: function () {
-							ajaxify.go(`/post-queue#${data.id}`);
+							ajaxify.go(`/post-queue/${data.id}`);
 						},
 					});
 				} else if (action === 'topics.post') {
