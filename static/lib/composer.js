@@ -771,7 +771,15 @@ define('composer', [
 				drafts.removeDraft(postData.save_id);
 
 				if (data.queued) {
-					bootbox.alert(data.message);
+					alerts.alert({
+						type: 'success',
+						title: '[[global:alert.success]]',
+						message: data.message,
+						timeout: 10000,
+						clickfn: function () {
+							ajaxify.go(`/post-queue#${data.id}`);
+						},
+					});
 				} else if (action === 'topics.post') {
 					if (submitHookData.redirect) {
 						ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm'));
