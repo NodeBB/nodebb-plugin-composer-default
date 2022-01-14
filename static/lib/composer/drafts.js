@@ -261,7 +261,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 							tags: [],
 						});
 					} else if (type === 'tid') {
-						socket.emit('topics.getTopic', id, function (err, topicObj) {
+						api.get('/topics/' + id, {}, function (err, topicObj) {
 							if (err) {
 								return alerts.error(err);
 							}
