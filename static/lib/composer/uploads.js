@@ -5,8 +5,9 @@ define('composer/uploads', [
 	'composer/categoryList',
 	'translator',
 	'alerts',
+	'uploadHelpers',
 	'jquery-form',
-], function (preview, categoryList, translator, alerts) {
+], function (preview, categoryList, translator, alerts, uploadHelpers) {
 	var uploads = {
 		inProgress: {},
 	};
@@ -67,103 +68,33 @@ define('composer/uploads', [
 	}
 
 	function initializeDragAndDrop(post_uuid) {
-		var draggingDocument = false;
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		var drop = postContainer.find('.imagedrop');
-
-		function onDragEnter() {
-			if (draggingDocument) {
-				return;
-			}
-
-			drop.css('top', '0px');
-			drop.css('height', postContainer.height() + 'px');
-			drop.css('line-height', postContainer.height() + 'px');
-			drop.show();
-
-			drop.on('dragleave', function () {
-				drop.hide();
-				drop.off('dragleave');
-			});
-		}
-
-		function onDragDrop(e) {
-			e.preventDefault();
-			var files = e.originalEvent.dataTransfer.files;
-			var fd;
-
-			if (files.length) {
-				if (window.FormData) {
-					fd = new FormData();
-					for (var i = 0; i < files.length; ++i) {
-						fd.append('files[]', files[i], files[i].name);
-					}
-				}
-
+		uploadHelpers.handleDragDrop({
+			container: postContainer,
+			callback: function (upload) {
 				uploadContentFiles({
-					files: files,
+					files: upload.files,
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd,
+					formData: upload.formData,
 				});
 			}
-
-			drop.hide();
-			return false;
-		}
-
-		function cancel(e) {
-			e.preventDefault();
-			return false;
-		}
-
-		$(document)
-			.off('dragstart')
-			.on('dragstart', function () {
-				draggingDocument = true;
-			})
-			.off('dragend')
-			.on('dragend', function () {
-				draggingDocument = false;
-			});
-
-		postContainer.on('dragenter', onDragEnter);
-
-		drop.on('dragover', cancel);
-		drop.on('dragenter', cancel);
-		drop.on('drop', onDragDrop);
+		});
 	}
 
 	function initializePaste(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		postContainer.on('paste', function (event) {
-			var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-
-			[].some.call(items, function (item) {
-				var blob = item.getAsFile();
-
-				if (!blob) {
-					return false;
-				}
-
-				var blobName = utils.generateUUID() + '-' + blob.name;
-
-				var fd = null;
-				if (window.FormData) {
-					fd = new FormData();
-					fd.append('files[]', blob, blobName);
-				}
-
+		uploadHelpers.handlePaste({
+			container: postContainer,
+			callback: function (upload) {
 				uploadContentFiles({
-					files: [blob],
-					fileNames: [blobName],
+					files: upload.files,
+					fileNames: upload.fileNames,
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd,
+					formData: upload.formData,
 				});
-
-				return true;
-			});
+			},
 		});
 	}
 
