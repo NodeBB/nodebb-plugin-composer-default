@@ -17,6 +17,7 @@ define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThum
 		},
 
 		thumbs: function () {
+			formatting.exitFullscreen();
 			var postContainer = this;
 			require(['composer'], function (composer) {
 				const uuid = postContainer.get(0).getAttribute('data-uuid');
@@ -61,10 +62,17 @@ define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThum
 			});
 
 			screenfull.toggle(postContainer.get(0));
+			$(window).trigger('action:composer.fullscreen', { postContainer: postContainer });
 		},
 	};
 
 	var buttons = [];
+
+	formatting.exitFullscreen = function () {
+		if (screenfull.isEnabled && screenfull.isFullscreen) {
+			screenfull.exit();
+		}
+	};
 
 	formatting.addComposerButtons = function () {
 		for (var x = 0, numButtons = buttons.length; x < numButtons; x++) {

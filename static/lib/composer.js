@@ -367,10 +367,7 @@ define('composer', [
 				return removeComposerHistory();
 			}
 
-			// Exit fullscreen
-			if (screenfull.isEnabled && screenfull.isFullscreen) {
-				screenfull.exit();
-			}
+			formatting.exitFullscreen();
 
 			var btn = $(this).prop('disabled', true);
 			translator.translate('[[modules:composer.discard]]', function (translated) {
