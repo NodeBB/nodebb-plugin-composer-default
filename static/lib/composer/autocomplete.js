@@ -1,6 +1,8 @@
 'use strict';
 
-define('composer/autocomplete', ['composer/preview'], function (preview) {
+define('composer/autocomplete', [
+	'composer/preview', 'textcomplete', 'textcomplete.contenteditable'
+], function (preview, TextComplete, TextCompleteContentEditable) {
 	var autocomplete = {
 		_active: {},
 	};
@@ -68,17 +70,16 @@ define('composer/autocomplete', ['composer/preview'], function (preview) {
 		}
 		var editor;
 		if (element.nodeName === 'TEXTAREA') {
-			var Textarea = window.Textcomplete.editors.Textarea;
-			editor = new Textarea(element);
+			editor = new TextComplete.Textarea(element);
 		} else if (element.nodeName === 'DIV' && element.getAttribute('contenteditable') === 'true') {
-			var ContentEditable = window.Textcomplete.editors.ContentEditable;
+			var ContentEditable = TextCompleteContentEditable.default;
 			editor = new ContentEditable(element);
 		}
 
 		// yuku-t/textcomplete inherits directionality from target element itself
 		element.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
 
-		var textcomplete = new window.Textcomplete(editor, {
+		var textcomplete = new TextComplete.Textcomplete(editor, {
 			dropdown: data.options,
 		});
 		textcomplete.register(data.strategies);
