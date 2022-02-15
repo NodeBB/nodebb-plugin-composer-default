@@ -27,10 +27,8 @@
 		"composer/scheduler.js": "./static/lib/composer/scheduler.js",
 		"composer/tags.js": "./static/lib/composer/tags.js",
 		"composer/uploads.js": "./static/lib/composer/uploads.js",
-		"composer/autocomplete.js": "./static/lib/composer/autocomplete.js"
+		"composer/autocomplete.js": "./static/lib/composer/autocomplete.js",
+		"admin/plugins/composer-default.js": "./static/lib/admin.js"
 	},
-	"acpScripts": [
-		"./static/lib/admin.js"
-	],
 	"templates": "static/templates"
 }
