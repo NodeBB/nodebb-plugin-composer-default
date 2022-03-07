@@ -44,12 +44,14 @@ define('composer/autocomplete', [
 			clearTimeout(timer);
 			timer = setTimeout(function () {
 				var dropdown = document.querySelector('.' + dropdownClass);
-				var pos = dropdown.getBoundingClientRect();
+				if (dropdown) {
+					var pos = dropdown.getBoundingClientRect();
 
-				var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
+					var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
 
-				var offset = window.innerHeight + margin - 10 - pos.bottom;
-				dropdown.style.marginTop = Math.min(offset, 0) + 'px';
+					var offset = window.innerHeight + margin - 10 - pos.bottom;
+					dropdown.style.marginTop = Math.min(offset, 0) + 'px';
+				}
 			}, 0);
 		});
 
