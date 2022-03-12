@@ -175,7 +175,7 @@ define('composer', [
 		if (showAlert) {
 			alerts.alert({
 				type: 'danger',
-				timeout: 3000,
+				timeout: 10000,
 				title: '',
 				message: message,
 				alert_id: 'post_error',
