@@ -793,7 +793,7 @@ define('composer', [
 					removeComposerHistory();
 				}
 
-				$(window).trigger('action:composer.' + action, { composerData: composerData, data: data });
+				hooks.fire('action:composer.' + action, { composerData: composerData, data: data });
 			})
 			.catch((err) => {
 				// Restore composer on error
