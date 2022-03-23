@@ -24,8 +24,7 @@ define('composer', [
 	'search',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
-	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search
-) {
+	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search) {
 	var composer = {
 		active: undefined,
 		posts: {},
