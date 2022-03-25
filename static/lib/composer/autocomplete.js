@@ -1,9 +1,6 @@
 'use strict';
 
-/* globals define */
-
-define('composer/autocomplete', ['composer/preview'], function(preview) {
-
+define('composer/autocomplete', ['composer/preview'], function (preview) {
 	var autocomplete = {
 		_active: {},
 	};
@@ -15,7 +12,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 		}
 	});
 
-	autocomplete.init = function(postContainer, post_uuid) {
+	autocomplete.init = function (postContainer, post_uuid) {
 		var element = postContainer.find('.write');
 		var dropdownClass = 'composer-autocomplete-dropdown-' + post_uuid;
 		var timer;
@@ -26,7 +23,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 			 * One reason is because they want to override the textarea with their own element.
 			 * In those scenarios, they don't specify the "write" class, and this conditional
 			 * looks for that and stops the autocomplete init process.
-			 **/
+			 */
 			return;
 		}
 
@@ -38,19 +35,21 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 					'z-index': 20000,
 				},
 				className: dropdownClass + ' dropdown-menu textcomplete-dropdown',
-			}
+			},
 		};
 
 		element.on('keyup', function () {
 			clearTimeout(timer);
 			timer = setTimeout(function () {
 				var dropdown = document.querySelector('.' + dropdownClass);
-				var pos = dropdown.getBoundingClientRect();
+				if (dropdown) {
+					var pos = dropdown.getBoundingClientRect();
 
-				var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
+					var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
 
-				var offset = window.innerHeight + margin - 10 - pos.bottom;
-				dropdown.style.marginTop = Math.min(offset, 0) + 'px';
+					var offset = window.innerHeight + margin - 10 - pos.bottom;
+					dropdown.style.marginTop = Math.min(offset, 0) + 'px';
+				}
 			}, 0);
 		});
 
@@ -58,7 +57,7 @@ define('composer/autocomplete', ['composer/preview'], function(preview) {
 
 		autocomplete._active[post_uuid] = autocomplete.setup(data);
 
-		data.element.on('textComplete:select', function() {
+		data.element.on('textComplete:select', function () {
 			preview.render(postContainer);
 		});
 	};

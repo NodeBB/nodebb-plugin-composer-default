@@ -1,8 +1,6 @@
 'use strict';
 
-/* globals $, app, define, window */
-
-define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bootbox) {
+define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benchpress, bootbox, alerts) {
 	const scheduler = {};
 	const state = {
 		timestamp: 0,
@@ -130,7 +128,7 @@ define('composer/scheduler', ['benchpress', 'bootbox'], function (Benchpress, bo
 		if (!bothFilled || isNaN(timestamp) || timestamp < Date.now()) {
 			state.timestamp = 0;
 			const message = timestamp < Date.now() ? '[[error:scheduling-to-past]]' : '[[error:invalid-schedule-date]]';
-			app.alert({
+			alerts.alert({
 				type: 'danger',
 				timeout: 3000,
 				title: '',

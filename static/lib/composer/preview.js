@@ -1,11 +1,7 @@
 'use strict';
 
-/* globals define, socket, $, window, utils, localStorage */
-
-define('composer/preview', function () {
+define('composer/preview', ['hooks'], function (hooks) {
 	var preview = {};
-
-	var timeoutId = 0;
 
 	preview.render = function (postContainer, callback) {
 		callback = callback || function () {};
@@ -13,25 +9,18 @@ define('composer/preview', function () {
 			return callback();
 		}
 
-		if (timeoutId) {
-			clearTimeout(timeoutId);
-			timeoutId = 0;
-		}
 		var textarea = postContainer.find('textarea');
 
-		timeoutId = setTimeout(function () {
-			socket.emit('plugins.composer.renderPreview', textarea.val(), function (err, preview) {
-				timeoutId = 0;
-				if (err) {
-					return;
-				}
-				preview = $('<div>' + preview + '</div>');
-				preview.find('img:not(.not-responsive)').addClass('img-responsive');
-				postContainer.find('.preview').html(preview);
-				$(window).trigger('action:composer.preview');
-				callback();
-			});
-		}, 250);
+		socket.emit('plugins.composer.renderPreview', textarea.val(), function (err, preview) {
+			if (err) {
+				return;
+			}
+			preview = $('<div>' + preview + '</div>');
+			preview.find('img:not(.not-responsive)').addClass('img-responsive');
+			postContainer.find('.preview').html(preview);
+			hooks.fire('action:composer.preview');
+			callback();
+		});
 	};
 
 	preview.matchScroll = function (postContainer) {
@@ -85,7 +74,7 @@ define('composer/preview', function () {
 
 				// Render preview once on mobile
 				if (show) {
-					preview.render(postContainer, function () {});
+					preview.render(postContainer);
 				}
 			} else {
 				previewContainer.toggleClass('hide', !show);

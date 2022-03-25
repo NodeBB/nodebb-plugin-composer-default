@@ -107,6 +107,14 @@
 		.composer-submit, .composer-discard {
 			min-width: 106px;
 		}
+
+		.action-bar {
+			.dropdown-menu:empty {
+				& ~ .dropdown-toggle {
+					display: none;
+				}
+			}
+		}
 	}
 
 	.display-scheduler {
@@ -426,16 +434,6 @@
 		}
 
 		box-shadow: none;
-	}
-
-	.imagedrop {
-		position: absolute;
-		top: 250px;
-		text-align: center;
-		font-size: 24px;
-		color: #999;
-		width: 100%;
-		display: none;
 	}
 
 	.draft-icon {

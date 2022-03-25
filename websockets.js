@@ -59,8 +59,8 @@ Sockets.renderHelp = async function () {
 	}
 
 	const parsed = await plugins.hooks.fire('filter:parse.raw', helpText);
-	if (meta.config['composer:allowPluginHelp']) {
-		return await plugins.hooks.fire('filter:composer.help', parsed);
+	if (meta.config['composer:allowPluginHelp'] && plugins.hooks.hasListeners('filter:composer.help')) {
+		return await plugins.hooks.fire('filter:composer.help', parsed) || helpText;
 	}
 	return helpText;
 };

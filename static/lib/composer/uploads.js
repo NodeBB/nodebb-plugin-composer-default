@@ -1,13 +1,13 @@
 'use strict';
 
-/* globals $, window, document, ajaxify, FormData, define, utils, config, app */
-
 define('composer/uploads', [
 	'composer/preview',
 	'composer/categoryList',
 	'translator',
+	'alerts',
+	'uploadHelpers',
 	'jquery-form',
-], function (preview, categoryList, translator) {
+], function (preview, categoryList, translator, alerts, uploadHelpers) {
 	var uploads = {
 		inProgress: {},
 	};
@@ -68,103 +68,33 @@ define('composer/uploads', [
 	}
 
 	function initializeDragAndDrop(post_uuid) {
-		var draggingDocument = false;
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		var drop = postContainer.find('.imagedrop');
-
-		function onDragEnter() {
-			if (draggingDocument) {
-				return;
-			}
-
-			drop.css('top', '0px');
-			drop.css('height', postContainer.height() + 'px');
-			drop.css('line-height', postContainer.height() + 'px');
-			drop.show();
-
-			drop.on('dragleave', function () {
-				drop.hide();
-				drop.off('dragleave');
-			});
-		}
-
-		function onDragDrop(e) {
-			e.preventDefault();
-			var files = e.originalEvent.dataTransfer.files;
-			var fd;
-
-			if (files.length) {
-				if (window.FormData) {
-					fd = new FormData();
-					for (var i = 0; i < files.length; ++i) {
-						fd.append('files[]', files[i], files[i].name);
-					}
-				}
-
+		uploadHelpers.handleDragDrop({
+			container: postContainer,
+			callback: function (upload) {
 				uploadContentFiles({
-					files: files,
+					files: upload.files,
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd,
+					formData: upload.formData,
 				});
 			}
-
-			drop.hide();
-			return false;
-		}
-
-		function cancel(e) {
-			e.preventDefault();
-			return false;
-		}
-
-		$(document)
-			.off('dragstart')
-			.on('dragstart', function () {
-				draggingDocument = true;
-			})
-			.off('dragend')
-			.on('dragend', function () {
-				draggingDocument = false;
-			});
-
-		postContainer.on('dragenter', onDragEnter);
-
-		drop.on('dragover', cancel);
-		drop.on('dragenter', cancel);
-		drop.on('drop', onDragDrop);
+		});
 	}
 
 	function initializePaste(post_uuid) {
 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		postContainer.on('paste', function (event) {
-			var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-
-			[].some.call(items, function (item) {
-				var blob = item.getAsFile();
-
-				if (!blob) {
-					return false;
-				}
-
-				var blobName = utils.generateUUID() + '-' + blob.name;
-
-				var fd = null;
-				if (window.FormData) {
-					fd = new FormData();
-					fd.append('files[]', blob, blobName);
-				}
-
+		uploadHelpers.handlePaste({
+			container: postContainer,
+			callback: function (upload) {
 				uploadContentFiles({
-					files: [blob],
-					fileNames: [blobName],
+					files: upload.files,
+					fileNames: upload.fileNames,
 					post_uuid: post_uuid,
 					route: '/api/post/upload',
-					formData: fd,
+					formData: upload.formData,
 				});
-
-				return true;
-			});
+			},
 		});
 	}
 
@@ -195,7 +125,7 @@ define('composer/uploads', [
 		for (i = 0; i < files.length; ++i) {
 			isImage = files[i].type.match(/image./);
 			if ((isImage && !app.user.privileges['upload:post:image']) || (!isImage && !app.user.privileges['upload:post:file'])) {
-				return app.alertError('[[error:no-privileges]]');
+				return alerts.error('[[error:no-privileges]]');
 			}
 		}
 
@@ -209,7 +139,7 @@ define('composer/uploads', [
 
 			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
-				return app.alertError('[[error:file-too-big, ' + config.maximumFileSize + ']]');
+				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
 
 			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
@@ -264,8 +194,13 @@ define('composer/uploads', [
 				data: { cid: cid },
 
 				error: function (xhr) {
+					doneUploading = true;
 					postContainer.find('[data-action="post"]').prop('disabled', false);
-					onUploadError(xhr, post_uuid);
+					const errorMsg = onUploadError(xhr, post_uuid);
+					for (var i = 0; i < files.length; ++i) {
+						updateTextArea(filenameMapping[i], errorMsg, true);
+					}
+					preview.render(postContainer);
 				},
 
 				uploadProgress: function (event, position, total, percent) {
@@ -318,11 +253,12 @@ define('composer/uploads', [
 		if (xhr && xhr.status === 413) {
 			msg = xhr.statusText || 'Request Entity Too Large';
 		}
-		app.alertError(msg);
+		alerts.error(msg);
 		$(window).trigger('action:composer.uploadError', {
 			post_uuid: post_uuid,
 			message: msg,
 		});
+		return msg;
 	}
 
 	return uploads;

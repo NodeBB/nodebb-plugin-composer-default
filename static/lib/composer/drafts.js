@@ -1,10 +1,8 @@
 'use strict';
 
-/* globals $, window, socket, app, define, localStorage, sessionStorage, ajaxify */
-
-define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
+define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	var drafts = {};
-	var	saveThrottleId;
+	var saveThrottleId;
 
 	drafts.init = function (postContainer, postData) {
 		var draftIconEl = postContainer.find('.draft-icon');
@@ -263,9 +261,9 @@ define('composer/drafts', ['topicThumbs', 'api'], function (topicThumbs, api) {
 							tags: [],
 						});
 					} else if (type === 'tid') {
-						socket.emit('topics.getTopic', id, function (err, topicObj) {
+						api.get('/topics/' + id, {}, function (err, topicObj) {
 							if (err) {
-								return app.alertError(err.message);
+								return alerts.error(err);
 							}
 							composer.newReply(id, undefined, topicObj.title, draft.text);
 						});

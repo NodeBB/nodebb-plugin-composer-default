@@ -1,23 +1,21 @@
 'use strict';
-/* globals $, app, socket */
 
-define('admin/plugins/composer-default', ['settings'], function(Settings) {
-
+define('admin/plugins/composer-default', ['settings', 'alerts'], function (Settings, alerts) {
 	var ACP = {};
 
-	ACP.init = function() {
+	ACP.init = function () {
 		Settings.load('composer-default', $('.composer-default-settings'));
 
-		$('#save').on('click', function() {
-			Settings.save('composer-default', $('.composer-default-settings'), function() {
-				app.alert({
+		$('#save').on('click', function () {
+			Settings.save('composer-default', $('.composer-default-settings'), function () {
+				alerts.alert({
 					type: 'success',
 					alert_id: 'composer-default-saved',
 					title: 'Settings Saved',
 					message: 'Please reload your NodeBB to apply these settings',
-					clickfn: function() {
+					clickfn: function () {
 						socket.emit('admin.reload');
-					}
+					},
 				});
 			});
 		});

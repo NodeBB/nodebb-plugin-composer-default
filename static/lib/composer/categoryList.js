@@ -1,7 +1,4 @@
-
 'use strict';
-
-/* globals define, $, window, ajaxify, config */
 
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
@@ -34,8 +31,8 @@ define('composer/categoryList', [
 		if (!selector) {
 			return;
 		}
-		if (postData.cid && ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
-			selector.selectedCategory = { cid: postData.cid, name: ajaxify.data.name };
+		if (postData.cid && postData.category) {
+			selector.selectedCategory = { cid: postData.cid, name: postData.category.name };
 		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
 			// separate composer route
 			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
@@ -77,29 +74,39 @@ define('composer/categoryList', [
 
 	categoryList.updateTaskbar = function (postContainer, postData) {
 		if (parseInt(postData.cid, 10)) {
-			var uuid = postContainer.attr('data-uuid');
 			api.get(`/categories/${postData.cid}`, {}).then(function (category) {
-				if (category && category.icon) {
-					taskbar.update('composer', uuid, {
-						image: category.backgroundImage,
-						'background-color': category.bgColor,
-						icon: category.icon.slice(3),
-					});
-				}
+				updateTaskbarByCategory(postContainer, category);
 			});
 		}
 	};
 
+	function updateTaskbarByCategory(postContainer, category) {
+		if (category) {
+			var uuid = postContainer.attr('data-uuid');
+			taskbar.update('composer', uuid, {
+				image: category.backgroundImage,
+				'background-color': category.bgColor,
+				icon: category.icon && category.icon.slice(3),
+			});
+		}
+	}
+
 	async function changeCategory(postContainer, postData, selectedCategory) {
 		postData.cid = selectedCategory.cid;
 		const categoryData = await window.fetch(`${config.relative_path}/api/category/${selectedCategory.cid}`).then(r => r.json());
-
+		postData.category = categoryData;
+		updateTaskbarByCategory(postContainer, categoryData);
 		require(['composer/scheduler', 'composer/tags'], function (scheduler, tags) {
 			scheduler.onChangeCategory(categoryData);
 			tags.onChangeCategory(postContainer, postData, selectedCategory.cid, categoryData);
-		});
 
-		categoryList.updateTaskbar(postContainer, postData);
+			$(window).trigger('action:composer.changeCategory', {
+				postContainer: postContainer,
+				postData: postData,
+				selectedCategory: selectedCategory,
+				categoryData: categoryData,
+			});
+		});
 	}
 
 	return categoryList;

@@ -1,11 +1,14 @@
 {
   "name": "nodebb-plugin-composer-default",
-  "version": "6.5.27",
+  "version": "7.0.21",
   "description": "Default composer for NodeBB",
   "main": "library.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/NodeBB/nodebb-plugin-composer-default"
+  },
+  "scripts": {
+    "lint": "eslint ."
   },
   "keywords": [
     "nodebb",
@@ -23,15 +26,15 @@
   },
   "readmeFilename": "README.md",
   "nbbpm": {
-    "compatibility": "^1.16.0"
+    "compatibility": "^1.18.6"
   },
   "dependencies": {
     "screenfull": "^5.0.2",
-    "validator": "^13.1.17"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
-    "eslint": "7.10.0",
-    "eslint-config-airbnb-base": "14.2.0",
-    "eslint-plugin-import": "2.21.1"
+    "eslint": "^7.32.0",
+    "eslint-config-nodebb": "^0.0.1",
+    "eslint-plugin-import": "^2.23.4"
   }
 }

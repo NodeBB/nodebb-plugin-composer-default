@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals window, document, $, config, ajaxify */
-
 $(document).ready(function () {
 	$(window).on('action:app.load', function () {
 		require(['composer/drafts'], function (drafts) {
