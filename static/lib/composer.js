@@ -196,7 +196,7 @@ define('composer', [
 		formatting.addButton(iconClass, onClick, title);
 	};
 
-	composer.newTopic = function (data) {
+	composer.newTopic = async (data) => {
 		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
@@ -207,10 +207,10 @@ define('composer', [
 			isMain: true,
 		};
 
-		$(window).trigger('filter:composer.topic.push', {
+		({ pushData } = await hooks.fire('filter:composer.topic.push', {
 			data: data,
 			pushData: pushData,
-		});
+		}));
 
 		push(pushData);
 	};
