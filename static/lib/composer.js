@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals screenfull */
-
 define('composer', [
 	'taskbar',
 	'translator',
@@ -22,9 +20,10 @@ define('composer', [
 	'hooks',
 	'messages',
 	'search',
+	'screenfull',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
-	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search) {
+	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
 	var composer = {
 		active: undefined,
 		posts: {},

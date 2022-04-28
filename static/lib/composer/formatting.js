@@ -1,8 +1,8 @@
 'use strict';
 
-/* globals screenfull */
-
-define('composer/formatting', ['composer/preview', 'composer/resize', 'topicThumbs'], function (preview, resize, topicThumbs) {
+define('composer/formatting', [
+	'composer/preview', 'composer/resize', 'topicThumbs', 'screenfull',
+], function (preview, resize, topicThumbs, screenfull) {
 	var formatting = {};
 
 	var formattingDispatchTable = {
