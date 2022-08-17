@@ -1,8 +1,8 @@
 'use strict';
 
 define('composer/autocomplete', [
-	'composer/preview', 'textcomplete', 'textcomplete.contenteditable'
-], function (preview, TextComplete, TextCompleteContentEditable) {
+	'composer/preview', '@textcomplete/core', '@textcomplete/textarea', '@textcomplete/contenteditable',
+], function (preview, { Textcomplete }, { TextareaEditor }, { ContenteditableEditor }) {
 	var autocomplete = {
 		_active: {},
 	};
@@ -72,19 +72,17 @@ define('composer/autocomplete', [
 		}
 		var editor;
 		if (element.nodeName === 'TEXTAREA') {
-			editor = new TextComplete.Textarea(element);
+			editor = new TextareaEditor(element);
 		} else if (element.nodeName === 'DIV' && element.getAttribute('contenteditable') === 'true') {
-			var ContentEditable = TextCompleteContentEditable.default;
-			editor = new ContentEditable(element);
+			editor = new ContenteditableEditor(element);
 		}
 
 		// yuku-t/textcomplete inherits directionality from target element itself
 		element.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
 
-		var textcomplete = new TextComplete.Textcomplete(editor, {
+		var textcomplete = new Textcomplete(editor, data.strategies, {
 			dropdown: data.options,
 		});
-		textcomplete.register(data.strategies);
 		textcomplete.on('rendered', function () {
 			if (textcomplete.dropdown.items.length) {
 				// Activate the first item by default.
