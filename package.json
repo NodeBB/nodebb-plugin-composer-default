@@ -29,6 +29,9 @@
     "compatibility": "^2.5.0"
   },
   "dependencies": {
+    "@textcomplete/contenteditable": "^0.1.12",
+    "@textcomplete/core": "^0.1.12",
+    "@textcomplete/textarea": "^0.1.12",
     "screenfull": "^5.0.2",
     "validator": "^13.7.0"
   },
