@@ -17,6 +17,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 		maxTags = ajaxify.data.hasOwnProperty('maxTags') ? ajaxify.data.maxTags : config.maximumTagsPerTopic;
 
 		tagEl.tagsinput({
+			tagClass: 'badge bg-info',
 			confirmKeys: [13, 44],
 			trimValue: true,
 		});
