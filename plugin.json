@@ -9,8 +9,8 @@
 		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
 		{ "hook": "filter:meta.getLinkTags", "method": "addPrefetchTags" }
 	],
-	"less": [
-		"./static/less/composer.less"
+	"scss": [
+		"./static/scss/composer.scss"
 	],
 	"scripts": [
 		"./static/lib/client.js",

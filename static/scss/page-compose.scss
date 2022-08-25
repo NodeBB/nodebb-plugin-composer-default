@@ -1,0 +1,24 @@
+html,
+body.page-compose,
+.page-compose #content,
+.page-compose #panel {
+	height: 100%;
+}
+
+body.page-compose {
+	padding-bottom: 0 !important;
+}
+
+.page-compose .composer {
+	height: 100%;
+	z-index: initial;
+	position: static;
+
+	.display-scheduler {
+		margin: 0 0 0 .6em;
+	}
+}
+
+.zen-mode .page-compose .composer {
+	position: absolute;
+}

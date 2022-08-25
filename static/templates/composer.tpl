@@ -1,7 +1,7 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar navbar-fixed-top mobile-navbar hidden-md hidden-lg">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg">
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
@@ -21,7 +21,7 @@
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
-		<div class="row title-container">
+		<div class="title-container">
 			{{{ if isTopic }}}
 			<div class="category-list-container hidden-sm hidden-xs">
 				<!-- IMPORT partials/category-selector.tpl -->
@@ -52,14 +52,16 @@
 			</div>
 
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
-				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
+				<button class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
-				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
-				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				{{{ if submitOptions.length }}}
+				<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="caret"></span>
 					<span class="sr-only">[[topic:composer.additional-options]]</span>
 				</button>
+				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
+				{{{ end }}}
 			</div>
 		</div>
 
@@ -94,7 +96,7 @@
 			</div>
 		</div>
 
-		<div class="row write-preview-container">
+		<div class="write-preview-container">
 			<div class="write-container">
 				<div class="help-text">
 					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
@@ -107,7 +109,7 @@
 				<div class="help-text">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>
-				<div class="preview well"></div>
+				<div class="preview card card-body bg-light"></div>
 			</div>
 		</div>
 
