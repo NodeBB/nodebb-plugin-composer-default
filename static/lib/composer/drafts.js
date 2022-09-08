@@ -256,7 +256,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					if (type === 'cid') {
 						composer.newTopic({
 							cid: id,
-							title: draft.title,
+							title: utils.escapeHTML(draft.title),
 							body: draft.text,
 							tags: [],
 						});
