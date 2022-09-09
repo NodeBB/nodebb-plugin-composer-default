@@ -191,6 +191,10 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	};
 
 	drafts.migrateThumbs = function (postContainer, postData) {
+		if (!app.uid) {
+			return;
+		}
+
 		// If any thumbs were uploaded, migrate them to this new composer's uuid
 		const newUUID = postContainer.attr('data-uuid');
 		const draft = drafts.get(postData.save_id);
@@ -224,7 +228,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 			open = [];
 		}
 
-		if (available.length && app.user && app.user.uid !== 0) {
+		if (available.length) {
 			// Deconstruct each save_id and open up composer
 			available.forEach(function (save_id) {
 				if (!save_id) {
@@ -256,16 +260,17 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					if (type === 'cid') {
 						composer.newTopic({
 							cid: id,
+							handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
 							title: utils.escapeHTML(draft.title),
-							body: draft.text,
-							tags: [],
+							body: utils.escapeHTML(draft.text),
+							tags: String(draft.tags || '').split(','),
 						});
 					} else if (type === 'tid') {
 						api.get('/topics/' + id, {}, function (err, topicObj) {
 							if (err) {
 								return alerts.error(err);
 							}
-							composer.newReply(id, undefined, topicObj.title, draft.text);
+							composer.newReply(id, undefined, topicObj.title, utils.escapeHTML(draft.text));
 						});
 					} else if (type === 'pid') {
 						composer.editPost(id);
