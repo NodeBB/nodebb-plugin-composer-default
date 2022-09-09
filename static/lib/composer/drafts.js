@@ -50,12 +50,6 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		}
 	}
 
-	// deprecated, for removal v1.14.x
-	drafts.getDraft = function (save_id) {
-		console.warn('[composer/drafts] drafts.getDraft is deprecated! Use drafts.get() instead.');
-		return localStorage.getItem(save_id);
-	};
-
 	function getStorage(uid) {
 		return parseInt(uid, 10) > 0 ? localStorage : sessionStorage;
 	}
