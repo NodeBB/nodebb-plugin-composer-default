@@ -361,7 +361,7 @@
 				font-size: 16px;
 
 				&:before {
-					content: $fa-var-arrows-alt;
+					content: fa-content($fa-var-arrows-alt-v);
 					position: relative;
 					top: 25%;
 				}
@@ -421,7 +421,7 @@
 	&.resizable.maximized {
 		.resizer .trigger i {
 			&:before {
-				content: $fa-var-chevron-down;
+				content: fa-content($fa-var-chevron-down);
 			}
 		}
 
