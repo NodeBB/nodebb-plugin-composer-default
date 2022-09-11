@@ -435,13 +435,13 @@
 		opacity: 0;
 
 		&::before {
-			content: $fa-var-save;
+			content: fa-content($fa-var-save);
 			position: relative;
 			top: 25%;
 		}
 
 		&::after {
-			content: $fa-var-check;
+			content: fa-content($fa-var-check);
 			position: relative;
 			top: 18px;
 			font-size: 0.7em;
