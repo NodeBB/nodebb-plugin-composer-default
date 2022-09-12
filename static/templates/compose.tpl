@@ -20,7 +20,7 @@
 			<div class="category-list-container"><!-- IMPORT partials/category-selector.tpl --></div>
 			<!-- ENDIF isTopic -->
 			<!-- IF isTopicOrMain -->
-			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<!-- ENDIF isTopicOrMain -->
@@ -77,7 +77,7 @@
 					</form>
 				</ul>
 
-				<div class="btn-group pull-right action-bar">
+				<div class="btn-group float-end action-bar">
 					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button type="submit" form="compose-form" class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>

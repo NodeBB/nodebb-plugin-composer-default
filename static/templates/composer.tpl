@@ -14,7 +14,7 @@
 			<!-- IF !isTopicOrMain -->
 			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
-			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<div class="btn-group">
@@ -45,13 +45,13 @@
 				</div>
 			</div>
 
-			<div class="pull-right draft-icon hidden-xs hidden-sm"></div>
+			<div class="float-end draft-icon hidden-xs hidden-sm"></div>
 
-			<div class="display-scheduler pull-right hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 
-			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
+			<div class="btn-group float-end action-bar hidden-sm hidden-xs">
 				<button class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
@@ -102,7 +102,7 @@
 					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
-				<div class="pull-right draft-icon hidden-md hidden-lg"></div>
+				<div class="float-end draft-icon hidden-md hidden-lg"></div>
 				<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]"></textarea>
 			</div>
 			<div class="hidden-sm hidden-xs preview-container">
