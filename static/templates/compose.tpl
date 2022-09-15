@@ -103,16 +103,16 @@
 
 		<!-- IF isTopicOrMain -->
 		<div class="tag-row">
-			<div class="tags-container">
+			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
 				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<button class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						<span class="caret"></span>
 					</button>
 
 					<ul class="dropdown-menu">
 						<!-- BEGIN tagWhitelist -->
-						<li data-tag="{@value}"><a href="#">{@value}</a></li>
+						<li data-tag="{@value}"><a class="dropdown-item" href="#">{@value}</a></li>
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>

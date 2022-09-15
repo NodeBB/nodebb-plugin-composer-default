@@ -1,7 +1,7 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary">
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
@@ -115,20 +115,20 @@
 
 		<!-- IF isTopicOrMain -->
 		<div class="tag-row">
-			<div class="tags-container">
+			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
 				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<button class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						[[tags:select_tags]]
 					</button>
 
 					<ul class="dropdown-menu">
 						<!-- BEGIN tagWhitelist -->
-						<li data-tag="{@value}"><a href="#">{@value}</a></li>
+						<li data-tag="{@value}"><a class="dropdown-item" href="#">{@value}</a></li>
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>
-				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
+				<input class="tags" type="text" class="" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
 			</div>
 		</div>
 		<!-- ENDIF isTopicOrMain -->

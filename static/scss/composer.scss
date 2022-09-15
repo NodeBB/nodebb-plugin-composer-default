@@ -22,9 +22,6 @@
 
 	.mobile-navbar {
 		position: static;
-		background: $primary;
-		// TODO:
-		// color: @btn-primary-color;
 		min-height: 40px;
 		margin: 0;
 
@@ -250,9 +247,6 @@
 
 	.tags-container {
 		[component="composer/tag/dropdown"] {
-			display: inherit;
-			top: -8px;
-			left: -8px;
 			.dropdown-menu {
 				max-height: 400px;
 				overflow-y: auto;
@@ -262,12 +256,17 @@
 				border: 0;
 			}
 		}
-
+		// if picking tags from taglist dropdown hide the input
+		&.haswhitelist .bootstrap-tagsinput {
+			input {
+				display: none;
+			}
+		}
 		.bootstrap-tagsinput {
+			flex-grow: 1;
 			border: 0;
 			padding: 4px 6px;
 			box-shadow: none;
-			display: block;
 			max-height: 80px;
 			overflow: auto;
 
@@ -310,17 +309,6 @@
 			transform: none;
 			visibility: visible;
 			transition-delay: 0s;
-		}
-
-		li {
-			padding: 10px;
-			color: #333;
-
-			&.active {
-				// TODO: pick colors
-				// background-color: @btn-primary-bg;
-				// color: @btn-primary-color;
-			}
 		}
 	}
 
