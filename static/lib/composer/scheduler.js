@@ -73,7 +73,7 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 			buttons: {
 				cancel: {
 					label: state.timestamp ? '[[modules:composer.cancel-scheduling]]' : '[[modules:bootbox.cancel]]',
-					className: (state.timestamp ? 'btn-warning' : 'btn-default') + (state.edit ? ' hidden' : ''),
+					className: (state.timestamp ? 'btn-warning' : 'btn-outline-secondary') + (state.edit ? ' hidden' : ''),
 					callback: cancelScheduling,
 				},
 				set: {

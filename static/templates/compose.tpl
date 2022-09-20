@@ -78,7 +78,7 @@
 				</ul>
 
 				<div class="btn-group float-end action-bar">
-					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
+					<a href="{discardRoute}" class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button type="submit" form="compose-form" class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 				</div>
@@ -105,7 +105,7 @@
 		<div class="tag-row">
 			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
 				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" type="button">
+					<button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						<span class="caret"></span>
 					</button>
