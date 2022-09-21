@@ -3,6 +3,7 @@
 $(document).ready(function () {
 	$(window).on('action:app.load', function () {
 		require(['composer/drafts'], function (drafts) {
+			drafts.migrateGuest();
 			drafts.loadOpen();
 		});
 	});

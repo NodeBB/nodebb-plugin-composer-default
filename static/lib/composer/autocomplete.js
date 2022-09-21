@@ -65,23 +65,23 @@ define('composer/autocomplete', [
 	};
 
 	// This is a generic method that is also used by the chat
-	autocomplete.setup = function (data) {
-		var element = data.element.get(0);
-		if (!element) {
+	autocomplete.setup = function ({ element, strategies, options }) {
+		const targetEl = element.get(0);
+		if (!targetEl) {
 			return;
 		}
 		var editor;
-		if (element.nodeName === 'TEXTAREA') {
-			editor = new TextareaEditor(element);
-		} else if (element.nodeName === 'DIV' && element.getAttribute('contenteditable') === 'true') {
-			editor = new ContenteditableEditor(element);
+		if (targetEl.nodeName === 'TEXTAREA') {
+			editor = new TextareaEditor(targetEl);
+		} else if (targetEl.nodeName === 'DIV' && targetEl.getAttribute('contenteditable') === 'true') {
+			editor = new ContenteditableEditor(targetEl);
 		}
 
 		// yuku-t/textcomplete inherits directionality from target element itself
-		element.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
+		targetEl.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
 
-		var textcomplete = new Textcomplete(editor, data.strategies, {
-			dropdown: data.options,
+		var textcomplete = new Textcomplete(editor, strategies, {
+			dropdown: options,
 		});
 		textcomplete.on('rendered', function () {
 			if (textcomplete.dropdown.items.length) {

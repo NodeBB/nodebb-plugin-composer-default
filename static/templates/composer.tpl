@@ -103,7 +103,7 @@
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<div class="float-end draft-icon hidden-md hidden-lg"></div>
-				<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]"></textarea>
+				<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
 			</div>
 			<div class="hidden-sm hidden-xs preview-container">
 				<div class="help-text">

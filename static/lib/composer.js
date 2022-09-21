@@ -200,6 +200,7 @@ define('composer', [
 		var pushData = {
 			action: 'topics.post',
 			cid: data.cid,
+			handle: data.handle,
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
@@ -317,9 +318,6 @@ define('composer', [
 			postContainer.attr('data-uuid', post_uuid);
 		}
 
-		var titleEl = postContainer.find('input.title');
-		var handleEl = postContainer.find('input.handle');
-		var tagsEl = postContainer.find('input.tags');
 		var bodyEl = postContainer.find('textarea');
 		var submitBtn = postContainer.find('.composer-submit');
 
@@ -394,21 +392,7 @@ define('composer', [
 		});
 
 		drafts.init(postContainer, postData);
-
-		var draft = drafts.get(postData.save_id);
-		if (draft && draft.title) {
-			titleEl.val(draft.title);
-		}
-		if (draft && draft.handle) {
-			handleEl.val(draft.handle);
-		}
-		if (draft && draft.tags) {
-			const tags = draft.tags.split(',');
-			tags.forEach(function (tag) {
-				tagsEl.tagsinput('add', tag);
-			});
-		}
-		bodyEl.val(draft.text ? draft.text : postData.body);
+		const draft = drafts.get(postData.save_id);
 
 		preview.render(postContainer, function () {
 			preview.matchScroll(postContainer);
@@ -426,11 +410,7 @@ define('composer', [
 			$('[data-format="zen"]').addClass('hidden');
 		}
 
-		hooks.fire('action:composer.enhanced', {
-			postContainer: postContainer,
-			postData: postData,
-			draft: draft,
-		});
+		hooks.fire('action:composer.enhanced', { postContainer, postData, draft });
 	};
 
 	async function getSelectedCategory(postData) {
@@ -463,6 +443,7 @@ define('composer', [
 		var data = {
 			title: title,
 			titleLength: title.length,
+			body: postData.body,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
