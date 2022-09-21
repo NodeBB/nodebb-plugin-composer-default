@@ -38,7 +38,7 @@ html.zen-mode {
 		}
 	}
 
-	@media (min-width: @screen-md-min) {
+	@include media-breakpoint-up(md) {
 		& {
 			padding-left: 15px;
 			padding-right: 15px;

@@ -1,7 +1,7 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar navbar-fixed-top mobile-navbar hidden-md hidden-lg">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary">
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
@@ -14,14 +14,14 @@
 			<!-- IF !isTopicOrMain -->
 			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
-			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
-		<div class="row title-container">
+		<div class="title-container">
 			{{{ if isTopic }}}
 			<div class="category-list-container hidden-sm hidden-xs">
 				<!-- IMPORT partials/category-selector.tpl -->
@@ -45,21 +45,23 @@
 				</div>
 			</div>
 
-			<div class="pull-right draft-icon hidden-xs hidden-sm"></div>
+			<div class="float-end draft-icon hidden-xs hidden-sm"></div>
 
-			<div class="display-scheduler pull-right hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 
-			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
-				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
+			<div class="btn-group float-end action-bar hidden-sm hidden-xs">
+				<button class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
-				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
-				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				{{{ if submitOptions.length }}}
+				<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="caret"></span>
 					<span class="sr-only">[[topic:composer.additional-options]]</span>
 				</button>
+				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
+				{{{ end }}}
 			</div>
 		</div>
 
@@ -94,39 +96,39 @@
 			</div>
 		</div>
 
-		<div class="row write-preview-container">
+		<div class="write-preview-container">
 			<div class="write-container">
 				<div class="help-text">
 					<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
-				<div class="pull-right draft-icon hidden-md hidden-lg"></div>
+				<div class="float-end draft-icon hidden-md hidden-lg"></div>
 				<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
 			</div>
 			<div class="hidden-sm hidden-xs preview-container">
 				<div class="help-text">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>
-				<div class="preview well"></div>
+				<div class="preview card card-body bg-light"></div>
 			</div>
 		</div>
 
 		<!-- IF isTopicOrMain -->
 		<div class="tag-row">
-			<div class="tags-container">
+			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
 				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						[[tags:select_tags]]
 					</button>
 
 					<ul class="dropdown-menu">
 						<!-- BEGIN tagWhitelist -->
-						<li data-tag="{@value}"><a href="#">{@value}</a></li>
+						<li data-tag="{@value}"><a class="dropdown-item" href="#">{@value}</a></li>
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>
-				<input class="tags" type="text" class="form-control" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5"/>
+				<input class="tags" type="text" class="" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
 			</div>
 		</div>
 		<!-- ENDIF isTopicOrMain -->

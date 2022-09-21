@@ -20,7 +20,7 @@
 			<div class="category-list-container"><!-- IMPORT partials/category-selector.tpl --></div>
 			<!-- ENDIF isTopic -->
 			<!-- IF isTopicOrMain -->
-			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<!-- ENDIF isTopicOrMain -->
@@ -77,8 +77,8 @@
 					</form>
 				</ul>
 
-				<div class="btn-group pull-right action-bar">
-					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
+				<div class="btn-group float-end action-bar">
+					<a href="{discardRoute}" class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
 
 					<button type="submit" form="compose-form" class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
 				</div>
@@ -103,16 +103,16 @@
 
 		<!-- IF isTopicOrMain -->
 		<div class="tag-row">
-			<div class="tags-container">
+			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
 				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button">
 						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
 						<span class="caret"></span>
 					</button>
 
 					<ul class="dropdown-menu">
 						<!-- BEGIN tagWhitelist -->
-						<li data-tag="{@value}"><a href="#">{@value}</a></li>
+						<li data-tag="{@value}"><a class="dropdown-item" href="#">{@value}</a></li>
 						<!-- END tagWhitelist -->
 					</ul>
 				</div>
