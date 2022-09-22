@@ -16,7 +16,7 @@ define('composer/preview', ['hooks'], function (hooks) {
 				return;
 			}
 			preview = $('<div>' + preview + '</div>');
-			preview.find('img:not(.not-responsive)').addClass('img-responsive');
+			preview.find('img:not(.not-responsive)').addClass('img-fluid');
 			postContainer.find('.preview').html(preview);
 			hooks.fire('action:composer.preview');
 			callback();
