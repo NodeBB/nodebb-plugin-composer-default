@@ -3,7 +3,6 @@
 
 	z-index: $zindex-modal;
 
-	background: #fff;
 	visibility: hidden;
 
 	padding: 0;
@@ -151,7 +150,6 @@
 				display: inline-block;
 				padding: 10px 15px;
 				cursor: pointer;
-				color: #333;
 				position: relative;
 
 				&:focus, &:hover {
