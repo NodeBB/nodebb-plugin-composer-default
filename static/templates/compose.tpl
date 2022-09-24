@@ -26,16 +26,16 @@
 			<!-- ENDIF isTopicOrMain -->
 			<!-- IF showHandleInput -->
 			<div class="col-sm-3 col-md-12">
-				<input class="handle form-control" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
+				<input class="handle form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 			</div>
 			<!-- ENDIF showHandleInput -->
 			<div class="<!-- IF isTopic -->col-lg-9<!-- ELSE -->col-lg-12<!-- ENDIF isTopic --> col-md-12">
 				<!-- IF isTopicOrMain -->
-				<input name="title" form="compose-form" class="title form-control" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
+				<input name="title" form="compose-form" class="title form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 				<!-- ELSE -->
-				<span class="title">[[topic:composer.replying_to, "{topicTitle}"]]</span>
+				<span class="title h-100">[[topic:composer.replying_to, "{topicTitle}"]]</span>
 				<!-- ENDIF isTopicOrMain -->
-				<div id="quick-search-container" class="quick-search-container hidden">
+				<div id="quick-search-container" class="quick-search-container mt-2 dropdown-menu d-block p-2 hidden">
 					<div class="quick-search-results-container"></div>
 				</div>
 			</div>
