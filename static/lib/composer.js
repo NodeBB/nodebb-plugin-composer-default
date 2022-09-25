@@ -529,10 +529,6 @@ define('composer', [
 
 				submitBtns.removeAttr('tabindex');
 				mobileSubmitBtn.attr('tabindex', parseInt(idx, 10) + 1);
-
-				$('.category-name-container').on('click', function () {
-					$('.category-selector').toggleClass('open');
-				});
 			}
 
 			$(window).trigger('action:composer.loaded', {

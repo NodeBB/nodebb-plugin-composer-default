@@ -87,14 +87,14 @@
 
 		<div class="row write-preview-container">
 			<div class="col-md-6 col-sm-12 write-container">
-				<div class="help-text">
+				<div class="help-text text-muted">
 					[[modules:composer.compose]] <span class="help hidden"><i class="fa fa-question-circle"></i></span>
 					<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
 				</div>
 				<textarea name="content" form="compose-form" class="write" tabindex="5" placeholder="[[modules:composer.textarea.placeholder]]"></textarea>
 			</div>
 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
-				<div class="help-text">
+				<div class="help-text text-muted">
 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
 				</div>
 				<div class="preview well"></div>

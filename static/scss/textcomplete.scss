@@ -1,6 +1,7 @@
 .textcomplete-dropdown {
-	border: 1px solid #ddd;
-	background-color: white;
+	border: 1px solid $border-color;
+	background-color: $body-bg;
+	color: $body-color;
 	list-style: none;
 	padding: 0;
 	margin: 0;
@@ -10,7 +11,7 @@
 	}
 
 	.textcomplete-footer, .textcomplete-item {
-		border-top: 1px solid #ddd;
+		border-top: 1px solid $border-color;
 	}
 
 	.textcomplete-item {
@@ -18,7 +19,8 @@
 		cursor: pointer;
 
 		&:hover, &.active {
-			background-color: rgb(110, 183, 219);
+			color: $dropdown-link-hover-color;
+			background-color: $dropdown-link-hover-bg;
 		}
 	}
 }

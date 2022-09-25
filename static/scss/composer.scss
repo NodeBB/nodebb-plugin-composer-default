@@ -1,12 +1,11 @@
 .composer {
 	@include no-select;
 
+	background-color: $body-bg;
+	color: $body-color;
 	z-index: $zindex-modal;
-
 	visibility: hidden;
-
 	padding: 0;
-
 	position: fixed;
 	bottom: 0;
 	top: 0;
@@ -49,7 +48,7 @@
 
 	.title-container {
 		display: flex;
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid $border-color;
 		margin: 0;
 
 		> div[data-component="composer/title"] {
@@ -61,6 +60,8 @@
 		}
 
 		.title, .handle {
+			background: transparent;
+			color: $body-color;
 			display: block;
 			margin: 0;
 			padding: 8px;
@@ -127,10 +128,6 @@
 	.formatting-bar {
 		margin: 0;
 
-		span {
-			color: #000;
-		}
-
 		.spacer {
 			&:before {
 				content: ' | ';
@@ -154,13 +151,14 @@
 
 				&:focus, &:hover {
 					outline: none;
-					background-color: darken(#fff, 10%);
+					color: $dropdown-link-hover-color;
+					background-color: $dropdown-link-hover-bg;
 				}
 
 				&[data-format="thumbs"][data-count]:after {
 					content: attr(data-count);
 					background: $info;
-					color: white;
+					color: $white;
 					font-weight: 600;
 					position: absolute;
 					top: 5px;
@@ -182,7 +180,6 @@
 	.write-container, .preview-container {
 		display: flex;
 		flex: 1;
-		margin: 0 15px;
 		position: relative;
 
 		.help-text {
@@ -191,7 +188,6 @@
 			right: 35px;
 			top: 8px;
 			font-size: 10px;
-			color: #999;
 			z-index: 1;
 		}
 	}
@@ -205,7 +201,6 @@
 	.preview-container {
 		word-wrap: break-word;
 		max-width: 50%;
-		max-width: calc(50% - 30px);
 	}
 
 	.write, .preview  {
@@ -220,8 +215,8 @@
 
 	.write {
 		border: none;
-		border-top: 1px solid #EDEDED;
-		border-bottom: 1px solid #EDEDED;
+		border-top: 1px solid $border-color;
+		border-bottom: 1px solid $border-color;
 		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 	}
 
@@ -261,6 +256,7 @@
 			}
 		}
 		.bootstrap-tagsinput {
+			background: transparent;
 			flex-grow: 1;
 			border: 0;
 			padding: 4px 6px;
@@ -269,6 +265,7 @@
 			overflow: auto;
 
 			input {
+				color: $body-color;
 				font-size: 16px;
 				width: 50%;
 				height: 28px;
@@ -279,34 +276,6 @@
 				color: white;
 				font-size: 13px;
 			}
-		}
-	}
-
-	.category-selector {
-		display: block;
-		visibility: hidden;
-
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 0;
-
-		margin: 0;
-		padding: 0 5px;
-		max-height: calc(100% - 86px);
-
-		background: #fff;
-		box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-		overflow: auto;
-		-webkit-overflow-scrolling: touch;
-		transform: translate3d(0, 350px, 0);
-		transition: transform 0.3s, visibility 0s 0.3s;
-		z-index: 2;
-
-		&.open {
-			transform: none;
-			visibility: visible;
-			transition-delay: 0s;
 		}
 	}
 
