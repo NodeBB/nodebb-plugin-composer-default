@@ -114,23 +114,7 @@
 		</div>
 
 		<!-- IF isTopicOrMain -->
-		<div class="tag-row">
-			<div class="tags-container d-flex {{{ if tagWhitelist.length }}}haswhitelist{{{ end }}}">
-				<div class="btn-group dropup <!-- IF !tagWhitelist.length -->hidden<!-- ENDIF !tagWhitelist.length -->" component="composer/tag/dropdown">
-					<button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button">
-						<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
-						[[tags:select_tags]]
-					</button>
-
-					<ul class="dropdown-menu">
-						<!-- BEGIN tagWhitelist -->
-						<li data-tag="{@value}"><a class="dropdown-item" href="#">{@value}</a></li>
-						<!-- END tagWhitelist -->
-					</ul>
-				</div>
-				<input class="tags" type="text" class="" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
-			</div>
-		</div>
+		<!-- IMPORT partials/composer-tags.tpl -->
 		<!-- ENDIF isTopicOrMain -->
 
 		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
