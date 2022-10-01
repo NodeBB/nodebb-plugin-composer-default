@@ -1,7 +1,7 @@
 <div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container">
-		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap">
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
@@ -12,7 +12,7 @@
 			</div>
 			<!-- ENDIF isTopic -->
 			<!-- IF !isTopicOrMain -->
-			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
+			<h4 class="title text-bg-primary">[[topic:composer.replying_to, "{title}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
 			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
