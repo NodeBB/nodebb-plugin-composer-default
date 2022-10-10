@@ -105,22 +105,6 @@ plugin.getFormattingOptions = async function () {
 
 	payload = await plugins.hooks.fire('filter:composer.formatting', payload);
 
-	// TODO: Backwards compatibility -- remove in v1.16.0
-	payload.options = payload.options.map((option) => {
-		option.visibility = {
-			...defaultVisibility,
-			...option.visibility || {},
-		};
-		if (option.hasOwnProperty('mobile')) {
-			winston.warn('[composer/formatting] `mobile` is no longer supported as a formatting option, use `visibility` instead (default values are passed in payload)');
-			option.visibility.mobile = option.mobile;
-			option.visibility.desktop = !option.mobile;
-		}
-
-		return option;
-	});
-	// end
-
 	return payload ? payload.options : null;
 };
 
