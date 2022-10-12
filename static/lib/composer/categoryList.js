@@ -85,6 +85,7 @@ define('composer/categoryList', [
 			var uuid = postContainer.attr('data-uuid');
 			taskbar.update('composer', uuid, {
 				image: category.backgroundImage,
+				color: category.color,
 				'background-color': category.bgColor,
 				icon: category.icon && category.icon.slice(3),
 			});
