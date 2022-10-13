@@ -441,7 +441,7 @@ define('composer', [
 		postData.category = await getSelectedCategory(postData);
 		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
 		var data = {
-			title: title,
+			topicTitle: title,
 			titleLength: title.length,
 			body: postData.body,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
