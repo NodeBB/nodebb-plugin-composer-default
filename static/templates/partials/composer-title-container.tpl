@@ -10,7 +10,7 @@
 		<input class="handle form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 	</div>
 	<!-- ENDIF showHandleInput -->
-	<div data-component="composer/title">
+	<div data-component="composer/title" class="position-relative">
 		<!-- IF isTopicOrMain -->
 		<input class="title form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
 		<!-- ELSE -->
