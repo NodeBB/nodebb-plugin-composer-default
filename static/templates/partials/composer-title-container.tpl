@@ -37,7 +37,7 @@
 			<span class="caret"></span>
 			<span class="sr-only">[[topic:composer.additional-options]]</span>
 		</button>
-		<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
+		<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a class="dropdown-item" href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
 		{{{ end }}}
 	</div>
 </div>
