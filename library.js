@@ -179,7 +179,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	}
 	globalPrivileges['topics:tag'] = canTagTopics;
 	const cid = parseInt(req.query.cid, 10);
-	const topicTitle = topicData && topicData.title ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : req.query.title;
+	const topicTitle = topicData && topicData.title ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : (req.query.title || '');
 	return {
 		req: req,
 		res: res,
@@ -197,7 +197,7 @@ plugin.filterComposerBuild = async function (hookData) {
 
 			// can't use title property as that is used for page title
 			topicTitle: topicTitle,
-			titleLength: topicTitle.length,
+			titleLength: topicTitle ? topicTitle.length : 0,
 			topic: topicData,
 			thumb: topicData ? topicData.thumb : '',
 			body: body,
