@@ -188,7 +188,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	}
 	globalPrivileges['topics:tag'] = canTagTopics;
 	const cid = parseInt(req.query.cid, 10);
-	const topicTitle = topicData && topicData.title ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : '';
+	const topicTitle = topicData && topicData.title ? topicData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;') : req.query.title;
 	return {
 		req: req,
 		res: res,
@@ -255,7 +255,7 @@ async function generateBody(req, postData) {
 		return `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body) {
-		return req.query.body;
+		return validator.escape(String(req.query.body));
 	}
 	return postData ? postData.content : '';
 }
