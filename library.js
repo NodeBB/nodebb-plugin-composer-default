@@ -254,8 +254,8 @@ async function generateBody(req, postData) {
 		const translated = await translator.translate(`[[modules:composer.user_said, ${username}]]`);
 		return `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
-	} else if (req.query.body) {
-		return validator.escape(String(req.query.body));
+	} else if (req.query.body || req.query.content) {
+		return validator.escape(String(req.query.body || req.query.content));
 	}
 	return postData ? postData.content : '';
 }
