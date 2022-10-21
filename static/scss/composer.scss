@@ -473,7 +473,7 @@
 	}
 }
 
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
 	html.composing {
 		.composer {
 			height: 100%;
