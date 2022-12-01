@@ -334,10 +334,6 @@ define('composer', [
 
 		postContainer.on('change', 'input, textarea', function () {
 			composer.posts[post_uuid].modified = true;
-
-			// Post is modified, save to list of opened drafts
-			drafts.updateVisibility('available', composer.posts[post_uuid].save_id, true);
-			drafts.updateVisibility('open', composer.posts[post_uuid].save_id, true);
 		});
 
 		submitBtn.on('click', function (e) {

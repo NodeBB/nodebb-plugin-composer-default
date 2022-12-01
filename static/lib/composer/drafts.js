@@ -2,21 +2,19 @@
 
 define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	var drafts = {};
-	var saveThrottleId;
 
 	drafts.init = function (postContainer, postData) {
 		var draftIconEl = postContainer.find('.draft-icon');
-		function saveThrottle() {
-			resetTimeout();
-
-			saveThrottleId = setTimeout(function () {
-				saveDraft(postContainer, draftIconEl, postData);
-			}, 1000);
+		function doSaveDraft() {
+			// Post is modified, save to list of opened drafts
+			drafts.updateVisibility('available', postData.save_id, true);
+			drafts.updateVisibility('open', postData.save_id, true);
+			saveDraft(postContainer, draftIconEl, postData);
 		}
 
-		postContainer.on('keyup', 'textarea, input.handle, input.title', saveThrottle);
-		postContainer.on('click', 'input[type="checkbox"]', saveThrottle);
-		postContainer.on('thumb.uploaded', saveThrottle);
+		postContainer.on('keyup', 'textarea, input.handle, input.title', utils.debounce(doSaveDraft, 1000));
+		postContainer.on('click', 'input[type="checkbox"]', utils.debounce(doSaveDraft, 1000));
+		postContainer.on('thumb.uploaded', doSaveDraft);
 
 		draftIconEl.on('animationend', function () {
 			$(this).toggleClass('active', false);
@@ -43,13 +41,6 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		drafts.migrateThumbs(...arguments);
 	};
 
-	function resetTimeout() {
-		if (saveThrottleId) {
-			clearTimeout(saveThrottleId);
-			saveThrottleId = 0;
-		}
-	}
-
 	function getStorage(uid) {
 		return parseInt(uid, 10) > 0 ? localStorage : sessionStorage;
 	}
@@ -59,8 +50,9 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		var storage = getStorage(uid);
 		var draft = {
 			text: storage.getItem(save_id),
+			save_id: save_id,
 		};
-		['cid', 'title', 'tags', 'uuid'].forEach(function (key) {
+		['cid', 'title', 'tags', 'uuid', 'timestamp'].forEach(function (key) {
 			const value = storage.getItem(save_id + ':' + key);
 			if (value) {
 				draft[key] = value;
@@ -68,6 +60,9 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		});
 		if (!parseInt(uid, 10)) {
 			draft.handle = storage.getItem(save_id + ':handle');
+		}
+		if (draft.timestamp) {
+			draft.timestampISO = utils.toISOString(draft.timestamp);
 		}
 
 		$(window).trigger('action:composer.drafts.get', {
@@ -94,6 +89,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 			if (raw.length || (title && title.length)) {
 				storage.setItem(postData.save_id, raw);
 				storage.setItem(`${postData.save_id}:uuid`, postContainer.attr('data-uuid'));
+				storage.setItem(`${postData.save_id}:timestamp`, Date.now());
 
 				if (postData.hasOwnProperty('cid')) {
 					// New topic only
@@ -122,7 +118,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		if (!save_id) {
 			return;
 		}
-		resetTimeout();
+
 		// Remove save_id from list of open and available drafts
 		drafts.updateVisibility('available', save_id);
 		drafts.updateVisibility('open', save_id);
@@ -130,6 +126,10 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		var storage = getStorage(uid);
 		const keys = Object.keys(storage).filter(key => key.startsWith(save_id));
 		keys.forEach(key => storage.removeItem(key));
+		$(window).trigger('action:composer.drafts.remove', {
+			storage: storage,
+			save_id: save_id,
+		});
 	};
 
 	drafts.updateVisibility = function (set, save_id, add) {
@@ -204,6 +204,29 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		}
 	};
 
+	drafts.listAvailable = function () {
+		try {
+			let available = localStorage.getItem('drafts:available');
+			available = JSON.parse(available) || [];
+			return available.map(drafts.get);
+		} catch (e) {
+			console.warn('[composer/drafts] Could not read list of available drafts');
+		}
+		return [];
+	};
+
+	drafts.getAvailableCount = function () {
+		return drafts.listAvailable().length;
+	};
+
+	drafts.open = function (save_id) {
+		if (!save_id) {
+			return;
+		}
+		const draft = drafts.get(save_id);
+		openComposer(save_id, draft);
+	};
+
 	drafts.loadOpen = function () {
 		if (ajaxify.data.template.login || ajaxify.data.template.register) {
 			return;
@@ -228,10 +251,6 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 				if (!save_id) {
 					return;
 				}
-				var saveObj = save_id.split(':');
-				var uid = saveObj[1];
-				var type = saveObj[2];
-				var id = saveObj[3];
 				var draft = drafts.get(save_id);
 
 				// If draft is already open, do nothing
@@ -239,40 +258,47 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					return;
 				}
 
-				// Don't open other peoples' drafts
-				if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
-					return;
-				}
-
-				if (!draft || (draft.text && draft.title && !draft.text.title && !draft.text.length)) {
+				if (!draft || (!draft.text && !draft.title)) {
 					// Empty content, remove from list of open drafts
 					drafts.updateVisibility('available', save_id);
 					drafts.updateVisibility('open', save_id);
 					return;
 				}
-				require(['composer'], function (composer) {
-					if (type === 'cid') {
-						composer.newTopic({
-							cid: id,
-							handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
-							title: utils.escapeHTML(draft.title),
-							body: utils.escapeHTML(draft.text),
-							tags: String(draft.tags || '').split(','),
-						});
-					} else if (type === 'tid') {
-						api.get('/topics/' + id, {}, function (err, topicObj) {
-							if (err) {
-								return alerts.error(err);
-							}
-							composer.newReply(id, undefined, topicObj.title, utils.escapeHTML(draft.text));
-						});
-					} else if (type === 'pid') {
-						composer.editPost(id);
-					}
-				});
+				openComposer(save_id, draft);
 			});
 		}
 	};
+
+	function openComposer(save_id, draft) {
+		var saveObj = save_id.split(':');
+		var uid = saveObj[1];
+		var type = saveObj[2];
+		var id = saveObj[3];
+		// Don't open other peoples' drafts
+		if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
+			return;
+		}
+		require(['composer'], function (composer) {
+			if (type === 'cid') {
+				composer.newTopic({
+					cid: id,
+					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
+					title: utils.escapeHTML(draft.title),
+					body: utils.escapeHTML(draft.text),
+					tags: String(draft.tags || '').split(','),
+				});
+			} else if (type === 'tid') {
+				api.get('/topics/' + id, {}, function (err, topicObj) {
+					if (err) {
+						return alerts.error(err);
+					}
+					composer.newReply(id, undefined, topicObj.title, utils.escapeHTML(draft.text));
+				});
+			} else if (type === 'pid') {
+				composer.editPost(id);
+			}
+		});
+	}
 
 	// Feature detection courtesy of: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 	function canSave(type) {
