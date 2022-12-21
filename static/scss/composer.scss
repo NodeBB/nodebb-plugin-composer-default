@@ -100,18 +100,18 @@
 	}
 
 	.display-scheduler {
-        display: flex;
-        align-items: center;
-        margin-right: 1em;
+		display: flex;
+		align-items: center;
+		margin-right: 1em;
 
 		> i {
-          font-size: 30px;
-          display: inline-block;
-          cursor: pointer;
+		  font-size: 30px;
+		  display: inline-block;
+		  cursor: pointer;
 
-          &.active {
-            animation: 300ms ease forwards pulse;
-          }
+		  &.active {
+			animation: 300ms ease forwards pulse;
+		  }
 		}
 	}
 
