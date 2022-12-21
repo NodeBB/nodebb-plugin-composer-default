@@ -1,6 +1,6 @@
-<div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
+<div component="composer" class="composer border-top pt-2 px-2<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
-	<div class="composer-container">
+	<div class="composer-container d-flex flex-column h-100">
 		<!-- mobile header -->
 		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap">
 			<div class="btn-group">
@@ -35,6 +35,12 @@
 
 		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
 
-		<div class="resizer"><div class="trigger text-center"><i class="fa"></i></div></div>
+		<div class="resizer position-absolute w-100 bottom-100 pe-3">
+			<div class="trigger text-center">
+				<div class="handle d-inline-block px-3 py-2 border">
+					<i class="fa fa-up-down"></i>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
