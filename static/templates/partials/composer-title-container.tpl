@@ -24,20 +24,20 @@
 
 	<div class="float-end draft-icon hidden-xs hidden-sm"></div>
 
-	<div class="display-scheduler float-end hidden-sm hidden-xs{{{ if !canSchedule }}} hidden{{{ end }}}">
-		<i class="fa fa-clock-o"></i>
-	</div>
-
 	<div class="btn-group float-end action-bar hidden-sm hidden-xs">
 		<button class="btn btn-outline-secondary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
 		<button class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
-		{{{ if submitOptions.length }}}
+		{{{ if (submitOptions.length || canSchedule) }}}
 		<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span class="caret"></span>
+			<i class="fa fa-caret-down"></i>
 			<span class="sr-only">[[topic:composer.additional-options]]</span>
 		</button>
-		<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a class="dropdown-item" href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
+		<ul class="dropdown-menu">
+			<li><a class="dropdown-item display-scheduler ">Post Later</a></li>
+			{{{ each submitOptions }}}
+			<li><a class="dropdown-item" href="#" data-action="{./action}">{./text}</a></li>
+			{{{ end }}}</ul>
 		{{{ end }}}
 	</div>
 </div>
