@@ -147,13 +147,10 @@
 
 	.write-preview-container {
 		flex: 2;
-		display: flex;
 		overflow: hidden;
 	}
 
 	.write-container, .preview-container {
-		display: flex;
-		flex: 1;
 		position: relative;
 
 		.help-text {
@@ -197,15 +194,6 @@
 	.preview {
 		-webkit-touch-callout: default;
 		user-select: text;
-	}
-
-	.help {
-		@include pointer;
-	}
-
-	.toggle-preview {
-		margin-left: 20px;
-		@include pointer;
 	}
 
 	.tags-container {
@@ -467,10 +455,6 @@
 				&::after {
 					top: 7px;
 				}
-			}
-
-			.toggle-preview.hide {
-				display: inline-block !important;
 			}
 
 			.preview-container {
