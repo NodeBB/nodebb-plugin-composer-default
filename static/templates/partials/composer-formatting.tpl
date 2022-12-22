@@ -33,6 +33,12 @@
 			<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>
 		</form>
 	</ul>
-	<button class="btn btn-sm btn-link text-body fw-semibold"><i class="fa fa-eye"></i> [[modules:composer.show_preview]]</button>
-	<button class="btn btn-sm btn-link text-body fw-semibold"><i class="fa fa-question"></i> [[modules:composer.help]]</button>
+	<button class="btn btn-sm btn-link text-body fw-semibold" data-action="preview">
+		<i class="fa fa-eye"></i>
+		<span class="d-none d-md-inline">[[modules:composer.show_preview]]</span>
+	</button>
+	<button class="btn btn-sm btn-link text-body fw-semibold" data-action="help">
+		<i class="fa fa-question"></i>
+		<span class="d-none d-md-inline">[[modules:composer.help]]</span>
+	</button>
 </nav>

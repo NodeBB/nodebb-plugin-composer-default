@@ -81,7 +81,7 @@ define('composer/formatting', [
 	};
 
 	formatting.addButton = function (iconClass, onClick, title, name) {
-		name = name || iconClass.replace('fa fa-', '')
+		name = name || iconClass.replace('fa fa-', '');
 		formattingDispatchTable[name] = onClick;
 		buttons.push({
 			name,
@@ -99,7 +99,7 @@ define('composer/formatting', [
 	};
 
 	formatting.addHandler = function (postContainer) {
-		postContainer.on('click', '.formatting-bar li', function (event) {
+		postContainer.on('click', '.formatting-bar li a', function (event) {
 			var format = $(this).attr('data-format');
 			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 

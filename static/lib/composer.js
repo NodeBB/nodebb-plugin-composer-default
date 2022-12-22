@@ -562,10 +562,9 @@ define('composer', [
 	}
 
 	function handleHelp(postContainer) {
-		var helpBtn = postContainer.find('.help');
+		var helpBtn = postContainer.find('[data-action="help"]');
 		socket.emit('plugins.composer.renderHelp', function (err, html) {
 			if (!err && html && html.length > 0) {
-				helpBtn.removeClass('hidden');
 				helpBtn.on('click', function () {
 					bootbox.alert(html);
 				});

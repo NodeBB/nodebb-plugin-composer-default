@@ -43,63 +43,54 @@ define('composer/preview', ['hooks'], function (hooks) {
 		}
 	};
 
-	preview.handleToggler = function (postContainer) {
-		preview.env = utils.findBootstrapEnvironment();
-		var showBtn = postContainer.find('.write-container .toggle-preview');
-		var hideBtn = postContainer.find('.preview-container .toggle-preview');
-		var previewContainer = $('.preview-container');
-		var writeContainer = $('.write-container');
+	preview.handleToggler = function ($postContainer) {
+		const postContainer = $postContainer.get(0);
 
-		function hidePreview() {
-			togglePreview(false);
-			if (preview.env !== 'xs' && preview.env !== 'sm') {
-				localStorage.setItem('composer:previewToggled', true);
-			}
-		}
+		const isMobile = ['xs', 'sm'].includes(utils.findBootstrapEnvironment());
+		const toggler = postContainer.querySelector('.formatting-bar [data-action="preview"]');
+		let show = localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env === 'sm');
+		const previewContainer = postContainer.querySelector('.preview-container');
+		const writeContainer = postContainer.querySelector('.write-container');
 
-		function showPreview() {
-			togglePreview(true);
-			if (preview.env !== 'xs' && preview.env !== 'sm') {
-				localStorage.removeItem('composer:previewToggled');
-			}
+		if (!toggler) {
+			return;
 		}
 
 		function togglePreview(show) {
-			if (preview.env === 'xs' || preview.env === 'sm') {
-				previewContainer.toggleClass('hide', false);
-				writeContainer.toggleClass('maximized', false);
-				showBtn.toggleClass('hide', true);
-				previewContainer.toggleClass('hidden-xs hidden-sm', !show);
-				writeContainer.toggleClass('hidden-xs hidden-sm', show);
+			if (isMobile) {
+				previewContainer.classList.toggle('hide', false);
+				writeContainer.classList.toggle('maximized', false);
+				previewContainer.classList.toggle('d-none', !show);
+				previewContainer.classList.toggle('d-flex', show);
+				writeContainer.classList.toggle('d-flex', !show);
+				writeContainer.classList.toggle('d-none', show);
 
 				// Render preview once on mobile
 				if (show) {
-					preview.render(postContainer);
+					preview.render($postContainer);
 				}
 			} else {
-				previewContainer.toggleClass('hide', !show);
-				writeContainer.toggleClass('maximized', !show);
-				showBtn.toggleClass('hide', show);
+				previewContainer.classList.toggle('hide', !show);
+				writeContainer.classList.toggle('w-50', show);
+				writeContainer.classList.toggle('w-100', !show);
+
+				localStorage[show ? 'removeItem' : 'setItem']('composer:previewToggled', true);
 			}
 
-			preview.matchScroll(postContainer);
+			preview.matchScroll($postContainer);
 		}
 		preview.toggle = togglePreview;
 
-		hideBtn.on('click', function () {
-			hidePreview();
-			postContainer.find('.write').focus();
-		});
-		showBtn.on('click', function () {
-			showPreview();
-			postContainer.find('.write').focus();
+		toggler.addEventListener('click', (e) => {
+			if (e.button !== 0) {
+				return;
+			}
+
+			show = !show;
+			togglePreview(show);
 		});
 
-		if (localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env === 'sm')) {
-			hidePreview();
-		} else {
-			showPreview();
-		}
+		togglePreview(show);
 	};
 
 	return preview;
