@@ -207,13 +207,26 @@
 	}
 
 	&.resizable.maximized {
-		.resizer .trigger i {
-			&:before {
-				content: fa-content($fa-var-chevron-down);
+		.resizer {
+			top: 0 !important;
+			background: transparent;
+
+			.trigger {
+				.handle {
+					border-top-left-radius: 0%;
+					border-top-right-radius: 0%;
+					border-bottom-left-radius: 50%;
+					border-bottom-right-radius: 50%;
+					border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+				}
+
+				i {
+					&:before {
+						content: fa-content($fa-var-chevron-down);
+					}
+				}
 			}
 		}
-
-		box-shadow: none;
 	}
 
 	.draft-icon {
