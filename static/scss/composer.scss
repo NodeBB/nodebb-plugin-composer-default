@@ -142,12 +142,17 @@
 	}
 
 	.resizer {
+		background: linear-gradient(transparent, #fff);
+		margin-left: calc($spacer * -0.5);
+		padding-left: $spacer;
+
 		.trigger {
 			cursor: ns-resize;
 
 			.handle {
 				border-top-left-radius: 50%;
 				border-top-right-radius: 50%;
+				border-bottom: 0 !important;
 			}
 		}
 	}
