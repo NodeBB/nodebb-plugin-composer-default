@@ -1,6 +1,5 @@
 .composer {
-	@include no-select;
-
+	user-select: none;
 	background-color: $body-bg;
 	color: $body-color;
 	z-index: $zindex-modal;
