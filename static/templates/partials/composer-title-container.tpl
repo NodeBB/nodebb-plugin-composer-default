@@ -1,6 +1,6 @@
 <div class="title-container">
 	{{{ if isTopic }}}
-	<div class="category-list-container hidden-sm hidden-xs">
+	<div class="category-list-container hidden-sm hidden-xs align-self-center">
 		<!-- IMPORT partials/category-selector.tpl -->
 	</div>
 	{{{ end }}}
