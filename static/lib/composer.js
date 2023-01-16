@@ -152,15 +152,6 @@ define('composer', [
 			});
 		});
 
-		// Construct a save_id
-		if (post.hasOwnProperty('cid')) {
-			post.save_id = ['composer', app.user.uid, 'cid', post.cid].join(':');
-		} else if (post.hasOwnProperty('tid')) {
-			post.save_id = ['composer', app.user.uid, 'tid', post.tid].join(':');
-		} else if (post.hasOwnProperty('pid')) {
-			post.save_id = ['composer', app.user.uid, 'pid', post.pid].join(':');
-		}
-
 		composer.posts[uuid] = post;
 		composer.load(uuid);
 	}
@@ -273,7 +264,7 @@ define('composer', [
 		});
 	};
 
-	composer.editPost = function (pid) {
+	composer.editPost = function (pid, text) {
 		socket.emit('plugins.composer.push', pid, function (err, threadData) {
 			if (err) {
 				return alerts.error(err);
@@ -281,6 +272,10 @@ define('composer', [
 			threadData.action = 'posts.edit';
 			threadData.pid = pid;
 			threadData.modified = false;
+			if (text) {
+				threadData.body = text;
+				threadData.modified = true;
+			}
 			push(threadData);
 		});
 	};

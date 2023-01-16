@@ -1,19 +1,23 @@
 'use strict';
 
 define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
-	var drafts = {};
+	const drafts = {};
 
 	drafts.init = function (postContainer, postData) {
-		var draftIconEl = postContainer.find('.draft-icon');
+		const draftIconEl = postContainer.find('.draft-icon');
 		function doSaveDraft() {
+			if (!postData.save_id) {
+				postData.save_id = utils.generateSaveId(app.user.uid);
+			}
 			// Post is modified, save to list of opened drafts
-			drafts.updateVisibility('available', postData.save_id, true);
-			drafts.updateVisibility('open', postData.save_id, true);
+			drafts.addToDraftList('available', postData.save_id);
+			drafts.addToDraftList('open', postData.save_id);
 			saveDraft(postContainer, draftIconEl, postData);
 		}
 
 		postContainer.on('keyup', 'textarea, input.handle, input.title', utils.debounce(doSaveDraft, 1000));
 		postContainer.on('click', 'input[type="checkbox"]', utils.debounce(doSaveDraft, 1000));
+		postContainer.on('click', '[component="category/list"] [data-cid]', utils.debounce(doSaveDraft, 1000));
 		postContainer.on('thumb.uploaded', doSaveDraft);
 
 		draftIconEl.on('animationend', function () {
@@ -21,19 +25,10 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		});
 
 		$(window).on('unload', function () {
-			// Update visibility on all open composers
-			var open = [];
-			try {
-				open = localStorage.getItem('drafts:open');
-				open = JSON.parse(open) || [];
-			} catch (e) {
-				console.warn('[composer/drafts] Could not read list of open/available drafts');
-				open = [];
-			}
+			// remove all drafts from the open list
+			const open = drafts.getList('open');
 			if (open.length) {
-				open.forEach(function (save_id) {
-					drafts.updateVisibility('open', save_id);
-				});
+				open.forEach(save_id => drafts.removeFromDraftList('open', save_id));
 			}
 		});
 
@@ -46,61 +41,69 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	}
 
 	drafts.get = function (save_id) {
-		var uid = save_id.split(':')[1];
-		var storage = getStorage(uid);
-		var draft = {
-			text: storage.getItem(save_id),
-			save_id: save_id,
-		};
-		['cid', 'title', 'tags', 'uuid', 'timestamp'].forEach(function (key) {
-			const value = storage.getItem(save_id + ':' + key);
-			if (value) {
-				draft[key] = value;
+		if (!save_id) {
+			return null;
+		}
+		const uid = save_id.split(':')[1];
+		const storage = getStorage(uid);
+		try {
+			const draftJson = storage.getItem(save_id);
+			const draft = JSON.parse(draftJson) || null;
+			if (!draft) {
+				throw new Error(`can't parse draft json for ${save_id}`);
 			}
-		});
-		if (!parseInt(uid, 10)) {
-			draft.handle = storage.getItem(save_id + ':handle');
+			draft.save_id = save_id;
+			if (draft.timestamp) {
+				draft.timestampISO = utils.toISOString(draft.timestamp);
+			}
+			$(window).trigger('action:composer.drafts.get', {
+				save_id: save_id,
+				draft: draft,
+				storage: storage,
+			});
+			return draft;
+		} catch (e) {
+			console.warn(`[composer/drafts] Could not get draft ${save_id}, removing`);
+			drafts.removeFromDraftList('available');
+			drafts.removeFromDraftList('open');
+			return null;
 		}
-		if (draft.timestamp) {
-			draft.timestampISO = utils.toISOString(draft.timestamp);
-		}
-
-		$(window).trigger('action:composer.drafts.get', {
-			save_id: save_id,
-			draft: draft,
-			storage: storage,
-		});
-		return draft;
 	};
 
 	function saveDraft(postContainer, draftIconEl, postData) {
 		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
 			const titleEl = postContainer.find('input.title');
 			const title = titleEl && titleEl.val();
-			var raw = postContainer.find('textarea').val();
-			var storage = getStorage(app.user.uid);
-
-			if (postData.hasOwnProperty('cid') && !postData.save_id.endsWith(':cid:' + postData.cid)) {
-				// A new cid was selected, the save_id needs updating
-				drafts.removeDraft(postData.save_id);	// First, delete the old draft
-				postData.save_id = postData.save_id.replace(/cid:\d+$/, 'cid:' + postData.cid);	// then create a new save_id
-			}
+			const raw = postContainer.find('textarea').val();
+			const storage = getStorage(app.user.uid);
 
 			if (raw.length || (title && title.length)) {
-				storage.setItem(postData.save_id, raw);
-				storage.setItem(`${postData.save_id}:uuid`, postContainer.attr('data-uuid'));
-				storage.setItem(`${postData.save_id}:timestamp`, Date.now());
+				const draftData = {
+					action: postData.action,
+					text: raw,
+					uuid: postContainer.attr('data-uuid'),
+					timestamp: Date.now(),
+				};
 
-				if (postData.hasOwnProperty('cid')) {
+				if (postData.action === 'topics.post') {
 					// New topic only
 					const tags = postContainer.find('input.tags').val();
-					storage.setItem(postData.save_id + ':tags', tags);
-					storage.setItem(postData.save_id + ':title', title);
+					draftData.tags = tags;
+					draftData.title = title;
+					draftData.cid = postData.cid;
+				} else if (postData.action === 'posts.reply') {
+					// new reply only
+					draftData.title = postData.title;
+					draftData.tid = postData.tid;
+				} else if (postData.action === 'posts.edit') {
+					draftData.pid = postData.pid;
 				}
 				if (!app.user.uid) {
-					var handle = postContainer.find('input.handle').val();
-					storage.setItem(postData.save_id + ':handle', handle);
+					draftData.handle = postContainer.find('input.handle').val();
 				}
+
+				// save all draft data into single item as json
+				storage.setItem(postData.save_id, JSON.stringify(draftData));
 
 				$(window).trigger('action:composer.drafts.save', {
 					storage: storage,
@@ -120,54 +123,64 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		}
 
 		// Remove save_id from list of open and available drafts
-		drafts.updateVisibility('available', save_id);
-		drafts.updateVisibility('open', save_id);
-		var uid = save_id.split(':')[1];
-		var storage = getStorage(uid);
-		const keys = Object.keys(storage).filter(key => key.startsWith(save_id));
-		keys.forEach(key => storage.removeItem(key));
+		drafts.removeFromDraftList('available', save_id);
+		drafts.removeFromDraftList('open', save_id);
+		const uid = save_id.split(':')[1];
+		const storage = getStorage(uid);
+		storage.removeItem(save_id);
+
 		$(window).trigger('action:composer.drafts.remove', {
 			storage: storage,
 			save_id: save_id,
 		});
 	};
 
-	drafts.updateVisibility = function (set, save_id, add) {
+	drafts.getList = function (set) {
+		try {
+			const draftIds = localStorage.getItem(`drafts:${set}`);
+			return JSON.parse(draftIds) || [];
+		} catch (e) {
+			console.warn('[composer/drafts] Could not read list of available drafts');
+			return [];
+		}
+	};
+
+	drafts.addToDraftList = function (set, save_id) {
 		if (!canSave(app.user.uid ? 'localStorage' : 'sessionStorage') || !save_id) {
 			return;
 		}
-		var open = [];
-		try {
-			open = localStorage.getItem('drafts:' + set);
-			open = open ? JSON.parse(open) : [];
-		} catch (e) {
-			console.warn('[composer/drafts] Could not read list of open drafts');
-			open = [];
+		const list = drafts.getList(set);
+		if (!list.includes(save_id)) {
+			list.push(save_id);
+			localStorage.setItem('drafts:' + set, JSON.stringify(list));
 		}
-		var idx = open.indexOf(save_id);
+	};
 
-		if (add && idx === -1) {
-			open.push(save_id);
-		} else if (!add && idx !== -1) {
-			open.splice(idx, 1);
-		}	// otherwise do nothing
-
-		localStorage.setItem('drafts:' + set, JSON.stringify(open));
+	drafts.removeFromDraftList = function (set, save_id) {
+		if (!canSave(app.user.uid ? 'localStorage' : 'sessionStorage') || !save_id) {
+			return;
+		}
+		const list = drafts.getList(set);
+		if (list.includes(save_id)) {
+			list.splice(list.indexOf(save_id), 1);
+			localStorage.setItem('drafts:' + set, JSON.stringify(list));
+		}
 	};
 
 	drafts.migrateGuest = function () {
 		// If any drafts are made while as guest, and user then logs in, assume control of those drafts
 		if (canSave('localStorage') && app.user.uid) {
-			var test = /^composer:\d+:\w+:\d+(:\w+)?$/;
-			var keys = Object.keys(sessionStorage).filter(function (key) {
+			// composer:<uid>:<timestamp>
+			const test = /^composer:\d+:\d$/;
+			const keys = Object.keys(sessionStorage).filter(function (key) {
 				return test.test(key);
 			});
-			var migrated = new Set([]);
-			var renamed = keys.map(function (key) {
-				var parts = key.split(':');
+			const migrated = new Set([]);
+			const renamed = keys.map(function (key) {
+				const parts = key.split(':');
 				parts[1] = app.user.uid;
 
-				migrated.add(parts.slice(0, 4).join(':'));
+				migrated.add(parts.join(':'));
 				return parts.join(':');
 			});
 
@@ -177,7 +190,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 			});
 
 			migrated.forEach(function (save_id) {
-				drafts.updateVisibility('available', save_id, 1);
+				drafts.addToDraftList('available', save_id);
 			});
 
 			return migrated;
@@ -205,14 +218,8 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	};
 
 	drafts.listAvailable = function () {
-		try {
-			let available = localStorage.getItem('drafts:available');
-			available = JSON.parse(available) || [];
-			return available.map(drafts.get);
-		} catch (e) {
-			console.warn('[composer/drafts] Could not read list of available drafts');
-		}
-		return [];
+		const available = drafts.getList('available');
+		return available.map(drafts.get);
 	};
 
 	drafts.getAvailableCount = function () {
@@ -228,40 +235,23 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	};
 
 	drafts.loadOpen = function () {
-		if (ajaxify.data.template.login || ajaxify.data.template.register) {
+		if (ajaxify.data.template.login || ajaxify.data.template.register || !config.hasOwnProperty('openDraftsOnPageLoad') || !config.openDraftsOnPageLoad) {
 			return;
 		}
 		// Load drafts if they were open
-		var available;
-		var open = [];
-		try {
-			available = localStorage.getItem('drafts:available');
-			open = localStorage.getItem('drafts:open');
-			available = JSON.parse(available) || [];
-			open = JSON.parse(open) || [];
-		} catch (e) {
-			console.warn('[composer/drafts] Could not read list of open/available drafts');
-			available = [];
-			open = [];
-		}
+		const available = drafts.getList('available');
+		const open = drafts.getList('open');
 
 		if (available.length) {
 			// Deconstruct each save_id and open up composer
 			available.forEach(function (save_id) {
-				if (!save_id) {
+				if (!save_id || open.includes(save_id)) {
 					return;
 				}
-				var draft = drafts.get(save_id);
-
-				// If draft is already open, do nothing
-				if (open.indexOf(save_id) !== -1) {
-					return;
-				}
-
+				const draft = drafts.get(save_id);
 				if (!draft || (!draft.text && !draft.title)) {
-					// Empty content, remove from list of open drafts
-					drafts.updateVisibility('available', save_id);
-					drafts.updateVisibility('open', save_id);
+					drafts.removeFromDraftList('available', save_id);
+					drafts.removeFromDraftList('open', save_id);
 					return;
 				}
 				openComposer(save_id, draft);
@@ -270,32 +260,30 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	};
 
 	function openComposer(save_id, draft) {
-		var saveObj = save_id.split(':');
-		var uid = saveObj[1];
-		var type = saveObj[2];
-		var id = saveObj[3];
+		const saveObj = save_id.split(':');
+		const uid = saveObj[1];
 		// Don't open other peoples' drafts
 		if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
 			return;
 		}
 		require(['composer'], function (composer) {
-			if (type === 'cid') {
+			if (draft.action === 'topics.post') {
 				composer.newTopic({
-					cid: id,
+					cid: draft.cid,
 					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
 					title: utils.escapeHTML(draft.title),
 					body: utils.escapeHTML(draft.text),
 					tags: String(draft.tags || '').split(','),
 				});
-			} else if (type === 'tid') {
-				api.get('/topics/' + id, {}, function (err, topicObj) {
+			} else if (draft.action === 'posts.reply') {
+				api.get('/topics/' + draft.tid, {}, function (err, topicObj) {
 					if (err) {
 						return alerts.error(err);
 					}
-					composer.newReply(id, undefined, topicObj.title, utils.escapeHTML(draft.text));
+					composer.newReply(draft.tid, undefined, topicObj.title, utils.escapeHTML(draft.text));
 				});
-			} else if (type === 'pid') {
-				composer.editPost(id);
+			} else if (draft.action === 'posts.edit') {
+				composer.editPost(draft.pid, draft.text);
 			}
 		});
 	}

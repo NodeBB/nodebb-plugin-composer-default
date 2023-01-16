@@ -3,7 +3,6 @@
 const url = require('url');
 
 const nconf = require.main.require('nconf');
-const winston = require.main.require('winston');
 const validator = require('validator');
 
 const plugins = require.main.require('./src/plugins');
@@ -14,6 +13,7 @@ const user = require.main.require('./src/user');
 const meta = require.main.require('./src/meta');
 const privileges = require.main.require('./src/privileges');
 const translator = require.main.require('./src/translator');
+const utils = require.main.require('./src/utils');
 const helpers = require.main.require('./src/controllers/helpers');
 const SocketPlugins = require.main.require('./src/socket.io/plugins');
 const socketMethods = require('./websockets');
@@ -164,7 +164,7 @@ plugin.filterComposerBuild = async function (hookData) {
 
 	const isEditing = !!req.query.pid;
 	const isGuestPost = postData && parseInt(postData.uid, 10) === 0;
-	const save_id = generateSaveId(req);
+	const save_id = utils.generateSaveId(req.uid);
 	const discardRoute = generateDiscardRoute(req, topicData);
 	const body = await generateBody(req, postData);
 
@@ -249,16 +249,6 @@ async function generateBody(req, postData) {
 		return validator.escape(String(req.query.body || req.query.content));
 	}
 	return postData ? postData.content : '';
-}
-
-function generateSaveId(req) {
-	if (req.query.cid) {
-		return ['composer', req.uid, 'cid', req.query.cid].join(':');
-	} else if (req.query.tid) {
-		return ['composer', req.uid, 'tid', req.query.tid].join(':');
-	} else if (req.query.pid) {
-		return ['composer', req.uid, 'pid', req.query.pid].join(':');
-	}
 }
 
 async function getPostData(req) {
