@@ -42,7 +42,7 @@ $(document).ready(function () {
 			require(['composer'], function (composer) {
 				composer.newReply({
 					tid: data.tid,
-					pid: data.pid,
+					toPid: data.pid,
 					title: data.topicName,
 					body: data.text,
 				});
