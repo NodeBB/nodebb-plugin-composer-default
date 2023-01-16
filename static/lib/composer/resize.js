@@ -11,6 +11,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	var $body = $('body');
 	var $window = $(window);
 	var $headerMenu = $('[component="navbar"]');
+	const content = document.getElementById('content');
 
 	var body = document.body;
 	var header = $headerMenu[0];
@@ -69,10 +70,10 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 			// Add some extra space at the bottom of the body so that
 			// the user can still scroll to the last post w/ composer open
 			var rect = elem.getBoundingClientRect();
-			body.style.paddingBottom = (rect.bottom - rect.top).toString() + 'px';
+			content.style.paddingBottom = (rect.bottom - rect.top).toString() + 'px';
 		} else {
 			postContainer.removeAttr('style');
-			body.style.paddingBottom = 0;
+			content.style.paddingBottom = 0;
 		}
 
 		postContainer.ratio = ratio;

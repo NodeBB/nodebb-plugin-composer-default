@@ -238,7 +238,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	};
 
 	drafts.loadOpen = function () {
-		if (ajaxify.data.template.login || ajaxify.data.template.register || !config.hasOwnProperty('openDraftsOnPageLoad') || !config.openDraftsOnPageLoad) {
+		if (ajaxify.data.template.login || ajaxify.data.template.register || (config.hasOwnProperty('openDraftsOnPageLoad') && !config.openDraftsOnPageLoad)) {
 			return;
 		}
 		// Load drafts if they were open
