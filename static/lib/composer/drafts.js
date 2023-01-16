@@ -2,7 +2,7 @@
 
 define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	const drafts = {};
-
+	const draftSaveDelay = 2000;
 	drafts.init = function (postContainer, postData) {
 		const draftIconEl = postContainer.find('.draft-icon');
 		function doSaveDraft() {
@@ -15,9 +15,10 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 			saveDraft(postContainer, draftIconEl, postData);
 		}
 
-		postContainer.on('keyup', 'textarea, input.handle, input.title', utils.debounce(doSaveDraft, 1000));
-		postContainer.on('click', 'input[type="checkbox"]', utils.debounce(doSaveDraft, 1000));
-		postContainer.on('click', '[component="category/list"] [data-cid]', utils.debounce(doSaveDraft, 1000));
+		postContainer.on('keyup', 'textarea, input.handle, input.title', utils.debounce(doSaveDraft, draftSaveDelay));
+		postContainer.on('click', 'input[type="checkbox"]', utils.debounce(doSaveDraft, draftSaveDelay));
+		postContainer.on('click', '[component="category/list"] [data-cid]', utils.debounce(doSaveDraft, draftSaveDelay));
+		postContainer.on('itemAdded', '.tags', utils.debounce(doSaveDraft, draftSaveDelay));
 		postContainer.on('thumb.uploaded', doSaveDraft);
 
 		draftIconEl.on('animationend', function () {
@@ -79,6 +80,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 
 			if (raw.length || (title && title.length)) {
 				const draftData = {
+					save_id: postData.save_id,
 					action: postData.action,
 					text: raw,
 					uuid: postContainer.attr('data-uuid'),
@@ -95,6 +97,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					// new reply only
 					draftData.title = postData.title;
 					draftData.tid = postData.tid;
+					draftData.toPid = postData.toPid;
 				} else if (postData.action === 'posts.edit') {
 					draftData.pid = postData.pid;
 				}
@@ -269,6 +272,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		require(['composer'], function (composer) {
 			if (draft.action === 'topics.post') {
 				composer.newTopic({
+					save_id: draft.save_id,
 					cid: draft.cid,
 					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
 					title: utils.escapeHTML(draft.title),
@@ -280,10 +284,21 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					if (err) {
 						return alerts.error(err);
 					}
-					composer.newReply(draft.tid, undefined, topicObj.title, utils.escapeHTML(draft.text));
+
+					composer.newReply({
+						save_id: draft.save_id,
+						tid: draft.tid,
+						toPid: draft.toPid,
+						title: topicObj.title,
+						body: utils.escapeHTML(draft.text),
+					});
 				});
 			} else if (draft.action === 'posts.edit') {
-				composer.editPost(draft.pid, draft.text);
+				composer.editPost({
+					save_id: draft.save_id,
+					pid: draft.pid,
+					body: utils.escapeHTML(draft.text),
+				});
 			}
 		});
 	}

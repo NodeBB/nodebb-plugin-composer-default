@@ -188,7 +188,8 @@ define('composer', [
 	};
 
 	composer.newTopic = async (data) => {
-		var pushData = {
+		let pushData = {
+			save_id: data.save_id,
 			action: 'topics.post',
 			cid: data.cid,
 			handle: data.handle,
@@ -207,76 +208,90 @@ define('composer', [
 		push(pushData);
 	};
 
-	composer.addQuote = function (tid, toPid, selectedPid, title, username, text, uuid) {
-		uuid = uuid || composer.active;
+	composer.addQuote = function (data) {
+		// tid, toPid, selectedPid, title, username, text, uuid
+		data.uuid = data.uuid || composer.active;
 
-		var escapedTitle = (title || '')
+		var escapedTitle = (data.title || '')
 			.replace(/([\\`*_{}[\]()#+\-.!])/g, '\\$1')
 			.replace(/\[/g, '&#91;')
 			.replace(/\]/g, '&#93;')
 			.replace(/%/g, '&#37;')
 			.replace(/,/g, '&#44;');
 
-		if (text) {
-			text = '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
+		if (data.body) {
+			data.body = '> ' + data.body.replace(/\n/g, '\n> ') + '\n\n';
 		}
-		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + (selectedPid || toPid) + ')';
-		if (uuid === undefined) {
-			if (title && (selectedPid || toPid)) {
-				composer.newReply(tid, toPid, title, '[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n' + text);
+		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + (data.selectedPid || data.toPid) + ')';
+		if (data.uuid === undefined) {
+			if (data.title && (data.selectedPid || data.toPid)) {
+				composer.newReply({
+					tid: data.tid,
+					toPid: data.toPid,
+					title: data.title,
+					body: '[[modules:composer.user_said_in, ' + data.username + ', ' + link + ']]\n' + data.body,
+				});
 			} else {
-				composer.newReply(tid, toPid, title, '[[modules:composer.user_said, ' + username + ']]\n' + text);
+				composer.newReply({
+					tid: data.tid,
+					toPid: data.toPid,
+					title: data.title,
+					body: '[[modules:composer.user_said, ' + data.username + ']]\n' + data.body,
+				});
 			}
 			return;
-		} else if (uuid !== composer.active) {
+		} else if (data.uuid !== composer.active) {
 			// If the composer is not currently active, activate it
-			composer.load(uuid);
+			composer.load(data.uuid);
 		}
 
-		var postContainer = $('.composer[data-uuid="' + uuid + '"]');
+		var postContainer = $('.composer[data-uuid="' + data.uuid + '"]');
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
-		if (title && (selectedPid || toPid)) {
-			translator.translate('[[modules:composer.user_said_in, ' + username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
+		if (data.title && (data.selectedPid || data.toPid)) {
+			translator.translate('[[modules:composer.user_said_in, ' + data.username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
-			translator.translate('[[modules:composer.user_said, ' + username + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user_said, ' + data.username + ']]\n', config.defaultLang, onTranslated);
 		}
 
 		function onTranslated(translated) {
-			composer.posts[uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + text;
-			bodyEl.val(composer.posts[uuid].body);
+			composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + data.body;
+			bodyEl.val(composer.posts[data.uuid].body);
 			focusElements(postContainer);
 			preview.render(postContainer);
 		}
 	};
 
-	composer.newReply = function (tid, toPid, title, text) {
-		translator.translate(text, config.defaultLang, function (translated) {
+	composer.newReply = function (data) {
+		translator.translate(data.body, config.defaultLang, function (translated) {
 			push({
+				save_id: data.save_id,
 				action: 'posts.reply',
-				tid: tid,
-				toPid: toPid,
-				title: title,
+				tid: data.tid,
+				toPid: data.toPid,
+				title: data.title,
 				body: translated,
-				modified: !!((title && title.length) || (translated && translated.length)),
+				modified: !!((data.title && data.title.length) || (translated && translated.length)),
 				isMain: false,
 			});
 		});
 	};
 
-	composer.editPost = function (pid, text) {
-		socket.emit('plugins.composer.push', pid, function (err, threadData) {
+	composer.editPost = function (data) {
+		// pid, text
+		socket.emit('plugins.composer.push', data.pid, function (err, postData) {
 			if (err) {
 				return alerts.error(err);
 			}
-			threadData.action = 'posts.edit';
-			threadData.pid = pid;
-			threadData.modified = false;
-			if (text) {
-				threadData.body = text;
-				threadData.modified = true;
+			postData.save_id = data.save_id;
+			postData.action = 'posts.edit';
+			postData.pid = data.pid;
+			postData.modified = false;
+			if (data.body) {
+				postData.body = data.body;
+				postData.modified = true;
 			}
-			push(threadData);
+			push(postData);
 		});
 	};
 

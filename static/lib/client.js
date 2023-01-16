@@ -30,7 +30,7 @@ $(document).ready(function () {
 	$(window).on('action:composer.post.edit', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
-				composer.editPost(data.pid);
+				composer.editPost({ pid: data.pid });
 			});
 		} else {
 			ajaxify.go('compose?pid=' + data.pid);
@@ -40,7 +40,12 @@ $(document).ready(function () {
 	$(window).on('action:composer.post.new', function (ev, data) {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
-				composer.newReply(data.tid, data.pid, data.topicName, data.text);
+				composer.newReply({
+					tid: data.tid,
+					pid: data.pid,
+					title: data.topicName,
+					body: data.text,
+				});
 			});
 		} else {
 			ajaxify.go(
@@ -56,7 +61,15 @@ $(document).ready(function () {
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
 				var topicUUID = composer.findByTid(data.tid);
-				composer.addQuote(data.tid, data.pid, data.selectedPid, data.topicName, data.username, data.text, topicUUID);
+				composer.addQuote({
+					tid: data.tid,
+					toPid: data.pid,
+					selectedPid: data.selectedPid,
+					title: data.topicName,
+					username: data.username,
+					body: data.text,
+					uuid: topicUUID,
+				});
 			});
 		} else {
 			ajaxify.go('compose?tid=' + data.tid + '&toPid=' + data.pid + '&quoted=1&username=' + data.username);
