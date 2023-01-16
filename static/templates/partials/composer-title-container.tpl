@@ -5,17 +5,17 @@
 	</div>
 	{{{ end }}}
 
-	<!-- IF showHandleInput -->
+	{{{ if showHandleInput }}}
 	<div data-component="composer/handle">
 		<input class="handle form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
 	</div>
-	<!-- ENDIF showHandleInput -->
+	{{{ end }}}
 	<div data-component="composer/title" class="position-relative">
-		<!-- IF isTopicOrMain -->
+		{{{ if isTopicOrMain }}}
 		<input class="title form-control h-100" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
-		<!-- ELSE -->
-		<span class="title h-100">[[topic:composer.replying_to, "{topicTitle}"]]</span>
-		<!-- ENDIF isTopicOrMain -->
+		{{{ else }}}
+		<span class="title h-100">{{{ if isEditing }}}[[topic:composer.editing]]{{{ else }}}[[topic:composer.replying_to, "{topicTitle}"]]{{{ end }}}</span>
+		{{{ end }}}
 		<div id="quick-search-container" class="quick-search-container mt-2 dropdown-menu d-block p-2 hidden">
 			<div class="text-center loading-indicator"><i class="fa fa-spinner fa-spin"></i></div>
 			<div class="quick-search-results-container"></div>
