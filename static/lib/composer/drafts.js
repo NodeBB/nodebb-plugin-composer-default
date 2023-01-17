@@ -2,7 +2,7 @@
 
 define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	const drafts = {};
-	const draftSaveDelay = 2000;
+	const draftSaveDelay = 1000;
 	drafts.init = function (postContainer, postData) {
 		const draftIconEl = postContainer.find('.draft-icon');
 		function doSaveDraft() {
