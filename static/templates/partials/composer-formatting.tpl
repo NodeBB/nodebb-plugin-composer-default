@@ -1,5 +1,5 @@
-<div class="d-flex justify-content-between align-items-center formatting-bar">
-	<ul class="list-unstyled mb-0 d-flex formatting-group gap-2">
+<div class="d-flex justify-content-between gap-2 align-items-center formatting-bar">
+	<ul class="list-unstyled mb-0 d-flex formatting-group gap-2 overflow-auto">
 		<!-- BEGIN formatting -->
 			<!-- IF formatting.spacer -->
 			<li class="small spacer"></li>

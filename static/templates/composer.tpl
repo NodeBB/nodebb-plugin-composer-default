@@ -2,7 +2,7 @@
 
 	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<!-- mobile header -->
-		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap gap-1">
 			<div class="btn-group">
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
@@ -15,7 +15,7 @@
 			<!-- IF !isTopicOrMain -->
 			<h4 class="title text-bg-primary">[[topic:composer.replying_to, "{topicTitle}"]]</h4>
 			<!-- ENDIF !isTopicOrMain -->
-			<div class="display-scheduler float-end{{{ if !canSchedule }}} hidden{{{ end }}}">
+			<div class="display-scheduler p-2 {{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<div class="btn-group">
