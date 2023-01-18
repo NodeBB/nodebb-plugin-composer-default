@@ -22,7 +22,7 @@
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
-		<div class="pt-2 px-2 d-flex flex-column gap-1 h-100">
+		<div class="p-2 d-flex flex-column gap-1 h-100">
 			<!-- IMPORT partials/composer-title-container.tpl -->
 
 			<!-- IMPORT partials/composer-formatting.tpl -->
