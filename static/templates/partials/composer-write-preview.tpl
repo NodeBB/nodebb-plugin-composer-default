@@ -1,16 +1,9 @@
-<div class="write-preview-container">
-	<div class="write-container me-1">
-		<div class="help-text text-black-50 ">
-			<span class="help hidden">[[modules:composer.compose]] <i class="fa fa-question-circle"></i></span>
-			<span class="toggle-preview hide">[[modules:composer.show_preview]]</span>
-		</div>
+<div class="write-preview-container d-flex gap-2 flex-grow-1">
+	<div class="write-container d-flex d-md-flex w-50">
 		<div class="float-end draft-icon hidden-md hidden-lg"></div>
-		<textarea class="write" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
+		<textarea class="write shadow-none rounded-1 w-100 form-control" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
 	</div>
-	<div class="hidden-sm hidden-xs preview-container ms-1">
-		<div class="help-text text-black-50">
-			<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
-		</div>
-		<div class="preview card card-body bg-light"></div>
+	<div class="preview-container d-none d-md-flex w-50">
+		<div class="preview card card-body bg-light rounded-1"></div>
 	</div>
 </div>

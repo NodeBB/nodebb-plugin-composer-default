@@ -181,6 +181,10 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 
 		$resizer
 			.on('mousedown', function (e) {
+				if (e.button !== 0) {
+					return;
+				}
+
 				e.preventDefault();
 				resizeStart(e);
 			})

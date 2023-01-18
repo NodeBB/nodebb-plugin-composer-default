@@ -33,7 +33,7 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 		submitBtn.defaultText = submitBtn.el.lastChild.textContent;
 		submitBtn.activeText = submitBtn.el.getAttribute('data-text-variant');
 
-		displayBtns.forEach(el => el.addEventListener('click', openModal));
+		displayBtnCons.forEach(el => el.addEventListener('click', openModal));
 	};
 
 	scheduler.getTimestamp = function () {
