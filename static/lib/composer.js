@@ -291,6 +291,10 @@ define('composer', [
 				postData.body = data.body;
 				postData.modified = true;
 			}
+			if (data.title) {
+				postData.title = data.title;
+				postData.modified = true;
+			}
 			push(postData);
 		});
 	};
@@ -576,7 +580,10 @@ define('composer', [
 		socket.emit('plugins.composer.renderHelp', function (err, html) {
 			if (!err && html && html.length > 0) {
 				helpBtn.on('click', function () {
-					bootbox.alert(html);
+					bootbox.dialog({
+						size: 'large',
+						message: html,
+					});
 				});
 			}
 		});

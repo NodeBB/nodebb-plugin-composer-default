@@ -74,7 +74,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	function saveDraft(postContainer, draftIconEl, postData) {
 		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
 			const titleEl = postContainer.find('input.title');
-			const title = titleEl && titleEl.val();
+			const title = titleEl && titleEl.length && titleEl.val();
 			const raw = postContainer.find('textarea').val();
 			const storage = getStorage(app.user.uid);
 
@@ -100,6 +100,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					draftData.toPid = postData.toPid;
 				} else if (postData.action === 'posts.edit') {
 					draftData.pid = postData.pid;
+					draftData.title = title;
 				}
 				if (!app.user.uid) {
 					draftData.handle = postContainer.find('input.handle').val();
@@ -297,6 +298,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 				composer.editPost({
 					save_id: draft.save_id,
 					pid: draft.pid,
+					title: draft.title ? utils.escapeHTML(draft.title) : undefined,
 					body: utils.escapeHTML(draft.text),
 				});
 			}
