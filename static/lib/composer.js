@@ -417,7 +417,7 @@ define('composer', [
 
 		// Hide "zen mode" if fullscreen API is not enabled/available (ahem, iOS...)
 		if (!screenfull.isEnabled) {
-			$('[data-format="zen"]').addClass('hidden');
+			$('[data-format="zen"]').parent().addClass('hidden');
 		}
 
 		hooks.fire('action:composer.enhanced', { postContainer, postData, draft });

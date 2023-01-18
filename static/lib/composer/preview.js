@@ -48,6 +48,8 @@ define('composer/preview', ['hooks'], function (hooks) {
 
 		const isMobile = ['xs', 'sm'].includes(utils.findBootstrapEnvironment());
 		const toggler = postContainer.querySelector('.formatting-bar [data-action="preview"]');
+		const showText = toggler.querySelector('.show-text');
+		const hideText = toggler.querySelector('.hide-text');
 		let show = localStorage.getItem('composer:previewToggled') || (preview.env === 'xs' || preview.env === 'sm');
 		const previewContainer = postContainer.querySelector('.preview-container');
 		const writeContainer = postContainer.querySelector('.write-container');
@@ -64,11 +66,6 @@ define('composer/preview', ['hooks'], function (hooks) {
 				previewContainer.classList.toggle('d-flex', show);
 				writeContainer.classList.toggle('d-flex', !show);
 				writeContainer.classList.toggle('d-none', show);
-
-				// Render preview once on mobile
-				if (show) {
-					preview.render($postContainer);
-				}
 			} else {
 				previewContainer.classList.toggle('hide', !show);
 				writeContainer.classList.toggle('w-50', show);
@@ -76,7 +73,11 @@ define('composer/preview', ['hooks'], function (hooks) {
 
 				localStorage[show ? 'removeItem' : 'setItem']('composer:previewToggled', true);
 			}
-
+			showText.classList.toggle('hide', show);
+			hideText.classList.toggle('hide', !show);
+			if (show) {
+				preview.render($postContainer);
+			}
 			preview.matchScroll($postContainer);
 		}
 		preview.toggle = togglePreview;

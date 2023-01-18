@@ -1,6 +1,6 @@
 <div component="composer" class="composer pt-2 px-2<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
-	<div class="composer-container d-flex flex-column h-100">
+	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<!-- mobile header -->
 		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap">
 			<div class="btn-group">
