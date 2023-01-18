@@ -33,6 +33,8 @@
 			<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>
 		</form>
 	</ul>
+
+	<div class="draft-icon mx-2 hidden-xs hidden-sm"></div>
 	<button class="btn btn-sm btn-link text-body fw-semibold" data-action="preview">
 		<i class="fa fa-eye"></i>
 		<span class="d-none d-md-inline">[[modules:composer.show_preview]]</span>

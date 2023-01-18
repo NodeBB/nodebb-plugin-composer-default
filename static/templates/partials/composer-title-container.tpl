@@ -22,8 +22,6 @@
 		</div>
 	</div>
 
-	<div class="draft-icon hidden-xs hidden-sm"></div>
-
 	<div class="d-flex action-bar hidden-sm hidden-xs align-items-center">
 		<button class="btn btn-sm btn-link text-body fw-semibold" data-action="hide" tabindex="-1"><i class="fa fa-angle-down"></i> [[topic:composer.hide]]</button>
 		<button class="btn btn-sm btn-link composer-discard text-body fw-semibold" data-action="discard" tabindex="-1"><i class="fa fa-trash"></i> [[topic:composer.discard]]</button>

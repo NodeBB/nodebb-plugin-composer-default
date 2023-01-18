@@ -231,21 +231,10 @@
 	.draft-icon {
 		font-family: 'FontAwesome';
 		color: $success;
-		margin: 0 1em;
 		opacity: 0;
 
 		&::before {
 			content: fa-content($fa-var-save);
-			position: relative;
-			top: 25%;
-		}
-
-		&::after {
-			content: fa-content($fa-var-check);
-			position: relative;
-			top: 18px;
-			font-size: 0.7em;
-			left: -15%;
 		}
 
 		&.active {
