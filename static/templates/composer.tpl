@@ -1,4 +1,4 @@
-<div component="composer" class="composer pt-2 px-2<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
+<div component="composer" class="composer <!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
 
 	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<!-- mobile header -->
@@ -22,23 +22,24 @@
 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
 			</div>
 		</nav>
+		<div class="pt-2 px-2 d-flex flex-column gap-1 h-100">
+			<!-- IMPORT partials/composer-title-container.tpl -->
 
-		<!-- IMPORT partials/composer-title-container.tpl -->
+			<!-- IMPORT partials/composer-formatting.tpl -->
 
-		<!-- IMPORT partials/composer-formatting.tpl -->
+			<!-- IMPORT partials/composer-write-preview.tpl -->
 
-		<!-- IMPORT partials/composer-write-preview.tpl -->
+			<!-- IF isTopicOrMain -->
+			<!-- IMPORT partials/composer-tags.tpl -->
+			<!-- ENDIF isTopicOrMain -->
 
-		<!-- IF isTopicOrMain -->
-		<!-- IMPORT partials/composer-tags.tpl -->
-		<!-- ENDIF isTopicOrMain -->
+			<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
 
-		<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
-
-		<div class="resizer position-absolute w-100 bottom-100 pe-3 border-bottom">
-			<div class="trigger text-center">
-				<div class="handle d-inline-block px-2 py-1 border bg-body">
-					<i class="fa fa-fw fa-up-down"></i>
+			<div class="resizer position-absolute w-100 bottom-100 pe-3 border-bottom">
+				<div class="trigger text-center">
+					<div class="handle d-inline-block px-2 py-1 border bg-body">
+						<i class="fa fa-fw fa-up-down"></i>
+					</div>
 				</div>
 			</div>
 		</div>

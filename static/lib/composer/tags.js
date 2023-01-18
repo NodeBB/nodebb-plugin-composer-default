@@ -185,7 +185,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 			input.removeAttr('readonly');
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
-
+		postContainer.find('.tags-container').toggleClass('haswhitelist', !!(data.tagWhitelist && data.tagWhitelist.length));
 		postContainer.find('.tags-container').toggleClass('hidden', (
 			data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) ||
 			(maxTags === 0 && !postData && !postData.tags && !postData.tags.length));
