@@ -5,7 +5,14 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 	const draftSaveDelay = 1000;
 	drafts.init = function (postContainer, postData) {
 		const draftIconEl = postContainer.find('.draft-icon');
+		const uuid = postContainer.attr('data-uuid');
 		function doSaveDraft() {
+			// check if composer is still around,
+			// it might have been gone by the time this timeout triggers
+			if (!$(`[component="composer"][data-uuid="${uuid}"]`).length) {
+				return;
+			}
+
 			if (!postData.save_id) {
 				postData.save_id = utils.generateSaveId(app.user.uid);
 			}
