@@ -1,7 +1,7 @@
 <div class="title-container align-items-center gap-2 d-flex">
 	{{{ if isTopic }}}
 	<div class="category-list-container hidden-sm hidden-xs align-self-center">
-		<!-- IMPORT partials/category-selector.tpl -->
+		<!-- IMPORT partials/category/selector-dropdown-left.tpl -->
 	</div>
 	{{{ end }}}
 
