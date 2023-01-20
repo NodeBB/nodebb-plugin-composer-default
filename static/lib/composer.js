@@ -271,7 +271,7 @@ define('composer', [
 				toPid: data.toPid,
 				title: data.title,
 				body: translated,
-				modified: !!((data.title && data.title.length) || (translated && translated.length)),
+				modified: !!(translated && translated.length),
 				isMain: false,
 			});
 		});

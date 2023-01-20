@@ -74,8 +74,11 @@ define('composer/preview', ['hooks'], function (hooks) {
 				previewContainer.classList.toggle('hide', !show);
 				writeContainer.classList.toggle('w-50', show);
 				writeContainer.classList.toggle('w-100', !show);
-
-				localStorage[show ? 'removeItem' : 'setItem']('composer:previewToggled', true);
+				if (show) {
+					localStorage.setItem('composer:previewToggled', true);
+				} else {
+					localStorage.removeItem('composer:previewToggled');
+				}
 			}
 			showText.classList.toggle('hide', show);
 			hideText.classList.toggle('hide', !show);
