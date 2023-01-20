@@ -32,7 +32,7 @@
 				<i class="fa fa-caret-down"></i>
 				<span class="sr-only">[[topic:composer.additional-options]]</span>
 			</button>
-			<ul class="dropdown-menu">
+			<ul class="dropdown-menu dropdown-menu-end">
 				<li><a class="dropdown-item display-scheduler ">Post Later</a></li>
 				{{{ each submitOptions }}}
 				<li><a class="dropdown-item" href="#" data-action="{./action}">{./text}</a></li>
