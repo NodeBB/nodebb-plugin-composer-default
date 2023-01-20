@@ -146,7 +146,7 @@
 	}
 
 	.resizer {
-		background: linear-gradient(transparent, #fff);
+		background: linear-gradient(transparent, $body-bg);
 		margin-left: calc($spacer * -0.5);
 		padding-left: $spacer;
 
