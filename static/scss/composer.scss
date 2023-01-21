@@ -216,6 +216,8 @@
 			background: transparent;
 
 			.trigger {
+				height: $spacer * 0.5;
+
 				.handle {
 					border-top-left-radius: 0%;
 					border-top-right-radius: 0%;
