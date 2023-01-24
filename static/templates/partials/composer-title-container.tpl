@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="d-none d-md-flex action-bar gap-1 align-items-center">
-		<button class="btn btn-sm btn-link text-body fw-semibold" data-action="hide" tabindex="-1"><i class="fa fa-angle-down"></i> [[topic:composer.hide]]</button>
+		<button class="btn btn-sm btn-link text-body fw-semibold composer-minimize" data-action="hide" tabindex="-1"><i class="fa fa-angle-down"></i> [[topic:composer.hide]]</button>
 		<button class="btn btn-sm btn-link composer-discard text-body fw-semibold" data-action="discard" tabindex="-1"><i class="fa fa-trash"></i> [[topic:composer.discard]]</button>
 		<div class="btn-group btn-group-sm">
 			<button class="btn btn-primary composer-submit fw-bold" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
