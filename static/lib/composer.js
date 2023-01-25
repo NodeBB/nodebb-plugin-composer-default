@@ -799,7 +799,7 @@ define('composer', [
 	}
 
 	function onHide() {
-		$('body').css({ paddingBottom: 0 });
+		$('#content').css({ paddingBottom: 0 });
 		$('html').removeClass('composing');
 		app.toggleNavbar(true);
 	}

@@ -13,7 +13,6 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	var $headerMenu = $('[component="navbar"]');
 	const content = document.getElementById('content');
 
-	var body = document.body;
 	var header = $headerMenu[0];
 
 	function getSavedRatio() {
