@@ -1,17 +1,16 @@
-<div component="composer" class="composer<!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->"<!-- IF !disabled --> style="visibility: inherit;"<!-- ENDIF !disabled -->>
-
+<div component="composer" class="composer{{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}"{{{ if !disabled }}} style="visibility: inherit;"{{{ end }}}>
 	<div class="composer-container">
 		<form id="compose-form" method="post">
-			<!-- IF pid -->
+			{{{ if pid }}}
 			<input type="hidden" name="pid" value="{pid}" />
 			<input type="hidden" name="thumb" value="{thumb}" />
-			<!-- ENDIF pid -->
-			<!-- IF tid -->
+			{{{ end }}}
+			{{{ if tid }}}
 			<input type="hidden" name="tid" value="{tid}" />
-			<!-- ENDIF tid -->
-			<!-- IF cid -->
+			{{{ end }}}
+			{{{ if cid }}}
 			<input type="hidden" name="cid" value="{cid}" />
-			<!-- ENDIF cid -->
+			{{{ end }}}
 			<input type="hidden" name="_csrf" value="{config.csrf_token}" />
 		</form>
 
@@ -21,8 +20,8 @@
 
 		<!-- IMPORT partials/composer-write-preview.tpl -->
 
-		<!-- IF isTopicOrMain -->
+		{{{ if isTopicOrMain }}}
 		<!-- IMPORT partials/composer-tags.tpl -->
-		<!-- ENDIF isTopicOrMain -->
+		{{{ end }}}
 	</div>
 </div>

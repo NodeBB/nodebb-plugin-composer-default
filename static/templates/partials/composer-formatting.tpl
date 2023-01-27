@@ -1,33 +1,33 @@
 <div class="d-flex justify-content-between gap-2 align-items-center formatting-bar">
 	<ul class="list-unstyled mb-0 d-flex formatting-group gap-2 overflow-auto">
-		<!-- BEGIN formatting -->
-			<!-- IF formatting.spacer -->
+		{{{ each formatting }}}
+			{{{ if ./spacer }}}
 			<li class="small spacer"></li>
-			<!-- ELSE -->
+			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			<li class="small">
-				<a href="#" class="btn btn-sm btn-link text-reset" tabindex="-1" data-format="{formatting.name}" title="{formatting.title}">
-					<i class="{formatting.className}"></i>
+				<a href="#" class="btn btn-sm btn-link text-reset" tabindex="-1" data-format="{./name}" title="{./title}">
+					<i class="{./className}"></i>
 				</a>
 			</li>
 			{{{ end }}}
-			<!-- ENDIF formatting.spacer -->
-		<!-- END formatting -->
+			{{{ end }}}
+		{{{ end }}}
 
-		<!-- IF privileges.upload:post:image -->
+		{{{ if privileges.upload:post:image }}}
 		<li class="img-upload-btn small">
 			<a href="#" class="btn btn-sm btn-link text-reset" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
 				<i class="fa fa-file-image-o"></i>
 			</a>
 		</li>
-		<!-- ENDIF privileges.upload:post:image -->
-		<!-- IF privileges.upload:post:file -->
+		{{{ end }}}
+		{{{ if privileges.upload:post:file }}}
 		<li class="file-upload-btn small">
 			<a href="#" class="btn btn-sm btn-link text-reset" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
 				<i class="fa fa-file-o"></i>
 			</a>
 		</li>
-		<!-- ENDIF privileges.upload:post:file -->
+		{{{ end }}}
 
 		<form id="fileForm" method="post" enctype="multipart/form-data">
 			<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>

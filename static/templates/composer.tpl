@@ -1,5 +1,4 @@
-<div component="composer" class="composer <!-- IF resizable --> resizable<!-- ENDIF resizable --><!-- IF !isTopicOrMain --> reply<!-- ENDIF !isTopicOrMain -->">
-
+<div component="composer" class="composer {{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}">
 	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<!-- mobile header -->
 		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap gap-1">
@@ -7,14 +6,14 @@
 				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
 				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
 			</div>
-			<!-- IF isTopic -->
+			{{{ if isTopic }}}
 			<div class="category-name-container">
 				<span class="category-name"></span> <i class="fa fa-sort"></i>
 			</div>
-			<!-- ENDIF isTopic -->
-			<!-- IF !isTopicOrMain -->
+			{{{ end }}}
+			{{{ if !isTopicOrMain }}}
 			<h4 class="title text-bg-primary">[[topic:composer.replying_to, "{topicTitle}"]]</h4>
-			<!-- ENDIF !isTopicOrMain -->
+			{{{ end }}}
 			<div class="display-scheduler p-2 {{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
 			</div>
@@ -29,9 +28,9 @@
 
 			<!-- IMPORT partials/composer-write-preview.tpl -->
 
-			<!-- IF isTopicOrMain -->
+			{{{ if isTopicOrMain }}}
 			<!-- IMPORT partials/composer-tags.tpl -->
-			<!-- ENDIF isTopicOrMain -->
+			{{{ end }}}
 
 			<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
 
