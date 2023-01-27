@@ -576,14 +576,13 @@ define('composer', [
 	}
 
 	function handleHelp(postContainer) {
-		var helpBtn = postContainer.find('[data-action="help"]');
-		socket.emit('plugins.composer.renderHelp', function (err, html) {
-			if (!err && html && html.length > 0) {
-				helpBtn.on('click', function () {
-					bootbox.dialog({
-						size: 'large',
-						message: html,
-					});
+		const helpBtn = postContainer.find('[data-action="help"]');
+		helpBtn.on('click', async function () {
+			const html = await socket.emit('plugins.composer.renderHelp');
+			if (html && html.length > 0) {
+				bootbox.dialog({
+					size: 'large',
+					message: html,
 				});
 			}
 		});
