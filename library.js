@@ -120,17 +120,12 @@ plugin.filterComposerBuild = async function (hookData) {
 	const { res } = hookData;
 
 	if (req.query.p) {
-		if (!res.locals.isAPI) {
-			let a;
-			try {
-				a = url.parse(req.query.p, true, true);
-			} catch (e) {
-				return helpers.redirect(res, '/');
-			}
+		try {
+			const a = url.parse(req.query.p, true, true);
 			return helpers.redirect(res, `/${(a.path || '').replace(/^\/*/, '')}`);
+		} catch (e) {
+			return helpers.redirect(res, '/');
 		}
-		res.render('', {});
-		return;
 	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
 		return helpers.redirect(res, '/');
 	}
