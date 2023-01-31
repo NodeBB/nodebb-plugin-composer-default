@@ -35,12 +35,12 @@
 	</ul>
 	<div class="d-flex align-items-center gap-1">
 		<div class="draft-icon m-2 hidden-xs hidden-sm"></div>
-		<button class="btn btn-sm btn-link py-2 text-body fw-semibold" data-action="preview">
+		<button class="btn btn-sm btn-link py-2 text-body fw-semibold text-nowrap" data-action="preview">
 			<i class="fa fa-eye"></i>
 			<span class="d-none d-md-inline show-text">[[modules:composer.show_preview]]</span>
 			<span class="d-none d-md-inline hide-text">[[modules:composer.hide_preview]]</span>
 		</button>
-		<button class="btn btn-sm btn-link py-2 text-body fw-semibold" data-action="help">
+		<button class="btn btn-sm btn-link py-2 text-body fw-semibold text-nowrap" data-action="help">
 			<i class="fa fa-question"></i>
 			<span class="d-none d-md-inline">[[modules:composer.help]]</span>
 		</button>

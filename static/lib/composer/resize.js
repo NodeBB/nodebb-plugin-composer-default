@@ -6,7 +6,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	var oldRatio = 0;
 	var minimumRatio = 0.3;
 	var snapMargin = 0.05;
-	var mediumMin = 992;
+	var smallMin = 768;
 
 	var $body = $('body');
 	var $window = $(window);
@@ -59,7 +59,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 		var minHeight = parseInt(style.getPropertyValue('min-height'), 10);
 		var adjustedMinimum = Math.max(minHeight / window.innerHeight, minimumRatio);
 
-		if (bounds.width >= mediumMin) {
+		if (bounds.width >= smallMin) {
 			const boundedDifference = (bounds.height - bounds.boundedHeight) / bounds.height;
 			ratio = Math.min(Math.max(ratio, adjustedMinimum + boundedDifference), 1);
 

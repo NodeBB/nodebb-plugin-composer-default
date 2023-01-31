@@ -312,7 +312,7 @@
 	}
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(sm) {
 	html.composing {
 		.composer {
 			left: 15%;
@@ -321,7 +321,7 @@
 	}
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(sm) {
 	html.composing {
 		.composer {
 			height: 100%;
@@ -348,7 +348,7 @@
 	}
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(sm) {
 	@import './medium';
 }
 
