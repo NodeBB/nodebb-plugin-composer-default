@@ -138,9 +138,10 @@
 				padding: 4px 6px;
 			}
 
-			.label {
-				color: white;
-				font-size: 13px;
+			.ui-autocomplete {
+				max-height: 350px;
+				overflow-x: hidden;
+				overflow-y: auto;
 			}
 		}
 	}
