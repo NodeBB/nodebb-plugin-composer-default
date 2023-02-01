@@ -602,6 +602,9 @@ define('composer', [
 				inputEl: postContainer.find('input.title'),
 				resultEl: postContainer.find('.quick-search-container'),
 			},
+			searchOptions: {
+				composer: 1,
+			},
 			hideOnNoMatches: true,
 			hideDuringSearch: true,
 		});
