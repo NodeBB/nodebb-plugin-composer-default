@@ -603,6 +603,7 @@ define('composer', [
 				resultEl: postContainer.find('.quick-search-container'),
 			},
 			hideOnNoMatches: true,
+			hideDuringSearch: true,
 		});
 	}
 
