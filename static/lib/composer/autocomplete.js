@@ -71,12 +71,14 @@ define('composer/autocomplete', [
 			return;
 		}
 		var editor;
-		if (targetEl.nodeName === 'TEXTAREA') {
+		if (targetEl.nodeName === 'TEXTAREA' || targetEl.nodeName === 'INPUT') {
 			editor = new TextareaEditor(targetEl);
 		} else if (targetEl.nodeName === 'DIV' && targetEl.getAttribute('contenteditable') === 'true') {
 			editor = new ContenteditableEditor(targetEl);
 		}
-
+		if (!editor) {
+			throw new Error('unknown target element type');
+		}
 		// yuku-t/textcomplete inherits directionality from target element itself
 		targetEl.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
 
