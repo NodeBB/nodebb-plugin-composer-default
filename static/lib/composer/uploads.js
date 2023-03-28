@@ -142,7 +142,7 @@ define('composer/uploads', [
 				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
 
-			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
+			text = insertText(text, textarea.getCursorPosition() + text.length , (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
 		}
 		if (uploadForm.length) {
 			postContainer.find('[data-action="post"]').prop('disabled', true);
