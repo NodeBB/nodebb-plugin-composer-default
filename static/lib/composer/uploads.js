@@ -142,6 +142,7 @@ define('composer/uploads', [
 				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
 
+			// add text.length fix Multiple img url inversion positive order
 			text = insertText(text, textarea.getCursorPosition() + text.length , (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
 		}
 		if (uploadForm.length) {
