@@ -867,7 +867,9 @@ define('composer', [
 
 				if (thumbs.length) {
 					const formatEl = postContainer.find('[data-format="thumbs"]');
-					formatEl.attr('data-count', thumbs.length);
+					formatEl.find('.badge')
+						.text(thumbs.length)
+						.toggleClass('hidden', !thumbs.length);
 				}
 			});
 		}

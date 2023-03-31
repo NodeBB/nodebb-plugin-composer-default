@@ -96,6 +96,7 @@ plugin.getFormattingOptions = async function () {
 			name: 'thumbs',
 			title: '[[topic:composer.thumb_title]]',
 			className: 'fa fa-address-card-o',
+			badge: true,
 			visibility: {
 				...defaultVisibility,
 				reply: false,

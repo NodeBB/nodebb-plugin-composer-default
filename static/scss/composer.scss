@@ -77,23 +77,6 @@
 				color: $gray-200;
 			}
 		}
-
-		.formatting-group {
-			li {
-				&[data-format="thumbs"][data-count]:after {
-					content: attr(data-count);
-					background: $info;
-					color: $white;
-					font-weight: 600;
-					position: absolute;
-					top: 5px;
-					left: 2.5em;
-					padding: 0px 5px;
-					border-radius: 5px;
-					font-size: 0.75em;
-				}
-			}
-		}
 	}
 
 	.tags-container {
