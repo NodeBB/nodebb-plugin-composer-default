@@ -130,7 +130,7 @@ define('composer/uploads', [
 		}
 
 		var filenameMapping = [];
-
+		let filesText = '';
 		for (i = 0; i < files.length; ++i) {
 			// The filename map has datetime and iterator prepended so that they can be properly tracked even if the
 			// filenames are identical.
@@ -141,9 +141,13 @@ define('composer/uploads', [
 				uploadForm[0].reset();
 				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
-
-			text = insertText(text, textarea.getCursorPosition(), (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ');
+			filesText += (isImage ? '!' : '') + '[' + filenameMapping[i] + '](' + uploadingText + ') ';
 		}
+
+		const cursorPosition = textarea.getCursorPosition();
+		const textLen = text.length;
+		text = insertText(text, cursorPosition, filesText);
+
 		if (uploadForm.length) {
 			postContainer.find('[data-action="post"]').prop('disabled', true);
 		}
@@ -225,7 +229,7 @@ define('composer/uploads', [
 						}
 					}
 					preview.render(postContainer);
-					textarea.focus();
+					textarea.selectRange(cursorPosition + textarea.val().length - textLen);
 					postContainer.find('[data-action="post"]').prop('disabled', false);
 					$(window).trigger('action:composer.upload', {
 						post_uuid: post_uuid,
