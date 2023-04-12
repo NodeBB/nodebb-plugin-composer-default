@@ -332,9 +332,6 @@ define('composer', [
 			postContainer.attr('data-uuid', post_uuid);
 		}
 
-		var bodyEl = postContainer.find('textarea');
-		var submitBtn = postContainer.find('.composer-submit');
-
 		categoryList.init(postContainer, composer.posts[post_uuid]);
 		scheduler.init(postContainer, composer.posts);
 
@@ -350,7 +347,7 @@ define('composer', [
 			composer.posts[post_uuid].modified = true;
 		});
 
-		submitBtn.on('click', function (e) {
+		postContainer.on('click', '.composer-submit', function (e) {
 			e.preventDefault();
 			e.stopPropagation();	// Other click events bring composer back to active state which is undesired on submit
 
@@ -360,7 +357,7 @@ define('composer', [
 
 		require(['mousetrap'], function (mousetrap) {
 			mousetrap(postContainer.get(0)).bind('mod+enter', function () {
-				submitBtn.attr('disabled', true);
+				postContainer.find('.composer-submit').attr('disabled', true);
 				post(post_uuid);
 			});
 		});
@@ -393,11 +390,12 @@ define('composer', [
 			composer.minimize(post_uuid);
 		});
 
-		bodyEl.on('input propertychange', utils.debounce(function () {
+		const textareaEl = postContainer.find('textarea');
+		textareaEl.on('input propertychange', utils.debounce(function () {
 			preview.render(postContainer);
 		}, 250));
 
-		bodyEl.on('scroll', function () {
+		textareaEl.on('scroll', function () {
 			preview.matchScroll(postContainer);
 		});
 

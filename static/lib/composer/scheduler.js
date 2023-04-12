@@ -10,6 +10,9 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 	};
 	let displayBtnCons = [];
 	let displayBtns;
+	let submitContainer;
+	let submitOptionsCon;
+
 	const submitBtn = {
 		el: null,
 		icon: null,
@@ -27,6 +30,8 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 
 		displayBtnCons = $postContainer[0].querySelectorAll('.display-scheduler');
 		displayBtns = $postContainer[0].querySelectorAll('.display-scheduler i');
+		submitContainer = $postContainer.find('[component="composer/submit/container"]');
+		submitOptionsCon = $postContainer.find('[component="composer/submit/options/container"]');
 
 		submitBtn.el = $postContainer[0].querySelector('.composer-submit:not(.btn-sm)');
 		submitBtn.icon = submitBtn.el.querySelector('i');
@@ -58,6 +63,9 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 	scheduler.onChangeCategory = function (categoryData) {
 		toggleDisplayButtons(categoryData.privileges['topics:schedule']);
 		toggleItems(false);
+		const optionsVisible = categoryData.privileges['topics:schedule'] || submitOptionsCon.attr('data-submit-options') > 0;
+		submitContainer.find('.composer-submit').toggleClass('rounded-1', !optionsVisible);
+		submitOptionsCon.toggleClass('hidden', !optionsVisible);
 		scheduler.reset();
 	};
 
