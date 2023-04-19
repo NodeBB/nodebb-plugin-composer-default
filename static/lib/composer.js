@@ -131,6 +131,10 @@ define('composer', [
 	}
 
 	function push(post) {
+		if (!post) {
+			return;
+		}
+
 		var uuid = utils.generateUUID();
 		var existingUUID = alreadyOpen(post);
 
