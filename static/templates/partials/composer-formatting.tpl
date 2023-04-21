@@ -43,10 +43,12 @@
 			<span class="d-none d-md-inline show-text">[[modules:composer.show_preview]]</span>
 			<span class="d-none d-md-inline hide-text">[[modules:composer.hide_preview]]</span>
 		</button>
+		{{{ if composer:showHelpTab }}}
 		<button class="btn btn-sm btn-link py-2 text-body fw-semibold text-nowrap" data-action="help">
 			<i class="fa fa-question"></i>
 			<span class="d-none d-md-inline">[[modules:composer.help]]</span>
 		</button>
+		{{{ end }}}
 	</div>
 </div>
 

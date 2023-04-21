@@ -464,6 +464,7 @@ define('composer', [
 			maximumPostLength: config.maximumPostLength,
 			minimumTagLength: config.minimumTagLength,
 			maximumTagLength: config.maximumTagLength,
+			'composer:showHelpTab': config['composer:showHelpTab'],
 			isTopic: isTopic,
 			isEditing: isEditing,
 			canSchedule: !!(isMain && privileges &&
