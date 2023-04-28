@@ -1,6 +1,11 @@
 'use strict';
 
-define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benchpress, bootbox, alerts) {
+define('composer/scheduler', ['benchpress', 'bootbox', 'alerts', 'translator'], function (
+	Benchpress,
+	bootbox,
+	alerts,
+	translator
+) {
 	const scheduler = {};
 	const state = {
 		timestamp: 0,
@@ -10,8 +15,15 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 	};
 	let displayBtnCons = [];
 	let displayBtns;
+	let cancelBtn;
 	let submitContainer;
 	let submitOptionsCon;
+
+	const dropdownDisplayBtn = {
+		el: null,
+		defaultText: '',
+		activeText: '',
+	};
 
 	const submitBtn = {
 		el: null,
@@ -28,8 +40,15 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 		state.timestamp = 0;
 		state.posts = posts;
 
+		translator.translateKeys(['[[topic:composer.post-later]]', '[[modules:composer.change-schedule-date]]']).then((translated) => {
+			dropdownDisplayBtn.defaultText = translated[0];
+			dropdownDisplayBtn.activeText = translated[1];
+		});
+
 		displayBtnCons = $postContainer[0].querySelectorAll('.display-scheduler');
 		displayBtns = $postContainer[0].querySelectorAll('.display-scheduler i');
+		dropdownDisplayBtn.el = $postContainer[0].querySelector('.dropdown-item.display-scheduler');
+		cancelBtn = $postContainer[0].querySelector('.dropdown-item.cancel-scheduling');
 		submitContainer = $postContainer.find('[component="composer/submit/container"]');
 		submitOptionsCon = $postContainer.find('[component="composer/submit/options/container"]');
 
@@ -38,6 +57,7 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 		submitBtn.defaultText = submitBtn.el.lastChild.textContent;
 		submitBtn.activeText = submitBtn.el.getAttribute('data-text-variant');
 
+		cancelBtn.addEventListener('click', cancelScheduling);
 		displayBtnCons.forEach(el => el.addEventListener('click', openModal));
 	};
 
@@ -164,6 +184,10 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts'], function (Benc
 		if (submitBtn.icon) {
 			submitBtn.icon.classList.toggle('fa-check', !active);
 			submitBtn.icon.classList.toggle('fa-clock-o', active);
+		}
+		if (dropdownDisplayBtn.el) {
+			dropdownDisplayBtn.el.textContent = active ? dropdownDisplayBtn.activeText : dropdownDisplayBtn.defaultText;
+			cancelBtn.classList.toggle('hidden', !active);
 		}
 		// Toggle submit button text
 		submitBtn.el.lastChild.textContent = active ? submitBtn.activeText : submitBtn.defaultText;
