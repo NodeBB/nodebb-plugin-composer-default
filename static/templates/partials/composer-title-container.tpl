@@ -34,6 +34,7 @@
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end p-1">
 					<li><a class="dropdown-item rounded-1 display-scheduler {{{ if !canSchedule }}}hidden{{{ end }}}">[[topic:composer.post-later]]</a></li>
+					<li><a class="dropdown-item rounded-1 cancel-scheduling hidden">[[modules:composer.cancel-scheduling]]</a></li>
 					{{{ each submitOptions }}}
 					<li><a class="dropdown-item rounded-1" href="#" data-action="{./action}">{./text}</a></li>
 					{{{ end }}}
