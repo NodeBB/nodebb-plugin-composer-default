@@ -75,9 +75,17 @@ define('composer/formatting', [
 	};
 
 	formatting.addComposerButtons = function () {
-		for (var x = 0, numButtons = buttons.length; x < numButtons; x++) {
-			$('.formatting-bar .formatting-group #fileForm').before('<li tabindex="-1" data-format="' + buttons[x].name + '" title="' + (buttons[x].title || '') + '"><i class="' + buttons[x].iconClass + '"></i></li>');
-		}
+		const fileForm = $('.formatting-bar .formatting-group #fileForm');
+		buttons.forEach((btn) => {
+			fileForm
+				.before(`
+					<li class="small">
+						<a data-format="${btn.name}" title="${btn.title || ''}" href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1">
+							<i class="${btn.iconClass}"></i>
+						</a>
+					</li>
+				`);
+		});
 	};
 
 	formatting.addButton = function (iconClass, onClick, title, name) {
