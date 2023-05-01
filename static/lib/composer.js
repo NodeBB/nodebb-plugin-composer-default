@@ -586,6 +586,8 @@ define('composer', [
 				bootbox.dialog({
 					size: 'large',
 					message: html,
+					onEscape: true,
+					backdrop: true,
 				});
 			}
 		});
