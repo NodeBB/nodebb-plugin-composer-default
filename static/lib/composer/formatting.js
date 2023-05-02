@@ -107,7 +107,7 @@ define('composer/formatting', [
 	};
 
 	formatting.addHandler = function (postContainer) {
-		postContainer.on('click', '.formatting-bar li a', function (event) {
+		postContainer.on('click', '.formatting-bar li', function (event) {
 			var format = $(this).attr('data-format');
 			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 

@@ -5,30 +5,24 @@
 			<li class="small spacer"></li>
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
-			<li class="small">
-				<a href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1" data-format="{./name}" title="{./title}">
-					<i class="{./className}"></i>
-					{{{ if ./badge }}}
-					<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
-					{{{ end }}}
-				</a>
+			<li class="btn btn-sm btn-link text-reset position-relative" tabindex="-1" data-format="{./name}" title="{./title}">
+				<i class="{./className}"></i>
+				{{{ if ./badge }}}
+				<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
+				{{{ end }}}
 			</li>
 			{{{ end }}}
 			{{{ end }}}
 		{{{ end }}}
 
 		{{{ if privileges.upload:post:image }}}
-		<li class="img-upload-btn small">
-			<a href="#" class="btn btn-sm btn-link text-reset" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
-				<i class="fa fa-file-image-o"></i>
-			</a>
+		<li class="img-upload-btn btn btn-sm btn-link text-reset" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
+			<i class="fa fa-file-image-o"></i>
 		</li>
 		{{{ end }}}
 		{{{ if privileges.upload:post:file }}}
-		<li class="file-upload-btn small">
-			<a href="#" class="btn btn-sm btn-link text-reset" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
-				<i class="fa fa-file-o"></i>
-			</a>
+		<li href="#" class="file-upload-btn btn btn-sm btn-link text-reset" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
+			<i class="fa fa-file-o"></i>
 		</li>
 		{{{ end }}}
 
