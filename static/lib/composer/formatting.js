@@ -79,10 +79,8 @@ define('composer/formatting', [
 		buttons.forEach((btn) => {
 			fileForm
 				.before(`
-					<li class="small">
-						<a data-format="${btn.name}" title="${btn.title || ''}" href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1">
-							<i class="${btn.iconClass}"></i>
-						</a>
+					<li data-format="${btn.name}" title="${btn.title || ''}" href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1">
+						<i class="${btn.iconClass}"></i>
 					</li>
 				`);
 		});
