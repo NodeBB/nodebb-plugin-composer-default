@@ -426,7 +426,7 @@ define('composer', [
 	};
 
 	async function getSelectedCategory(postData) {
-		if (ajaxify.data.template.category) {
+		if (ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
 			// no need to load data if we are already on the category page
 			return ajaxify.data;
 		} else if (parseInt(postData.cid, 10)) {
