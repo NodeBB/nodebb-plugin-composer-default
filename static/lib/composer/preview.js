@@ -50,7 +50,11 @@ define('composer/preview', ['hooks'], function (hooks) {
 		const toggler = postContainer.querySelector('.formatting-bar [data-action="preview"]');
 		const showText = toggler.querySelector('.show-text');
 		const hideText = toggler.querySelector('.hide-text');
-		let show = localStorage.getItem('composer:previewToggled') && !isMobile;
+		const previewToggled = localStorage.getItem('composer:previewToggled');
+		const hidePreviewOnOpen = config['composer-default'].hidePreviewOnOpen === 'on';
+		let show = !isMobile && (
+			((previewToggled === null && !hidePreviewOnOpen) || previewToggled)
+		);
 		const previewContainer = postContainer.querySelector('.preview-container');
 		const writeContainer = postContainer.querySelector('.write-container');
 
@@ -74,11 +78,7 @@ define('composer/preview', ['hooks'], function (hooks) {
 				previewContainer.classList.toggle('hide', !show);
 				writeContainer.classList.toggle('w-50', show);
 				writeContainer.classList.toggle('w-100', !show);
-				if (show) {
-					localStorage.setItem('composer:previewToggled', true);
-				} else {
-					localStorage.removeItem('composer:previewToggled');
-				}
+				localStorage.setItem('composer:previewToggled', show);
 			}
 			showText.classList.toggle('hide', show);
 			hideText.classList.toggle('hide', !show);

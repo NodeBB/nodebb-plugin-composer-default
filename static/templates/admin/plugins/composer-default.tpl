@@ -2,11 +2,14 @@
 	<div class="row">
 		<div class="col-sm-2 col-12 settings-header">General</div>
 		<div class="col-sm-10 col-12">
-			<div class="checkbox">
-				<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
-					<input class="mdl-switch__input" type="checkbox" name="composeRouteEnabled" />
-					<span class="mdl-switch__label"><strong>Use a separate route for the composer</strong></span>
-				</label>
+			<div class="form-check form-switch">
+				<input id="composeRouteEnabled" class="form-check-input" type="checkbox" name="composeRouteEnabled" />
+				<label for="composeRouteEnabled" class="form-check-label">Use a separate route for the composer</label>
+			</div>
+
+			<div class="form-check form-switch">
+				<input type="checkbox" class="form-check-input" id="hidePreviewOnOpen" name="hidePreviewOnOpen" />
+				<label for="hidePreviewOnOpen" class="form-check-label">Hide preview on open</label>
 			</div>
 		</div>
 	</div>
