@@ -38,21 +38,24 @@ $(document).ready(function () {
 	});
 
 	$(window).on('action:composer.post.new', function (ev, data) {
+		// backwards compatibility
+		data.body = data.body || data.text;
+		data.title = data.title || data.topicName;
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
 				composer.newReply({
 					tid: data.tid,
 					toPid: data.pid,
-					title: data.topicName,
-					body: data.text,
+					title: data.title,
+					body: data.body,
 				});
 			});
 		} else {
 			ajaxify.go(
 				'compose?tid=' + data.tid +
 				(data.pid ? '&toPid=' + data.pid : '') +
-				(data.topicName ? '&title=' + encodeURIComponent(data.topicName) : '') +
-				(data.text ? '&body=' + encodeURIComponent(data.text) : '')
+				(data.title ? '&title=' + encodeURIComponent(data.title) : '') +
+				(data.body ? '&body=' + encodeURIComponent(data.body) : '')
 			);
 		}
 	});
