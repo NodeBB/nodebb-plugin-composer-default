@@ -61,6 +61,8 @@ $(document).ready(function () {
 	});
 
 	$(window).on('action:composer.addQuote', function (ev, data) {
+		data.body = data.body || data.text;
+		data.title = data.title || data.topicName;
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
 				var topicUUID = composer.findByTid(data.tid);
@@ -68,9 +70,9 @@ $(document).ready(function () {
 					tid: data.tid,
 					toPid: data.pid,
 					selectedPid: data.selectedPid,
-					title: data.topicName,
+					title: data.title,
 					username: data.username,
-					body: data.text,
+					body: data.body,
 					uuid: topicUUID,
 				});
 			});
