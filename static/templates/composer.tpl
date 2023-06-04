@@ -12,7 +12,7 @@
 			</div>
 			{{{ end }}}
 			{{{ if !isTopicOrMain }}}
-			<h4 class="title text-bg-primary">[[topic:composer.replying_to, "{topicTitle}"]]</h4>
+			<h4 class="title text-bg-primary">{{{ if isEditing }}}[[topic:composer.editing-in, "{topicTitle}"]]{{{ else }}}[[topic:composer.replying_to, "{topicTitle}"]]{{{ end }}}</h4>
 			{{{ end }}}
 			<div class="display-scheduler p-2 {{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
