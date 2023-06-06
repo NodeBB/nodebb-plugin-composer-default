@@ -23,11 +23,11 @@ const plugin = module.exports;
 plugin.socketMethods = socketMethods;
 
 plugin.init = async function (data) {
+	const { router } = data;
+	const routeHelpers = require.main.require('./src/routes/helpers');
 	const controllers = require('./controllers');
 	SocketPlugins.composer = socketMethods;
-
-	data.router.get('/admin/plugins/composer-default', data.middleware.admin.buildHeader, controllers.renderAdminPage);
-	data.router.get('/api/admin/plugins/composer-default', controllers.renderAdminPage);
+	routeHelpers.setupAdminPageRoute(router, '/admin/plugins/composer-default', controllers.renderAdminPage);
 };
 
 plugin.appendConfig = async function (config) {
