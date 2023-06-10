@@ -147,7 +147,7 @@ define('composer', [
 		if (post.action === 'posts.reply') {
 			actionText = '[[topic:composer.replying_to]]';
 		} else if (post.action === 'posts.edit') {
-			actionText = '[[topic:composer.editing]]';
+			actionText = '[[topic:composer.editing-in]]';
 		}
 
 		translator.translate(actionText, function (translatedAction) {
