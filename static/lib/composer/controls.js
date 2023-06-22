@@ -32,6 +32,32 @@ define('composer/controls', ['composer/preview'], function (preview) {
 		preview.render(postContainer);
 	};
 
+	controls.replaceSelectionInTextareaWith = function (textarea, value) {
+		var payload = {
+			context: this,
+			textarea: textarea,
+			value: value,
+			preventDefault: false,
+		};
+		$(window).trigger('action:composer.replaceSelectionInTextareaWith', payload);
+
+		if (payload.preventDefault) {
+			return;
+		}
+
+		var $textarea = $(payload.textarea);
+		var currentVal = $textarea.val();
+		var postContainer = $textarea.parents('[component="composer"]');
+
+		$textarea.val(
+			currentVal.slice(0, payload.textarea.selectionStart) +
+			payload.value +
+			currentVal.slice(payload.textarea.selectionEnd)
+		);
+
+		preview.render(postContainer);
+	};
+
 	controls.wrapSelectionInTextareaWith = function (textarea, leading, trailing) {
 		var payload = {
 			context: this,
