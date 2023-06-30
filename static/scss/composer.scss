@@ -296,20 +296,14 @@
 	}
 }
 
-@include media-breakpoint-up(sm) {
-	html.composing {
-		.composer {
-			left: 15%;
-			width: 70%;
-		}
-	}
+@include media-breakpoint-down(lg) {
+	html.composing .composer { z-index: $zindex-modal; }
 }
 
 @include media-breakpoint-down(sm) {
 	html.composing {
 		.composer {
 			height: 100%;
-			z-index: $zindex-modal;
 
 			.draft-icon {
 				position: absolute;
@@ -333,7 +327,21 @@
 }
 
 @include media-breakpoint-up(sm) {
-	@import './medium';
+	html.composing {
+		.composer {
+			left: 15%;
+			width: 70%;
+			min-height: 400px;
+
+			.resizer {
+				display: block;
+			}
+
+			.minimize {
+				display: block;
+			}
+		}
+	}
 }
 
 @import './zen-mode';
