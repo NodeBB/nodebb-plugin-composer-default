@@ -344,6 +344,14 @@
 	}
 }
 
+@include media-breakpoint-up(md) {
+	// without this formatting elements that are dropdowns are not visible on desktop.
+	// on mobile dropdowns use bottom-sheet and overflow is auto
+	.formatting-group {
+		overflow: visible!important;
+	}
+}
+
 @import './zen-mode';
 @import './page-compose';
 @import './textcomplete';

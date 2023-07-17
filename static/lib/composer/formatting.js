@@ -77,14 +77,46 @@ define('composer/formatting', [
 	formatting.addComposerButtons = function () {
 		const fileForm = $('.formatting-bar .formatting-group #fileForm');
 		buttons.forEach((btn) => {
-			fileForm
-				.before(`
+			let markup = ``;
+			if (Array.isArray(btn.dropdownItems) && btn.dropdownItems.length) {
+				markup = generateFormattingDropdown(btn);
+			} else {
+				markup = `
 					<li data-format="${btn.name}" title="${btn.title || ''}" href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1">
 						<i class="${btn.iconClass}"></i>
 					</li>
-				`);
+				`;
+			}
+			fileForm.before(markup);
 		});
 	};
+
+	function generateFormattingDropdown(btn) {
+		const dropdownItemsHtml = btn.dropdownItems.map(function (btn) {
+			let badgeHtml = '';
+			if (btn.badge) {
+				badgeHtml = `<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>`;
+			}
+			return `
+				<li data-format="${btn.name}">
+					<a href="#" class="dropdown-item rounded-1 position-relative">
+						<i class="${btn.iconClass} text-secondary"></i> ${btn.text}
+						${badgeHtml}
+					</a>
+				</li>
+			`;
+		});
+		return `
+			<li class="dropdown bottom-sheet" tab-index="-1">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" title="${btn.title}">
+					<i class="${btn.iconClass}"></i>
+				</button>
+				<ul class="dropdown-menu p-1">
+				${dropdownItemsHtml}
+				</ul>
+			</li>
+		`;
+	}
 
 	formatting.addButton = function (iconClass, onClick, title, name) {
 		name = name || iconClass.replace('fa fa-', '');
@@ -93,6 +125,19 @@ define('composer/formatting', [
 			name,
 			iconClass,
 			title,
+		});
+	};
+
+	formatting.addDropdown = function (data) {
+		buttons.push({
+			iconClass: data.iconClass,
+			title: data.title,
+			dropdownItems: data.dropdownItems,
+		});
+		data.dropdownItems.forEach((btn) => {
+			if (btn.name && btn.onClick) {
+				formattingDispatchTable[btn.name] = btn.onClick;
+			}
 		});
 	};
 
@@ -105,7 +150,7 @@ define('composer/formatting', [
 	};
 
 	formatting.addHandler = function (postContainer) {
-		postContainer.on('click', '.formatting-bar li', function (event) {
+		postContainer.on('click', '.formatting-bar li[data-format]', function (event) {
 			var format = $(this).attr('data-format');
 			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 

@@ -5,12 +5,32 @@
 			<li class="small spacer"></li>
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
+			{{{ if ./dropdownItems.length }}}
+			<li class="dropdown bottom-sheet" tabindex="-1">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" title="{./title}">
+					<i class="{./className}"></i>
+				</button>
+				<ul class="dropdown-menu p-1">
+				{{{ each ./dropdownItems }}}
+					<li data-format="{./name}">
+						<a href="#" class="dropdown-item rounded-1 position-relative">
+							<i class="{./className} text-secondary"></i> {./text}
+							{{{ if ./badge }}}
+							<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
+							{{{ end }}}
+						</a>
+					</li>
+				{{{ end }}}
+				</ul>
+			</li>
+			{{{ else }}}
 			<li class="btn btn-sm btn-link text-reset position-relative" tabindex="-1" data-format="{./name}" title="{./title}">
 				<i class="{./className}"></i>
 				{{{ if ./badge }}}
 				<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
 				{{{ end }}}
 			</li>
+			{{{ end }}}
 			{{{ end }}}
 			{{{ end }}}
 		{{{ end }}}
