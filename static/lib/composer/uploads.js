@@ -78,7 +78,7 @@ define('composer/uploads', [
 					route: '/api/post/upload',
 					formData: upload.formData,
 				});
-			}
+			},
 		});
 	}
 
@@ -137,7 +137,7 @@ define('composer/uploads', [
 			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
 			isImage = files[i].type.match(/image./);
 
-			if (files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
+			if (!app.user.isAdmin && files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
 				return alerts.error('[[error:file-too-big, ' + config.maximumFileSize + ']]');
 			}
