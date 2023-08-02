@@ -130,7 +130,7 @@
 	}
 
 	.resizer {
-		background: linear-gradient(transparent, $body-bg);
+		background: linear-gradient(transparent, var(--bs-body-bg));
 		margin-left: calc($spacer * -0.5);
 		padding-left: $spacer;
 
