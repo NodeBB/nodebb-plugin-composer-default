@@ -76,7 +76,6 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 		}
 
 		postContainer.ratio = ratio;
-		elem.style.visibility = 'visible';
 
 		taskbar.updateActive(postContainer.attr('data-uuid'));
 	}

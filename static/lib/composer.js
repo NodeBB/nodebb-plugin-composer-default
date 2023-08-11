@@ -621,8 +621,11 @@ define('composer', [
 		}
 
 		composer.active = post_uuid;
+		const postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		postContainer.css('visibility', 'visible');
 		$(window).trigger('action:composer.activate', {
 			post_uuid: post_uuid,
+			postContainer: postContainer,
 		});
 	}
 
