@@ -810,6 +810,7 @@ define('composer', [
 		$('#content').css({ paddingBottom: 0 });
 		$('html').removeClass('composing');
 		app.toggleNavbar(true);
+		formatting.exitFullscreen();
 	}
 
 	composer.discard = function (post_uuid) {
