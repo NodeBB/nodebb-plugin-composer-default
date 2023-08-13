@@ -71,7 +71,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 			var rect = elem.getBoundingClientRect();
 			content.style.paddingBottom = (rect.bottom - rect.top).toString() + 'px';
 		} else {
-			postContainer.removeAttr('style');
+			elem.style.top = 0;
 			content.style.paddingBottom = 0;
 		}
 
