@@ -1,10 +1,10 @@
 <div component="composer" class="composer {{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}">
 	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<!-- mobile header -->
-		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap gap-1">
+		<nav class="navbar fixed-top mobile-navbar hidden-md hidden-lg text-bg-primary flex-nowrap gap-1 px-1">
 			<div class="btn-group">
-				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i></button>
-				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-minus"></i></button>
+				<button class="btn btn-sm btn-primary composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-fw fa-times"></i></button>
+				<button class="btn btn-sm btn-primary composer-minimize" data-action="minimize" tabindex="-1"><i class="fa fa-fw fa-minus"></i></button>
 			</div>
 			{{{ if isTopic }}}
 			<div class="category-name-container">
@@ -18,7 +18,7 @@
 				<i class="fa fa-clock-o"></i>
 			</div>
 			<div class="btn-group">
-				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
+				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-fw fa-chevron-right"></i></button>
 			</div>
 		</nav>
 		<div class="p-2 d-flex flex-column gap-1 h-100">
