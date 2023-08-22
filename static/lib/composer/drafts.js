@@ -107,7 +107,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					draftData.toPid = postData.toPid;
 				} else if (postData.action === 'posts.edit') {
 					draftData.pid = postData.pid;
-					draftData.title = title;
+					draftData.title = title || postData.title;
 				}
 				if (!app.user.uid) {
 					draftData.handle = postContainer.find('input.handle').val();
@@ -284,7 +284,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					cid: draft.cid,
 					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
 					title: utils.escapeHTML(draft.title),
-					body: utils.escapeHTML(draft.text),
+					body: draft.text,
 					tags: String(draft.tags || '').split(','),
 				});
 			} else if (draft.action === 'posts.reply') {
@@ -298,7 +298,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 						tid: draft.tid,
 						toPid: draft.toPid,
 						title: topicObj.title,
-						body: utils.escapeHTML(draft.text),
+						body: draft.text,
 					});
 				});
 			} else if (draft.action === 'posts.edit') {
@@ -306,7 +306,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					save_id: draft.save_id,
 					pid: draft.pid,
 					title: draft.title ? utils.escapeHTML(draft.title) : undefined,
-					body: utils.escapeHTML(draft.text),
+					body: draft.text,
 				});
 			}
 		});
