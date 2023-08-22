@@ -443,7 +443,7 @@ define('composer', [
 		var data = {
 			title: title,
 			titleLength: title.length,
-			body: postData.body,
+			body: utils.escapeHTML(postData.body),
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
