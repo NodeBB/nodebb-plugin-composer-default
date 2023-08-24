@@ -12,6 +12,7 @@ define('composer', [
 	'composer/resize',
 	'composer/autocomplete',
 	'composer/scheduler',
+	'composer/post-queue',
 	'scrollStop',
 	'topicThumbs',
 	'api',
@@ -22,7 +23,7 @@ define('composer', [
 	'search',
 	'screenfull',
 ], function (taskbar, translator, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, scrollStop,
+	categoryList, preview, resize, autocomplete, scheduler, postQueue, scrollStop,
 	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
 	var composer = {
 		active: undefined,
@@ -476,6 +477,7 @@ define('composer', [
 			tagWhitelist: postData.category ? postData.category.tagWhitelist : ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
 			selectedCategory: postData.category,
+			exemptFromPostQueue: await postQueue.isExempt(postData),
 			submitOptions: [
 				// Add items using `filter:composer.create`, or just add them to the <ul> in DOM
 				// {

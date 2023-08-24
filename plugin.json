@@ -28,6 +28,7 @@
 		"composer/tags.js": "./static/lib/composer/tags.js",
 		"composer/uploads.js": "./static/lib/composer/uploads.js",
 		"composer/autocomplete.js": "./static/lib/composer/autocomplete.js",
+		"composer/post-queue.js": "./static/lib/composer/post-queue.js",
 		"../admin/plugins/composer-default.js": "./static/lib/admin.js"
 	},
 	"templates": "static/templates"

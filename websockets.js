@@ -66,5 +66,29 @@ Sockets.renderHelp = async function () {
 };
 
 Sockets.getFormattingOptions = async function () {
-	return await module.parent.exports.getFormattingOptions();
+	return await require('./library').getFormattingOptions();
+};
+
+Sockets.isExemptFromPostQueue = async function (socket, data) {
+	if (!data || !data.postData) {
+		throw new Error('[[error:invalid-data]]');
+	}
+	if (socket.uid <= 0) {
+		return false;
+	}
+
+	let shouldQueue = false;
+	const { postData } = data;
+	if (postData.action === 'posts.reply') {
+		shouldQueue = await posts.shouldQueue(socket.uid, {
+			tid: postData.tid,
+			content: postData.content || '',
+		});
+	} else if (postData.action === 'topics.post') {
+		shouldQueue = await posts.shouldQueue(socket.uid, {
+			cid: postData.cid,
+			content: postData.content || '',
+		});
+	}
+	return !shouldQueue;
 };
