@@ -75,7 +75,8 @@ define('composer/formatting', [
 	};
 
 	formatting.addComposerButtons = function () {
-		const fileForm = $('.formatting-bar .formatting-group #fileForm');
+		const formattingBarEl = $('.formatting-bar');
+		const fileForm = formattingBarEl.find('.formatting-group #fileForm');
 		buttons.forEach((btn) => {
 			let markup = ``;
 			if (Array.isArray(btn.dropdownItems) && btn.dropdownItems.length) {
@@ -88,6 +89,12 @@ define('composer/formatting', [
 				`;
 			}
 			fileForm.before(markup);
+		});
+		formattingBarEl.tooltip({
+			selector: '.formatting-group>li',
+			container: '#content',
+			animation: false,
+			trigger: 'hover',
 		});
 	};
 
@@ -107,8 +114,8 @@ define('composer/formatting', [
 			`;
 		});
 		return `
-			<li class="dropdown bottom-sheet" tab-index="-1">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" title="${btn.title}">
+			<li class="dropdown bottom-sheet" tab-index="-1" title="${btn.title}">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" >
 					<i class="${btn.iconClass}"></i>
 				</button>
 				<ul class="dropdown-menu p-1">

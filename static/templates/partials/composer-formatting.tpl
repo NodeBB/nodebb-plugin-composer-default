@@ -6,8 +6,8 @@
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			{{{ if ./dropdownItems.length }}}
-			<li class="dropdown bottom-sheet" tabindex="-1">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" title="{./title}">
+			<li class="dropdown bottom-sheet" tabindex="-1" title="{./title}">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown">
 					<i class="{./className}"></i>
 				</button>
 				<ul class="dropdown-menu p-1">
