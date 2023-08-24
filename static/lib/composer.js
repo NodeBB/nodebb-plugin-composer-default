@@ -343,7 +343,7 @@ define('composer', [
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
 		preview.handleToggler(postContainer);
-
+		postQueue.showAlert(postContainer, postData);
 		uploads.initialize(post_uuid);
 		tags.init(postContainer, composer.posts[post_uuid]);
 		autocomplete.init(postContainer, post_uuid);
@@ -477,7 +477,6 @@ define('composer', [
 			tagWhitelist: postData.category ? postData.category.tagWhitelist : ajaxify.data.tagWhitelist,
 			privileges: app.user.privileges,
 			selectedCategory: postData.category,
-			exemptFromPostQueue: await postQueue.isExempt(postData),
 			submitOptions: [
 				// Add items using `filter:composer.create`, or just add them to the <ul> in DOM
 				// {

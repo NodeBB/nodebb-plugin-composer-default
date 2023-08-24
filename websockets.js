@@ -69,7 +69,7 @@ Sockets.getFormattingOptions = async function () {
 	return await require('./library').getFormattingOptions();
 };
 
-Sockets.isExemptFromPostQueue = async function (socket, data) {
+Sockets.shouldQueue = async function (socket, data) {
 	if (!data || !data.postData) {
 		throw new Error('[[error:invalid-data]]');
 	}
@@ -90,5 +90,5 @@ Sockets.isExemptFromPostQueue = async function (socket, data) {
 			content: postData.content || '',
 		});
 	}
-	return !shouldQueue;
+	return shouldQueue;
 };
