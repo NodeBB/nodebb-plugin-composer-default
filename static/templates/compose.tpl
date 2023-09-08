@@ -1,5 +1,5 @@
-<div component="composer" class="composer{{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}"{{{ if !disabled }}} style="visibility: inherit;"{{{ end }}}>
-	<div class="composer-container">
+<div component="composer" class="composer pb-3 h-100 {{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}"{{{ if !disabled }}} style="visibility: inherit;"{{{ end }}}>
+	<div class="composer-container d-flex flex-column gap-1 h-100">
 		<form id="compose-form" method="post">
 			{{{ if pid }}}
 			<input type="hidden" name="pid" value="{pid}" />

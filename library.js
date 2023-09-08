@@ -219,6 +219,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			isAdminOrMod: isAdmin || isMod,
 			save_id: save_id,
 			privileges: globalPrivileges,
+			'composer:showHelpTab': meta.config['composer:showHelpTab'] === 1,
 		},
 	};
 };

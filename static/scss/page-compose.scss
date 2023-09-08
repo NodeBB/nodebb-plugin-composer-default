@@ -1,20 +1,23 @@
-html,
-body.page-compose,
-.page-compose #content,
-.page-compose #panel {
-	height: 100%;
-}
-
-body.page-compose {
-	padding-bottom: 0 !important;
-}
-
 .page-compose .composer {
-	height: 100%;
 	z-index: initial;
 	position: static;
+	[data-action="hide"] {
+		display: none;
+	}
 }
 
 .zen-mode .page-compose .composer {
 	position: absolute;
+}
+.page-compose {
+	&.skin-noskin, &.skin-cosmo, &.skin-flatly,
+	&.skin-journal, &.skin-litera, &.skin-minty, &.skin-pulse,
+	&.skin-sandstone, &.skin-sketchy, &.skin-spacelab, &.skin-united,
+	&.skin-cerulean, &.skin-lumen, &.skin-lux, &.skin-morph,
+	&.skin-simplex, &.skin-yeti, &.skin-zephyr	{
+		.composer {
+			color: var(--bs-body-color) !important;
+			background-color: var(--bs-body-bg) !important;
+		}
+	}
 }
