@@ -1,7 +1,7 @@
 .composer {
 	user-select: none;
-	background-color: $body-bg;
-	color: $body-color;
+	background-color: var(--bs-body-bg);
+	color: var(--bs-body-color);
 	z-index: $zindex-dropdown;
 	visibility: hidden;
 	padding: 0;
@@ -356,3 +356,27 @@
 @import './page-compose';
 @import './textcomplete';
 
+
+.skin-noskin, .skin-cosmo, .skin-flatly,
+.skin-journal, .skin-litera, .skin-minty, .skin-pulse,
+.skin-sandstone, .skin-sketchy, .skin-spacelab, .skin-united {
+	.composer {
+		color: var(--bs-secondary) !important;
+		background-color: var(--bs-light) !important;
+	}
+}
+
+.skin-cerulean, .skin-lumen, .skin-lux, .skin-morph,
+.skin-simplex, .skin-yeti, .skin-zephyr {
+	.composer {
+		color: var(--bs-body) !important;
+		background-color: var(--bs-light) !important;
+	}
+}
+
+@include color-mode(dark) {
+	.skin-noskin .composer {
+		color: var(--bs-secondary)!important;
+		background-color: var(--bs-body-bg)!important;
+	}
+}
