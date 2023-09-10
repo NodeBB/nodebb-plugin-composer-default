@@ -5,6 +5,6 @@
 		<textarea class="write shadow-none rounded-1 w-100 form-control" tabindex="4" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
 	</div>
 	<div class="preview-container d-none d-md-flex w-50">
-		<div class="preview p-3 border w-100 rounded-1 overflow-auto"></div>
+		<div class="preview w-100 overflow-auto"></div>
 	</div>
 </div>

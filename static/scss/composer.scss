@@ -1,5 +1,4 @@
 .composer {
-	user-select: none;
 	background-color: var(--bs-body-bg);
 	color: var(--bs-body-color);
 	z-index: $zindex-dropdown;
@@ -47,8 +46,6 @@
 		.category-list-container {
 
 			[component="category-selector"] {
-				margin-right: 0.5em;
-
 				.category-dropdown-menu {
 					max-height: 300px;
 				}
@@ -69,8 +66,6 @@
 	}
 
 	.formatting-bar {
-		margin: 0;
-
 		.spacer {
 			&:before {
 				content: ' | ';
@@ -231,6 +226,14 @@
 		&.active {
 			animation: draft-saved 3s ease;
 		}
+	}
+
+	textarea {
+		resize: none;
+	}
+
+	.preview {
+		padding: $input-padding-y $input-padding-x;
 	}
 }
 
