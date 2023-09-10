@@ -53,7 +53,7 @@ define('composer/preview', ['hooks'], function (hooks) {
 		const previewToggled = localStorage.getItem('composer:previewToggled');
 		const hidePreviewOnOpen = config['composer-default'].hidePreviewOnOpen === 'on';
 		let show = !isMobile && (
-			((previewToggled === null && !hidePreviewOnOpen) || previewToggled)
+			((previewToggled === null && !hidePreviewOnOpen) || previewToggled === 'true')
 		);
 		const previewContainer = postContainer.querySelector('.preview-container');
 		const writeContainer = postContainer.querySelector('.write-container');
