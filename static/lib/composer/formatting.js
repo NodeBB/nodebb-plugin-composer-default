@@ -90,11 +90,20 @@ define('composer/formatting', [
 			}
 			fileForm.before(markup);
 		});
-		formattingBarEl.tooltip({
-			selector: '.formatting-group>li',
+
+		const els = formattingBarEl.find('.formatting-group>li');
+		els.tooltip({
 			container: '#content',
 			animation: false,
-			trigger: 'hover',
+			trigger: 'manual',
+		}).on('mouseenter', function (ev) {
+			const target = $(ev.target);
+			const isDropdown = target.hasClass('dropdown-menu') || !!target.parents('.dropdown-menu').length;
+			if (!isDropdown) {
+				$(this).tooltip('show');
+			}
+		}).on('click mouseleave', function () {
+			$(this).tooltip('hide');
 		});
 	};
 
