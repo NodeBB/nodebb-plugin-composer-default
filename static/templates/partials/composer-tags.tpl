@@ -3,7 +3,7 @@
 		<div class="btn-group dropup me-2 {{{ if !tagWhitelist.length }}}hidden{{{ end }}}" component="composer/tag/dropdown">
 			<button class="btn btn-sm btn-link text-body dropdown-toggle" data-bs-toggle="dropdown" type="button">
 				<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
-				[[tags:select_tags]]
+				[[tags:select-tags]]
 			</button>
 
 			<ul class="dropdown-menu">
@@ -12,6 +12,6 @@
 				<!-- END tagWhitelist -->
 			</ul>
 		</div>
-		<input class="tags" type="text" class="" placeholder="[[tags:enter_tags_here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
+		<input class="tags" type="text" class="" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
 	</div>
 </div>

@@ -7,14 +7,14 @@
 
 	{{{ if showHandleInput }}}
 	<div data-component="composer/handle">
-		<input class="handle form-control h-100 border-0 shadow-none" type="text" tabindex="1" placeholder="[[topic:composer.handle_placeholder]]" value="{handle}" />
+		<input class="handle form-control h-100 border-0 shadow-none" type="text" tabindex="1" placeholder="[[topic:composer.handle-placeholder]]" value="{handle}" />
 	</div>
 	{{{ end }}}
 	<div data-component="composer/title" class="position-relative flex-1" style="min-width: 0;">
 		{{{ if isTopicOrMain }}}
-		<input class="title form-control h-100 rounded-1 shadow-none" type="text" tabindex="1" placeholder="[[topic:composer.title_placeholder]]" value="{topicTitle}"/>
+		<input class="title form-control h-100 rounded-1 shadow-none" type="text" tabindex="1" placeholder="[[topic:composer.title-placeholder]]" value="{topicTitle}"/>
 		{{{ else }}}
-		<span class="d-none d-md-block title h-100 text-truncate">{{{ if isEditing }}}[[topic:composer.editing-in, "{topicTitle}"]]{{{ else }}}[[topic:composer.replying_to, "{topicTitle}"]]{{{ end }}}</span>
+		<span class="d-none d-md-block title h-100 text-truncate">{{{ if isEditing }}}[[topic:composer.editing-in, "{topicTitle}"]]{{{ else }}}[[topic:composer.replying-to, "{topicTitle}"]]{{{ end }}}</span>
 		{{{ end }}}
 		<div id="quick-search-container" class="quick-search-container mt-2 dropdown-menu d-block p-2 hidden">
 			<div class="text-center loading-indicator"><i class="fa fa-spinner fa-spin"></i></div>

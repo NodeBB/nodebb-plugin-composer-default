@@ -85,7 +85,7 @@ plugin.getFormattingOptions = async function () {
 			},
 			{
 				name: 'zen',
-				title: '[[modules:composer.zen_mode]]',
+				title: '[[modules:composer.zen-mode]]',
 				className: 'fa fa-arrows-alt',
 				visibility: defaultVisibility,
 			},
@@ -94,7 +94,7 @@ plugin.getFormattingOptions = async function () {
 	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
 		payload.options.push({
 			name: 'thumbs',
-			title: '[[topic:composer.thumb_title]]',
+			title: '[[topic:composer.thumb-title]]',
 			className: 'fa fa-address-card-o',
 			badge: true,
 			visibility: {
@@ -239,7 +239,7 @@ async function generateBody(req, postData) {
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
-		const translated = await translator.translate(`[[modules:composer.user_said, ${username}]]`);
+		const translated = await translator.translate(`[[modules:composer.user-said, ${username}]]`);
 		return `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body || req.query.content) {

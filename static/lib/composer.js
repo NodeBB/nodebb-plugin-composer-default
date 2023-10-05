@@ -144,9 +144,9 @@ define('composer', [
 			return composer.load(existingUUID);
 		}
 
-		var actionText = '[[topic:composer.new_topic]]';
+		var actionText = '[[topic:composer.new-topic]]';
 		if (post.action === 'posts.reply') {
-			actionText = '[[topic:composer.replying_to]]';
+			actionText = '[[topic:composer.replying-to]]';
 		} else if (post.action === 'posts.edit') {
 			actionText = '[[topic:composer.editing-in]]';
 		}
@@ -234,14 +234,14 @@ define('composer', [
 					tid: data.tid,
 					toPid: data.toPid,
 					title: data.title,
-					body: '[[modules:composer.user_said_in, ' + data.username + ', ' + link + ']]\n' + data.body,
+					body: '[[modules:composer.user-said-in, ' + data.username + ', ' + link + ']]\n' + data.body,
 				});
 			} else {
 				composer.newReply({
 					tid: data.tid,
 					toPid: data.toPid,
 					title: data.title,
-					body: '[[modules:composer.user_said, ' + data.username + ']]\n' + data.body,
+					body: '[[modules:composer.user-said, ' + data.username + ']]\n' + data.body,
 				});
 			}
 			return;
@@ -254,9 +254,9 @@ define('composer', [
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
 		if (data.title && (data.selectedPid || data.toPid)) {
-			translator.translate('[[modules:composer.user_said_in, ' + data.username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user-said-in, ' + data.username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
 		} else {
-			translator.translate('[[modules:composer.user_said, ' + data.username + ']]\n', config.defaultLang, onTranslated);
+			translator.translate('[[modules:composer.user-said, ' + data.username + ']]\n', config.defaultLang, onTranslated);
 		}
 
 		function onTranslated(translated) {

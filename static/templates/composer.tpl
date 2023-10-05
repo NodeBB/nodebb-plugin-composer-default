@@ -12,7 +12,7 @@
 			</div>
 			{{{ end }}}
 			{{{ if !isTopicOrMain }}}
-			<h4 class="title text-bg-primary">{{{ if isEditing }}}[[topic:composer.editing-in, "{topicTitle}"]]{{{ else }}}[[topic:composer.replying_to, "{topicTitle}"]]{{{ end }}}</h4>
+			<h4 class="title text-bg-primary">{{{ if isEditing }}}[[topic:composer.editing-in, "{topicTitle}"]]{{{ else }}}[[topic:composer.replying-to, "{topicTitle}"]]{{{ end }}}</h4>
 			{{{ end }}}
 			<div class="display-scheduler p-2 {{{ if !canSchedule }}} hidden{{{ end }}}">
 				<i class="fa fa-clock-o"></i>
@@ -32,7 +32,7 @@
 			<!-- IMPORT partials/composer-tags.tpl -->
 			{{{ end }}}
 
-			<div class="imagedrop"><div>[[topic:composer.drag_and_drop_images]]</div></div>
+			<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
 
 			<div class="resizer position-absolute w-100 bottom-100 pe-3 border-bottom">
 				<div class="trigger text-center">

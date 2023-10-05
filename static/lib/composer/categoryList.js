@@ -40,7 +40,7 @@ define('composer/categoryList', [
 
 		// this is the mobile category selector
 		postContainer.find('.category-name')
-			.translateText(selector.selectedCategory ? selector.selectedCategory.name : '[[modules:composer.select_category]]')
+			.translateText(selector.selectedCategory ? selector.selectedCategory.name : '[[modules:composer.select-category]]')
 			.on('click', function () {
 				categorySelector.modal({
 					privilege: 'topics:create',
