@@ -230,7 +230,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 
 	drafts.listAvailable = function () {
 		const available = drafts.getList('available');
-		return available.map(drafts.get);
+		return available.map(drafts.get).filter(Boolean);
 	};
 
 	drafts.getAvailableCount = function () {
