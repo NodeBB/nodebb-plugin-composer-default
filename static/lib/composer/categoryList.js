@@ -21,7 +21,7 @@ define('composer/categoryList', [
 
 		selector = categorySelector.init(listContainer.find('[component="category-selector"]'), {
 			privilege: 'topics:create',
-			states: ['watching', 'notwatching', 'ignoring'],
+			states: ['watching', 'tracking', 'notwatching', 'ignoring'],
 			onSelect: function (selectedCategory) {
 				if (postData.hasOwnProperty('cid')) {
 					changeCategory(postContainer, postData, selectedCategory);
@@ -44,7 +44,7 @@ define('composer/categoryList', [
 			.on('click', function () {
 				categorySelector.modal({
 					privilege: 'topics:create',
-					states: ['watching', 'notwatching', 'ignoring'],
+					states: ['watching', 'tracking', 'notwatching', 'ignoring'],
 					openOnLoad: true,
 					showLinks: false,
 					onSubmit: function (selectedCategory) {
