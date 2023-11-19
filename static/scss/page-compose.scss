@@ -4,6 +4,18 @@
 	[data-action="hide"] {
 		display: none;
 	}
+
+	@include media-breakpoint-down(md) {
+		.title-container {
+			flex-wrap: wrap;
+		}
+		.category-list-container {
+			[component="category-selector-selected"] > span {
+				display: inline!important;
+			}
+			width: 100%;
+		}
+	}
 }
 
 .zen-mode .page-compose .composer {
