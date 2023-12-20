@@ -229,7 +229,8 @@ define('composer/uploads', [
 						}
 					}
 					preview.render(postContainer);
-					textarea.selectRange(cursorPosition + textarea.val().length - textLen);
+					textarea.prop('selectionEnd', cursorPosition + textarea.val().length - textLen);
+					textarea.focus();
 					postContainer.find('[data-action="post"]').prop('disabled', false);
 					$(window).trigger('action:composer.upload', {
 						post_uuid: post_uuid,
