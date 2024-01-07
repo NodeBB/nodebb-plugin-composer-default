@@ -8,12 +8,16 @@ define('composer/formatting', [
 	var formattingDispatchTable = {
 		picture: function () {
 			var postContainer = this;
-			postContainer.find('#files').click();
+			postContainer.find('#files')
+				.attr('accept', 'image/*')
+				.click();
 		},
 
 		upload: function () {
 			var postContainer = this;
-			postContainer.find('#files').click();
+			postContainer.find('#files')
+				.attr('accept', '')
+				.click();
 		},
 
 		thumbs: function () {
