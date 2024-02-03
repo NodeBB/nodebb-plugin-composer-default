@@ -119,7 +119,7 @@ define('composer/formatting', [
 			}
 			return `
 				<li data-format="${btn.name}">
-					<a href="#" class="dropdown-item rounded-1 position-relative">
+					<a href="#" class="dropdown-item rounded-1 position-relative" role="menuitem">
 						<i class="${btn.iconClass} text-secondary"></i> ${btn.text}
 						${badgeHtml}
 					</a>
@@ -128,10 +128,10 @@ define('composer/formatting', [
 		});
 		return `
 			<li class="dropdown bottom-sheet" tab-index="-1" title="${btn.title}">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" >
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="${btn.iconClass}"></i>
 				</button>
-				<ul class="dropdown-menu p-1">
+				<ul class="dropdown-menu p-1" role="menu">
 				${dropdownItemsHtml}
 				</ul>
 			</li>

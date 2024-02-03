@@ -7,13 +7,13 @@
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			{{{ if ./dropdownItems.length }}}
 			<li class="dropdown bottom-sheet" tabindex="-1" title="{./title}">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="{./className}"></i>
 				</button>
-				<ul class="dropdown-menu p-1">
+				<ul class="dropdown-menu p-1" role="menu">
 				{{{ each ./dropdownItems }}}
 					<li data-format="{./name}">
-						<a href="#" class="dropdown-item rounded-1 position-relative">
+						<a href="#" class="dropdown-item rounded-1 position-relative" role="menuitem">
 							<i class="{./className} text-secondary"></i> {./text}
 							{{{ if ./badge }}}
 							<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
