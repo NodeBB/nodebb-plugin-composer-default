@@ -16,7 +16,7 @@
 						<a href="#" class="dropdown-item rounded-1 position-relative" role="menuitem">
 							<i class="{./className} text-secondary"></i> {./text}
 							{{{ if ./badge }}}
-							<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
+							<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
 							{{{ end }}}
 						</a>
 					</li>
@@ -27,7 +27,7 @@
 			<li class="btn btn-sm btn-link text-reset position-relative" tabindex="-1" data-format="{./name}" title="{./title}">
 				<i class="{./className}"></i>
 				{{{ if ./badge }}}
-				<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
+				<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
 				{{{ end }}}
 			</li>
 			{{{ end }}}
