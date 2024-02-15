@@ -12,6 +12,6 @@
 				<!-- END tagWhitelist -->
 			</ul>
 		</div>
-		<input class="tags" type="text" class="" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" tabindex="5" />
+		<input class="tags" type="text" class="" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" />
 	</div>
 </div>

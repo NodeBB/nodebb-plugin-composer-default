@@ -87,8 +87,11 @@ define('composer/formatting', [
 				markup = generateFormattingDropdown(btn);
 			} else {
 				markup = `
-					<li data-format="${btn.name}" title="${btn.title || ''}" href="#" class="btn btn-sm btn-link text-reset position-relative" tabindex="-1">
-						<i class="${btn.iconClass}"></i>
+					<li title="${btn.title || ''}">
+						<button data-format="${btn.name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="${btn.title || ''}">
+							<i class="${btn.iconClass}"></i>
+							${generateBadgetHtml(btn)}
+						</button>
 					</li>
 				`;
 			}
@@ -111,24 +114,28 @@ define('composer/formatting', [
 		});
 	};
 
+	function generateBadgetHtml(btn) {
+		let badgeHtml = '';
+		if (btn.badge) {
+			badgeHtml = `<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>`;
+		}
+		return badgeHtml;
+	}
+
 	function generateFormattingDropdown(btn) {
 		const dropdownItemsHtml = btn.dropdownItems.map(function (btn) {
-			let badgeHtml = '';
-			if (btn.badge) {
-				badgeHtml = `<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>`;
-			}
 			return `
-				<li data-format="${btn.name}">
-					<a href="#" class="dropdown-item rounded-1 position-relative" role="menuitem">
+				<li>
+					<a href="#" data-format="${btn.name}" class="dropdown-item rounded-1 position-relative" role="menuitem">
 						<i class="${btn.iconClass} text-secondary"></i> ${btn.text}
-						${badgeHtml}
+						${generateBadgetHtml(btn)}
 					</a>
 				</li>
 			`;
 		});
 		return `
 			<li class="dropdown bottom-sheet" tab-index="-1" title="${btn.title}">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="${btn.title}">
 					<i class="${btn.iconClass}"></i>
 				</button>
 				<ul class="dropdown-menu p-1" role="menu">
@@ -170,7 +177,7 @@ define('composer/formatting', [
 	};
 
 	formatting.addHandler = function (postContainer) {
-		postContainer.on('click', '.formatting-bar li[data-format]', function (event) {
+		postContainer.on('click', '.formatting-bar [data-format]', function (event) {
 			var format = $(this).attr('data-format');
 			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 

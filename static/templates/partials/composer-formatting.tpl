@@ -6,14 +6,14 @@
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			{{{ if ./dropdownItems.length }}}
-			<li class="dropdown bottom-sheet" tabindex="-1" title="{./title}">
-				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<li class="dropdown bottom-sheet" title="{./title}">
+				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{./title}">
 					<i class="{./className}"></i>
 				</button>
 				<ul class="dropdown-menu p-1" role="menu">
 				{{{ each ./dropdownItems }}}
-					<li data-format="{./name}">
-						<a href="#" class="dropdown-item rounded-1 position-relative" role="menuitem">
+					<li>
+						<a href="#" data-format="{./name}" class="dropdown-item rounded-1 position-relative" role="menuitem">
 							<i class="{./className} text-secondary"></i> {./text}
 							{{{ if ./badge }}}
 							<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
@@ -24,11 +24,13 @@
 				</ul>
 			</li>
 			{{{ else }}}
-			<li class="btn btn-sm btn-link text-reset position-relative" tabindex="-1" data-format="{./name}" title="{./title}">
-				<i class="{./className}"></i>
-				{{{ if ./badge }}}
-				<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
-				{{{ end }}}
+			<li title="{./title}">
+				<button data-format="{./name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="{./title}">
+					<i class="{./className}"></i>
+					{{{ if ./badge }}}
+					<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
+					{{{ end }}}
+				</button>
 			</li>
 			{{{ end }}}
 			{{{ end }}}
@@ -36,18 +38,23 @@
 		{{{ end }}}
 
 		{{{ if privileges.upload:post:image }}}
-		<li class="img-upload-btn btn btn-sm btn-link text-reset" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
-			<i class="fa fa-file-image-o"></i>
+		<li title="[[modules:composer.upload-picture]]">
+			<button data-format="picture" class="img-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-picture]]">
+				<i class="fa fa-file-image-o"></i>
+			</button>
 		</li>
 		{{{ end }}}
+
 		{{{ if privileges.upload:post:file }}}
-		<li href="#" class="file-upload-btn btn btn-sm btn-link text-reset" data-format="upload" tabindex="-1" title="[[modules:composer.upload-file]]">
-			<i class="fa fa-file-o"></i>
+		<li title="[[modules:composer.upload-file]]">
+			<button data-format="upload" class="file-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-file]]">
+				<i class="fa fa-file-o"></i>
+			</button>
 		</li>
 		{{{ end }}}
 
 		<form id="fileForm" method="post" enctype="multipart/form-data">
-			<input type="file" id="files" name="files[]" multiple class="gte-ie9 hide"/>
+			<input type="file" id="files" name="files[]" multiple class="hide"/>
 		</form>
 	</ul>
 	<div class="d-flex align-items-center gap-1">
