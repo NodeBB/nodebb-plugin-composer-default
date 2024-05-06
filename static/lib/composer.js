@@ -227,7 +227,7 @@ define('composer', [
 		if (data.body) {
 			data.body = '> ' + data.body.replace(/\n/g, '\n> ') + '\n\n';
 		}
-		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + (data.selectedPid || data.toPid) + ')';
+		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + encodeURIComponent(data.selectedPid || data.toPid) + ')';
 		if (data.uuid === undefined) {
 			if (data.title && (data.selectedPid || data.toPid)) {
 				composer.newReply({
