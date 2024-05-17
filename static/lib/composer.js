@@ -873,17 +873,11 @@ define('composer', [
 				calls.push(topicThumbs.getByPid(composerObj.pid));
 			}
 			Promise.all(calls).then((thumbs) => {
-				thumbs = thumbs.reduce((memo, cur) => {
-					memo = memo.concat(cur);
-					return memo;
-				});
-
-				if (thumbs.length) {
-					const formatEl = postContainer.find('[data-format="thumbs"]');
-					formatEl.find('.badge')
-						.text(thumbs.length)
-						.toggleClass('hidden', !thumbs.length);
-				}
+				const thumbCount = thumbs.flat().length;
+				const formatEl = postContainer.find('[data-format="thumbs"]');
+				formatEl.find('.badge')
+					.text(thumbCount)
+					.toggleClass('hidden', !thumbCount);
 			});
 		}
 	};
