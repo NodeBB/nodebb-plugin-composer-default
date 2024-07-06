@@ -71,37 +71,40 @@ define('composer/tags', ['alerts'], function (alerts) {
 				} else if (reachedMaxTags) {
 					return alerts.error('[[error:too-many-tags, ' + maxTags + ']]');
 				}
+				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
+				$(window).trigger('action:tag.beforeAdd', {
+					cid,
+					tagEl,
+					tag: event.item,
+					event,
+					inputAutocomplete: input,
+				});
 				if (different) {
 					tagEl.tagsinput('add', cleanTag);
 				}
+				if (event.cancel && input.length) {
+					input.autocomplete('close');
+				}
 			});
 
-			var skipAddCheck = false;
-			var skipRemoveCheck = false;
 			tagEl.on('itemRemoved', function (event) {
-				if (skipRemoveCheck) {
-					skipRemoveCheck = false;
+				if (!event.item || (event.options && event.options.skipRemoveCheck)) {
 					return;
 				}
 
-				if (!event.item) {
-					return;
-				}
 				socket.emit('topics.canRemoveTag', { tag: event.item }, function (err, allowed) {
 					if (err) {
 						return alerts.error(err);
 					}
 					if (!allowed) {
 						alerts.error('[[error:cant-remove-system-tag]]');
-						skipAddCheck = true;
-						tagEl.tagsinput('add', event.item);
+						tagEl.tagsinput('add', event.item, { skipAddCheck: true });
 					}
 				});
 			});
 
 			tagEl.on('itemAdded', function (event) {
-				if (skipAddCheck) {
-					skipAddCheck = false;
+				if (event.options && event.options.skipAddCheck) {
 					return;
 				}
 				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
@@ -110,10 +113,14 @@ define('composer/tags', ['alerts'], function (alerts) {
 						return alerts.error(err);
 					}
 					if (!allowed) {
-						skipRemoveCheck = true;
-						return tagEl.tagsinput('remove', event.item);
+						return tagEl.tagsinput('remove', event.item, { skipRemoveCheck: true });
 					}
-					$(window).trigger('action:tag.added', { cid: cid, tagEl: tagEl, tag: event.item });
+					$(window).trigger('action:tag.added', {
+						cid,
+						tagEl,
+						tag: event.item,
+						inputAutocomplete: input,
+					});
 					if (input.length) {
 						input.autocomplete('close');
 					}
