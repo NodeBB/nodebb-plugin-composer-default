@@ -411,6 +411,9 @@ define('composer', [
 			preview.matchScroll(postContainer);
 		});
 
+		if (!utils.isNumber(postData.pid)) {
+			handleRemotePid(postContainer);
+		}
 		handleHelp(postContainer);
 		handleSearch(postContainer);
 		focusElements(postContainer);
@@ -579,6 +582,16 @@ define('composer', [
 		}, path, `${config.relative_path}/${returnPath}`);
 	}
 
+	function handleRemotePid(postContainer) {
+		alerts.alert({
+			title: '[[modules:composer.remote-pid-editing]]',
+			message: '[[modules:composer.remote-pid-content-immutable]]',
+			timeout: 15000,
+		});
+		var container = postContainer.find('.write-container');
+		container.addClass('hidden');
+	}
+
 	function handleHelp(postContainer) {
 		const helpBtn = postContainer.find('[data-action="help"]');
 		helpBtn.on('click', async function () {
@@ -731,7 +744,7 @@ define('composer', [
 			};
 		} else if (action === 'posts.edit') {
 			method = 'put';
-			route = `/posts/${postData.pid}`;
+			route = `/posts/${encodeURIComponent(postData.pid)}`;
 			composerData = {
 				...composerData,
 				pid: postData.pid,
