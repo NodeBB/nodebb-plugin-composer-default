@@ -411,7 +411,7 @@ define('composer', [
 			preview.matchScroll(postContainer);
 		});
 
-		if (!utils.isNumber(postData.pid)) {
+		if (postData.action === 'posts.edit' && !utils.isNumber(postData.pid)) {
 			handleRemotePid(postContainer);
 		}
 		handleHelp(postContainer);
