@@ -1,8 +1,8 @@
 'use strict';
 
 define('composer/autocomplete', [
-	'composer/preview', '@textcomplete/core', '@textcomplete/textarea', '@textcomplete/contenteditable',
-], function (preview, { Textcomplete }, { TextareaEditor }, { ContenteditableEditor }) {
+	'composer/preview', 'autocomplete',
+], function (preview, Autocomplete) {
 	var autocomplete = {
 		_active: {},
 	};
@@ -57,42 +57,11 @@ define('composer/autocomplete', [
 
 		$(window).trigger('composer:autocomplete:init', data);
 
-		autocomplete._active[post_uuid] = autocomplete.setup(data);
+		autocomplete._active[post_uuid] = Autocomplete.setup(data);
 
 		data.element.on('textComplete:select', function () {
 			preview.render(postContainer);
 		});
-	};
-
-	// This is a generic method that is also used by the chat
-	autocomplete.setup = function ({ element, strategies, options }) {
-		const targetEl = element.get(0);
-		if (!targetEl) {
-			return;
-		}
-		var editor;
-		if (targetEl.nodeName === 'TEXTAREA' || targetEl.nodeName === 'INPUT') {
-			editor = new TextareaEditor(targetEl);
-		} else if (targetEl.nodeName === 'DIV' && targetEl.getAttribute('contenteditable') === 'true') {
-			editor = new ContenteditableEditor(targetEl);
-		}
-		if (!editor) {
-			throw new Error('unknown target element type');
-		}
-		// yuku-t/textcomplete inherits directionality from target element itself
-		targetEl.setAttribute('dir', document.querySelector('html').getAttribute('data-dir'));
-
-		var textcomplete = new Textcomplete(editor, strategies, {
-			dropdown: options,
-		});
-		textcomplete.on('rendered', function () {
-			if (textcomplete.dropdown.items.length) {
-				// Activate the first item by default.
-				textcomplete.dropdown.items[0].activate();
-			}
-		});
-
-		return textcomplete;
 	};
 
 	return autocomplete;
