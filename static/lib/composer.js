@@ -718,7 +718,6 @@ define('composer', [
 
 		// Check if the anonymous checkbox was filled in or not
 		var isAnonymous = anonymousEl.is(':checked');
-		console.log(isAnonymous);
 
 		let composerData = {
 			uuid: post_uuid,
@@ -727,7 +726,6 @@ define('composer', [
 		let route = '';
 
 		if (action === 'topics.post') {
-			console.log('topics.post called');
 			route = '/topics';
 			composerData = {
 				...composerData,
