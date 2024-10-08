@@ -130,6 +130,9 @@ plugin.filterComposerBuild = async function (hookData) {
 	} else if (!req.query.pid && !req.query.tid && !req.query.cid) {
 		return helpers.redirect(res, '/');
 	}
+
+	await checkPrivileges(req, res);
+
 	const [
 		isMainPost,
 		postData,
@@ -222,6 +225,18 @@ plugin.filterComposerBuild = async function (hookData) {
 			'composer:showHelpTab': meta.config['composer:showHelpTab'] === 1,
 		},
 	};
+};
+
+async function checkPrivileges(req, res) {
+	const notAllowed = (
+		(req.query.cid && !await privileges.categories.can('topics:create', req.query.cid, req.uid)) ||
+		(req.query.tid && !await privileges.topics.can('topics:reply', req.query.tid, req.uid)) ||
+		(req.query.pid && !await privileges.posts.can('posts:edit', req.query.pid, req.uid))
+	);
+
+	if (notAllowed) {
+		await helpers.notAllowed(req, res);
+	}
 };
 
 function generateDiscardRoute(req, topicData) {
