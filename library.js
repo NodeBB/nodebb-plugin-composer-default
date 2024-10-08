@@ -237,7 +237,7 @@ async function checkPrivileges(req, res) {
 	if (notAllowed) {
 		await helpers.notAllowed(req, res);
 	}
-};
+}
 
 function generateDiscardRoute(req, topicData) {
 	if (req.query.cid) {
