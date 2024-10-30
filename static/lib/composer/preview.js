@@ -51,7 +51,7 @@ define('composer/preview', ['hooks'], function (hooks) {
 		const showText = toggler.querySelector('.show-text');
 		const hideText = toggler.querySelector('.hide-text');
 		const previewToggled = localStorage.getItem('composer:previewToggled');
-		const hidePreviewOnOpen = config['composer-default'].hidePreviewOnOpen === 'on';
+		const hidePreviewOnOpen = config['composer-default'] && config['composer-default'].hidePreviewOnOpen === 'on';
 		let show = !isMobile && (
 			((previewToggled === null && !hidePreviewOnOpen) || previewToggled === 'true')
 		);
