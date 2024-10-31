@@ -6,10 +6,10 @@
 				[[tags:select-tags]]
 			</button>
 
-			<ul class="dropdown-menu" role="menu">
-				<!-- BEGIN tagWhitelist -->
-				<li data-tag="{@value}"><a class="dropdown-item" href="#" role="menuitem">{@value}</a></li>
-				<!-- END tagWhitelist -->
+			<ul class="dropdown-menu p-1" role="menu">
+				{{{ each tagWhitelist }}}
+				<li data-tag="{@value}"><a class="dropdown-item rounded-1" href="#" role="menuitem">{@value}</a></li>
+				{{{ end }}}
 			</ul>
 		</div>
 		<input class="tags" type="text" class="" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" />
