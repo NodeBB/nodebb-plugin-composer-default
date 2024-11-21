@@ -37,7 +37,7 @@
 			{{{ end }}}
 		{{{ end }}}
 
-		{{{ if privileges.upload:post:image }}}
+		{{{ if canUploadImage }}}
 		<li title="[[modules:composer.upload-picture]]">
 			<button data-format="picture" class="img-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-picture]]">
 				<i class="fa fa-file-image-o"></i>
@@ -45,7 +45,7 @@
 		</li>
 		{{{ end }}}
 
-		{{{ if privileges.upload:post:file }}}
+		{{{ if canUploadFile }}}
 		<li title="[[modules:composer.upload-file]]">
 			<button data-format="upload" class="file-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-file]]">
 				<i class="fa fa-file-o"></i>

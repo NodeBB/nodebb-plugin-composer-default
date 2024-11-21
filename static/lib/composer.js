@@ -473,6 +473,8 @@ define('composer', [
 			isEditing: isEditing,
 			canSchedule: !!(isMain && privileges &&
 				((privileges['topics:schedule'] && !isEditing) || (isScheduled && privileges.view_scheduled))),
+			canUploadImage: app.user.privileges['upload:post:image'] && (config.maximumFileSize > 0 || app.user.isAdmin),
+			canUploadFile: app.user.privileges['upload:post:file'] && (config.maximumFileSize > 0 || app.user.isAdmin),
 			showHandleInput: config.allowGuestHandles &&
 				(app.user.uid === 0 || (isEditing && isGuestPost && app.user.isAdmin)),
 			handle: postData ? postData.handle || '' : undefined,
