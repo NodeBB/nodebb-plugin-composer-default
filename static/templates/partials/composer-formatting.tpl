@@ -61,13 +61,13 @@
 		<div class="draft-icon m-2 hidden-xs hidden-sm"></div>
 		<button class="btn btn-sm btn-link py-2 text-body fw-semibold text-nowrap" data-action="preview">
 			<i class="fa fa-eye"></i>
-			<span class="d-none d-md-inline show-text">[[modules:composer.show-preview]]</span>
-			<span class="d-none d-md-inline hide-text">[[modules:composer.hide-preview]]</span>
+			<span class="d-none d-xl-inline show-text">[[modules:composer.show-preview]]</span>
+			<span class="d-none d-xl-inline hide-text">[[modules:composer.hide-preview]]</span>
 		</button>
 		{{{ if composer:showHelpTab }}}
 		<button class="btn btn-sm btn-link py-2 text-body fw-semibold text-nowrap" data-action="help">
 			<i class="fa fa-question"></i>
-			<span class="d-none d-md-inline">[[modules:composer.help]]</span>
+			<span class="d-none d-xl-inline">[[modules:composer.help]]</span>
 		</button>
 		{{{ end }}}
 	</div>
