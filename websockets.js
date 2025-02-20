@@ -14,7 +14,7 @@ Sockets.push = async function (socket, pid) {
 		throw new Error('[[error:no-privileges]]');
 	}
 
-	const postData = await posts.getPostFields(pid, ['content', 'tid', 'uid', 'handle', 'timestamp']);
+	const postData = await posts.getPostFields(pid, ['content', 'sourceContent', 'tid', 'uid', 'handle', 'timestamp']);
 	if (!postData && !postData.content) {
 		throw new Error('[[error:invalid-pid]]');
 	}
@@ -33,7 +33,7 @@ Sockets.push = async function (socket, pid) {
 		pid: pid,
 		uid: postData.uid,
 		handle: parseInt(meta.config.allowGuestHandles, 10) ? postData.handle : undefined,
-		body: postData.content,
+		body: postData.sourceContent || postData.content,
 		title: topic.title,
 		thumb: topic.thumb,
 		tags: tags,
