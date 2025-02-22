@@ -430,11 +430,14 @@ define('composer', [
 	};
 
 	async function getSelectedCategory(postData) {
-		if (ajaxify.data.template.category && parseInt(postData.cid, 10) === parseInt(ajaxify.data.cid, 10)) {
+		const { template } = ajaxify.data;
+		const cid = parseInt(postData.cid, 10);
+		if ((template.category || template.world) && cid === parseInt(ajaxify.data.cid, 10)) {
 			// no need to load data if we are already on the category page
 			return ajaxify.data;
-		} else if (parseInt(postData.cid, 10)) {
-			return await api.get(`/api/category/${postData.cid}`, {});
+		} else if (cid) {
+			const categoryUrl = cid !== -1 ? `/api/category/${postData.cid}` : `/api/world`;
+			return await api.get(categoryUrl, {});
 		}
 		return null;
 	}
