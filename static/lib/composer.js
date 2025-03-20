@@ -436,7 +436,7 @@ define('composer', [
 			// no need to load data if we are already on the category page
 			return ajaxify.data;
 		} else if (cid) {
-			const categoryUrl = cid !== -1 ? `/api/category/${postData.cid}` : `/api/world`;
+			const categoryUrl = cid !== -1 ? `/api/category/${encodeURIComponent(postData.cid)}` : `/api/world`;
 			return await api.get(categoryUrl, {});
 		}
 		return null;

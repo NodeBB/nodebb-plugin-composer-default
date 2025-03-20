@@ -94,7 +94,7 @@ define('composer/categoryList', [
 
 	async function changeCategory(postContainer, postData, selectedCategory) {
 		postData.cid = selectedCategory.cid;
-		const categoryData = await window.fetch(`${config.relative_path}/api/category/${selectedCategory.cid}`).then(r => r.json());
+		const categoryData = await window.fetch(`${config.relative_path}/api/category/${encodeURIComponent(selectedCategory.cid)}`).then(r => r.json());
 		postData.category = categoryData;
 		updateTaskbarByCategory(postContainer, categoryData);
 		require(['composer/scheduler', 'composer/tags', 'composer/post-queue'], function (scheduler, tags, postQueue) {
