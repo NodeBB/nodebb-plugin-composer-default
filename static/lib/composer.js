@@ -431,8 +431,8 @@ define('composer', [
 
 	async function getSelectedCategory(postData) {
 		const { template } = ajaxify.data;
-		const cid = parseInt(postData.cid, 10);
-		if ((template.category || template.world) && cid === parseInt(ajaxify.data.cid, 10)) {
+		const { cid } = postData;
+		if ((template.category || template.world) && String(cid) === String(ajaxify.data.cid)) {
 			// no need to load data if we are already on the category page
 			return ajaxify.data;
 		} else if (cid) {
@@ -682,7 +682,7 @@ define('composer', [
 		var action = postData.action;
 
 		var checkTitle = (postData.hasOwnProperty('cid') || parseInt(postData.pid, 10)) && postContainer.find('input.title').length;
-		var isCategorySelected = !checkTitle || (checkTitle && parseInt(postData.cid, 10));
+		var isCategorySelected = !checkTitle || (checkTitle && postData.cid);
 
 		// Specifically for checking title/body length via plugins
 		var payload = {
