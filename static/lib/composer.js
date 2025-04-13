@@ -670,6 +670,7 @@ define('composer', [
 		var titleEl = postContainer.find('.title');
 		var bodyEl = postContainer.find('textarea');
 		var thumbEl = postContainer.find('input#topic-thumb-url');
+		var anonymousEl = postContainer.find('#anonymousPost');
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 		const submitBtn = postContainer.find('.composer-submit');
 
@@ -720,6 +721,9 @@ define('composer', [
 			return composerAlert(post_uuid, '[[error:scheduling-to-past]]');
 		}
 
+		// Check if the anonymous checkbox was filled in or not
+		var isAnonymous = anonymousEl.is(':checked');
+
 		let composerData = {
 			uuid: post_uuid,
 		};
@@ -737,6 +741,7 @@ define('composer', [
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
+				anonymous: isAnonymous, // Add anonymous flag
 			};
 		} else if (action === 'posts.reply') {
 			route = `/topics/${postData.tid}`;
@@ -746,6 +751,7 @@ define('composer', [
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
 				toPid: postData.toPid,
+				anonymous: isAnonymous, // Add anonymous flag here too
 			};
 		} else if (action === 'posts.edit') {
 			method = 'put';
@@ -759,6 +765,7 @@ define('composer', [
 				thumb: thumbEl.val() || '',
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
+				anonymous: isAnonymous, // Add anonymous flag here as well
 			};
 		}
 		var submitHookData = {
