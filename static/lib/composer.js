@@ -89,15 +89,15 @@ define('composer', [
 
 			if (!isMobile && window.location.pathname.startsWith(config.relative_path + '/compose')) {
 				/*
-				 *	If this conditional is met, we're no longer in mobile/tablet
-				 *	resolution but we've somehow managed to have a mobile
-				 *	composer load, so let's go back to the topic
+				 * If this conditional is met, we're no longer in mobile/tablet
+				 * resolution but we've somehow managed to have a mobile
+				 * composer load, so let's go back to the topic
 				 */
 				history.back();
 			} else if (isMobile && !window.location.pathname.startsWith(config.relative_path + '/compose')) {
 				/*
-				 *	In this case, we're in mobile/tablet resolution but the composer
-				 *	that loaded was a regular composer, so let's fix the address bar
+				 * In this case, we're in mobile/tablet resolution but the composer
+				 * that loaded was a regular composer, so let's fix the address bar
 				 */
 				mobileHistoryAppend();
 			}
@@ -121,7 +121,7 @@ define('composer', [
 		id = post[type];
 
 		// Find a match
-		for (var uuid in composer.posts) {
+		for (const uuid of Object.keys(composer.posts)) {
 			if (composer.posts[uuid].hasOwnProperty(type) && id === composer.posts[uuid][type]) {
 				return uuid;
 			}
@@ -179,8 +179,8 @@ define('composer', [
 
 	composer.findByTid = function (tid) {
 		// Iterates through the initialised composers and returns the uuid of the matching composer
-		for (var uuid in composer.posts) {
-			if (composer.posts.hasOwnProperty(uuid) && composer.posts[uuid].hasOwnProperty('tid') && parseInt(composer.posts[uuid].tid, 10) === parseInt(tid, 10)) {
+		for (const uuid of Object.keys(composer.posts)) {
+			if (composer.posts[uuid].hasOwnProperty('tid') && String(composer.posts[uuid].tid) === String(tid)) {
 				return uuid;
 			}
 		}
@@ -354,7 +354,7 @@ define('composer', [
 
 		postContainer.on('click', '.composer-submit', function (e) {
 			e.preventDefault();
-			e.stopPropagation();	// Other click events bring composer back to active state which is undesired on submit
+			e.stopPropagation(); // Other click events bring composer back to active state which is undesired on submit
 
 			$(this).attr('disabled', true);
 			post(post_uuid);
@@ -488,8 +488,8 @@ define('composer', [
 			submitOptions: [
 				// Add items using `filter:composer.create`, or just add them to the <ul> in DOM
 				// {
-				// 	action: 'foobar',
-				// 	text: 'Text Label',
+				//  action: 'foobar',
+				//  text: 'Text Label',
 				// }
 			],
 		};
