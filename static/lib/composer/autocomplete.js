@@ -57,7 +57,7 @@ define('composer/autocomplete', [
 
 		$(window).trigger('composer:autocomplete:init', data);
 
-		autocomplete._active[post_uuid] = Autocomplete.setup(data);
+		// autocomplete._active[post_uuid] = Autocomplete.setup(data);
 
 		data.element.on('textComplete:select', function () {
 			preview.render(postContainer);
