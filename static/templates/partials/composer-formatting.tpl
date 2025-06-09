@@ -6,7 +6,7 @@
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			{{{ if ./dropdownItems.length }}}
-			<li class="dropdown bottom-sheet" title="{./title}">
+			<li class="dropdown dropdown-left bottom-sheet" title="{./title}">
 				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{./title}">
 					<i class="{./className}"></i>
 				</button>
