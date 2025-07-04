@@ -19,9 +19,8 @@ Sockets.push = async function (socket, pid) {
 		throw new Error('[[error:invalid-pid]]');
 	}
 
-	const [topic, tags, isMain] = await Promise.all([
+	const [topic, isMain] = await Promise.all([
 		topics.getTopicDataByPid(pid),
-		topics.getTopicTags(postData.tid),
 		posts.isMain(pid),
 	]);
 
@@ -36,7 +35,7 @@ Sockets.push = async function (socket, pid) {
 		body: postData.sourceContent || postData.content,
 		title: topic.title,
 		thumb: topic.thumb,
-		tags: tags,
+		tags: topic.tags.map(t => t.value),
 		isMain: isMain,
 		timestamp: postData.timestamp,
 	});
