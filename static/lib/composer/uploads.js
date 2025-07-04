@@ -19,7 +19,7 @@ define('composer/uploads', [
 		initializePaste(post_uuid);
 
 		addChangeHandlers(post_uuid);
-		addTopicThumbHandlers(post_uuid);
+
 		translator.translate('[[modules:composer.uploading, ' + 0 + '%]]', function (translated) {
 			uploadingText = translated;
 		});
@@ -35,36 +35,6 @@ define('composer/uploads', [
 				uploadContentFiles({ files: files, post_uuid: post_uuid, route: '/api/post/upload' });
 			}
 		});
-	}
-
-	function addTopicThumbHandlers(post_uuid) {
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-
-		postContainer.on('click', '.topic-thumb-clear-btn', function (e) {
-			postContainer.find('input#topic-thumb-url').val('').trigger('change');
-			resetInputFile(postContainer.find('input#topic-thumb-file'));
-			$(this).addClass('hide');
-			e.preventDefault();
-		});
-
-		postContainer.on('paste change keypress', 'input#topic-thumb-url', function () {
-			var urlEl = $(this);
-			setTimeout(function () {
-				var url = urlEl.val();
-				if (url) {
-					postContainer.find('.topic-thumb-clear-btn').removeClass('hide');
-				} else {
-					resetInputFile(postContainer.find('input#topic-thumb-file'));
-					postContainer.find('.topic-thumb-clear-btn').addClass('hide');
-				}
-				postContainer.find('img.topic-thumb-preview').attr('src', url);
-			}, 100);
-		});
-	}
-
-	function resetInputFile($el) {
-		$el.wrap('<form />').closest('form').get(0).reset();
-		$el.unwrap();
 	}
 
 	function initializeDragAndDrop(post_uuid) {
