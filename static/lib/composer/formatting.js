@@ -28,8 +28,8 @@ define('composer/formatting', [
 				const composerObj = composer.posts[uuid];
 
 				if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
-					topicThumbs.modal.open({ id: uuid, pid: composerObj.pid }).then(() => {
-						postContainer.trigger('thumb.uploaded'); // toggle draft save
+					topicThumbs.modal.open({ id: uuid, postData: composerObj }).then(() => {
+						postContainer.trigger('thumb.uploaded');
 
 						// Update client-side with count
 						composer.updateThumbCount(uuid, postContainer);

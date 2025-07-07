@@ -201,6 +201,7 @@ define('composer', [
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
+			thumbs: data.thumbs || [],
 			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
 			isMain: true,
 		};
@@ -417,7 +418,7 @@ define('composer', [
 		handleHelp(postContainer);
 		handleSearch(postContainer);
 		focusElements(postContainer);
-		if (postData.action === 'posts.edit') {
+		if (postData.action === 'posts.edit' || postData.action === 'topics.post') {
 			composer.updateThumbCount(post_uuid, postContainer);
 		}
 
@@ -736,6 +737,7 @@ define('composer', [
 				thumb: thumbEl.val() || '',
 				cid: categoryList.getSelectedCid(),
 				tags: tags.getTags(post_uuid),
+				thumbs: postData.thumbs || [],
 				timestamp: scheduler.getTimestamp(),
 			};
 		} else if (action === 'posts.reply') {
@@ -756,7 +758,7 @@ define('composer', [
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
 				title: titleEl.val(),
-				thumb: thumbEl.val() || '',
+				thumbs: postData.thumbs || [],
 				tags: tags.getTags(post_uuid),
 				timestamp: scheduler.getTimestamp(),
 			};
@@ -883,20 +885,12 @@ define('composer', [
 
 	composer.updateThumbCount = function (uuid, postContainer) {
 		const composerObj = composer.posts[uuid];
-		if (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain)) {
-			const calls = [
-				topicThumbs.get(uuid),
-			];
-			if (composerObj.pid) {
-				calls.push(topicThumbs.getByPid(composerObj.pid));
-			}
-			Promise.all(calls).then((thumbs) => {
-				const thumbCount = thumbs.flat().length;
-				const formatEl = postContainer.find('[data-format="thumbs"]');
-				formatEl.find('.badge')
-					.text(thumbCount)
-					.toggleClass('hidden', !thumbCount);
-			});
+		if (composerObj && (composerObj.action === 'topics.post' || (composerObj.action === 'posts.edit' && composerObj.isMain))) {
+			const thumbCount = composerObj.thumbs ? composerObj.thumbs.length : 0;
+			const formatEl = postContainer.find('[data-format="thumbs"]');
+			formatEl.find('.badge')
+				.text(thumbCount)
+				.toggleClass('hidden', !thumbCount);
 		}
 	};
 

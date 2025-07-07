@@ -41,7 +41,6 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		});
 
 		drafts.migrateGuest();
-		drafts.migrateThumbs(...arguments);
 	};
 
 	function getStorage(uid) {
@@ -100,6 +99,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					draftData.tags = tags;
 					draftData.title = title;
 					draftData.cid = postData.cid;
+					draftData.thumbs = postData.thumbs || [];
 				} else if (postData.action === 'posts.reply') {
 					// new reply only
 					draftData.title = postData.title;
@@ -108,6 +108,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 				} else if (postData.action === 'posts.edit') {
 					draftData.pid = postData.pid;
 					draftData.title = title || postData.title;
+					draftData.thumbs = postData.thumbs || [];
 				}
 				if (!app.user.uid) {
 					draftData.handle = postContainer.find('input.handle').val();
@@ -208,26 +209,6 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		}
 	};
 
-	drafts.migrateThumbs = function (postContainer, postData) {
-		if (!app.uid) {
-			return;
-		}
-
-		// If any thumbs were uploaded, migrate them to this new composer's uuid
-		const newUUID = postContainer.attr('data-uuid');
-		const draft = drafts.get(postData.save_id);
-
-		if (draft && draft.uuid) {
-			api.put(`/topics/${draft.uuid}/thumbs`, {
-				tid: newUUID,
-			}).then(() => {
-				require(['composer'], function (composer) {
-					composer.updateThumbCount(newUUID, postContainer);
-				});
-			});
-		}
-	};
-
 	drafts.listAvailable = function () {
 		const available = drafts.getList('available');
 		return available.map(drafts.get).filter(Boolean);
@@ -286,6 +267,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					title: utils.escapeHTML(draft.title),
 					body: draft.text,
 					tags: String(draft.tags || '').split(','),
+					thumbs: draft.thumbs || [],
 				});
 			} else if (draft.action === 'posts.reply') {
 				api.get('/topics/' + draft.tid, {}, function (err, topicObj) {
@@ -307,6 +289,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					pid: draft.pid,
 					title: draft.title ? utils.escapeHTML(draft.title) : undefined,
 					body: draft.text,
+					thumbs: draft.thumbs || [],
 				});
 			}
 		});
