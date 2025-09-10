@@ -92,11 +92,23 @@ define('composer/categoryList', [
 		}
 	}
 
+	function updateTopicTemplate(postContainer, category, previousCategory) {
+		const currentText = postContainer.find('textarea.write').val();
+		const previousTopicTemplate = previousCategory && previousCategory.topicTemplate;
+		if (category && (!currentText.length || currentText === previousTopicTemplate) &&
+			currentText !== category.topicTemplate) {
+			postContainer.find('textarea.write').val(category.topicTemplate).trigger('input');
+		}
+	}
+
 	async function changeCategory(postContainer, postData, selectedCategory) {
+		const previousCategory = postData.category;
 		postData.cid = selectedCategory.cid;
 		const categoryData = await window.fetch(`${config.relative_path}/api/category/${encodeURIComponent(selectedCategory.cid)}`).then(r => r.json());
 		postData.category = categoryData;
 		updateTaskbarByCategory(postContainer, categoryData);
+		updateTopicTemplate(postContainer, categoryData, previousCategory);
+
 		require(['composer/scheduler', 'composer/tags', 'composer/post-queue'], function (scheduler, tags, postQueue) {
 			scheduler.onChangeCategory(categoryData);
 			tags.onChangeCategory(postContainer, postData, selectedCategory.cid, categoryData);
