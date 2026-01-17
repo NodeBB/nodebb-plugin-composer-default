@@ -52,16 +52,14 @@ define('composer', [
 				return;
 			}
 
-			translator.translate('[[modules:composer.discard]]', function (translated) {
-				composer.discardConfirm = bootbox.confirm(translated, function (confirm) {
-					if (confirm) {
-						composer.discard(composer.active);
-					} else {
-						composer.posts[composer.active].modified = true;
-					}
-				});
-				composer.posts[composer.active].modified = false;
+			composer.discardConfirm = bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+				if (confirm) {
+					composer.discard(composer.active);
+				} else {
+					composer.posts[composer.active].modified = true;
+				}
 			});
+			composer.posts[composer.active].modified = false;
 		}
 	});
 
@@ -378,15 +376,13 @@ define('composer', [
 
 			formatting.exitFullscreen();
 
-			var btn = $(this).prop('disabled', true);
-			translator.translate('[[modules:composer.discard]]', function (translated) {
-				bootbox.confirm(translated, function (confirm) {
-					if (confirm) {
-						composer.discard(post_uuid);
-						removeComposerHistory();
-					}
-					btn.prop('disabled', false);
-				});
+			const btn = $(this).prop('disabled', true);
+			bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+				if (confirm) {
+					composer.discard(post_uuid);
+					removeComposerHistory();
+				}
+				btn.prop('disabled', false);
 			});
 		});
 
