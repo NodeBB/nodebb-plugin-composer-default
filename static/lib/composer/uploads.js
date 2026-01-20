@@ -226,7 +226,7 @@ define('composer/uploads', [
 			'[[error:parse-error]]';
 
 		if (xhr && xhr.status === 413) {
-			msg = xhr.statusText || 'Request Entity Too Large';
+			msg = '[[error:api.413]]';
 		}
 		alerts.error(msg);
 		$(window).trigger('action:composer.uploadError', {
