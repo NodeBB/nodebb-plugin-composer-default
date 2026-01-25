@@ -456,11 +456,11 @@ define('composer', [
 		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 		postData.category = await getSelectedCategory(postData);
 		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
-		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : null;
+		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : '';
 		var data = {
 			topicTitle: title,
 			titleLength: title.length,
-			body: translator.escape(utils.escapeHTML(topicTemplate || postData.body)),
+			body: translator.escape(utils.escapeHTML(postData.body || topicTemplate)),
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
