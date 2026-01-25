@@ -460,7 +460,7 @@ define('composer', [
 		var data = {
 			topicTitle: title,
 			titleLength: title.length,
-			body: translator.escape(utils.escapeHTML(postData.body || topicTemplate)),
+			body: utils.escapeHTML(translator.escape(postData.body) || topicTemplate),
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
