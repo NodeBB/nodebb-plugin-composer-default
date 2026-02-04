@@ -27,6 +27,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		postContainer.on('click', '[component="category/list"] [data-cid]', utils.debounce(doSaveDraft, draftSaveDelay));
 		postContainer.on('itemAdded', '.tags', utils.debounce(doSaveDraft, draftSaveDelay));
 		postContainer.on('thumb.uploaded', doSaveDraft);
+		postContainer.on('composer.minimize', doSaveDraft);
 
 		draftIconEl.on('animationend', function () {
 			$(this).toggleClass('active', false);
@@ -84,48 +85,45 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 			const raw = postContainer.find('textarea').val();
 			const storage = getStorage(app.user.uid);
 
-			if (raw.length || (title && title.length)) {
-				const draftData = {
-					save_id: postData.save_id,
-					action: postData.action,
-					text: raw,
-					uuid: postContainer.attr('data-uuid'),
-					timestamp: Date.now(),
-				};
+			const draftData = {
+				save_id: postData.save_id,
+				action: postData.action,
+				text: raw,
+				uuid: postContainer.attr('data-uuid'),
+				timestamp: Date.now(),
+			};
 
-				if (postData.action === 'topics.post') {
-					// New topic only
-					const tags = postContainer.find('input.tags').val();
-					draftData.tags = tags;
-					draftData.title = title;
-					draftData.cid = postData.cid;
-					draftData.thumbs = postData.thumbs || [];
-				} else if (postData.action === 'posts.reply') {
-					// new reply only
-					draftData.title = postData.title;
-					draftData.tid = postData.tid;
-					draftData.toPid = postData.toPid;
-				} else if (postData.action === 'posts.edit') {
-					draftData.pid = postData.pid;
-					draftData.title = title || postData.title;
-					draftData.thumbs = postData.thumbs || [];
-				}
-				if (!app.user.uid) {
-					draftData.handle = postContainer.find('input.handle').val();
-				}
-
-				// save all draft data into single item as json
-				storage.setItem(postData.save_id, JSON.stringify(draftData));
-
-				$(window).trigger('action:composer.drafts.save', {
-					storage: storage,
-					postData: postData,
-					postContainer: postContainer,
-				});
-				draftIconEl.toggleClass('active', true);
-			} else {
-				drafts.removeDraft(postData.save_id);
+			if (postData.action === 'topics.post') {
+				// New topic only
+				const tags = postContainer.find('input.tags').val();
+				draftData.tags = tags;
+				draftData.title = title;
+				draftData.cid = postData.cid;
+				draftData.thumbs = postData.thumbs || [];
+			} else if (postData.action === 'posts.reply') {
+				// new reply only
+				draftData.title = postData.title;
+				draftData.tid = postData.tid;
+				draftData.toPid = postData.toPid;
+			} else if (postData.action === 'posts.edit') {
+				draftData.pid = postData.pid;
+				draftData.title = title || postData.title;
+				draftData.thumbs = postData.thumbs || [];
 			}
+			if (!app.user.uid) {
+				draftData.handle = postContainer.find('input.handle').val();
+			}
+
+			// save all draft data into single item as json
+			storage.setItem(postData.save_id, JSON.stringify(draftData));
+
+			$(window).trigger('action:composer.drafts.save', {
+				storage: storage,
+				postData: postData,
+				postContainer: postContainer,
+			});
+			draftIconEl.toggleClass('active', true);
+
 		}
 	}
 

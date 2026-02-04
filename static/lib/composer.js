@@ -871,6 +871,7 @@ define('composer', [
 			post_uuid: post_uuid,
 		});
 
+		postContainer.trigger('composer.minimize');
 		onHide();
 	};
 
