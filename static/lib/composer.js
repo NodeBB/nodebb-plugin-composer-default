@@ -226,23 +226,24 @@ define('composer', [
 		if (data.body) {
 			data.body = '> ' + data.body.replace(/\n/g, '\n> ') + '\n\n';
 		}
-		var link = '[' + escapedTitle + '](' + config.relative_path + '/post/' + encodeURIComponent(data.selectedPid || data.toPid) + ')';
+
+		const composerTid = data.uuid ? composer.posts[data.uuid].tid : data.tid;
+		const inDifferentTopic = parseInt(data.tid, 10) !== parseInt(composerTid, 10);
+		const useTopicLink = data.title && (data.selectedPid || data.toPid) && inDifferentTopic;
+		const postHref = `${config.relative_path}/post/${encodeURIComponent(data.selectedPid || data.toPid)}`;
+		const topicLink = `[${escapedTitle}](${postHref})`;
+
+		const quoteKey = useTopicLink ?
+			'> [[modules:composer.user-said-in, ' + data.username + ', ' + topicLink + ']]\n>\n' :
+			'> [[modules:composer.user-said, ' + data.username + ', ' + postHref + ']]\n>\n';
+
 		if (data.uuid === undefined) {
-			if (data.title && (data.selectedPid || data.toPid)) {
-				composer.newReply({
-					tid: data.tid,
-					toPid: data.toPid,
-					title: data.title,
-					body: '[[modules:composer.user-said-in, ' + data.username + ', ' + link + ']]\n' + data.body,
-				});
-			} else {
-				composer.newReply({
-					tid: data.tid,
-					toPid: data.toPid,
-					title: data.title,
-					body: '[[modules:composer.user-said, ' + data.username + ']]\n' + data.body,
-				});
-			}
+			composer.newReply({
+				tid: data.tid,
+				toPid: data.toPid,
+				title: data.title,
+				body: quoteKey + data.body,
+			});
 			return;
 		} else if (data.uuid !== composer.active) {
 			// If the composer is not currently active, activate it
@@ -252,18 +253,13 @@ define('composer', [
 		var postContainer = $('.composer[data-uuid="' + data.uuid + '"]');
 		var bodyEl = postContainer.find('textarea');
 		var prevText = bodyEl.val();
-		if (data.title && (data.selectedPid || data.toPid)) {
-			translator.translate('[[modules:composer.user-said-in, ' + data.username + ', ' + link + ']]\n', config.defaultLang, onTranslated);
-		} else {
-			translator.translate('[[modules:composer.user-said, ' + data.username + ']]\n', config.defaultLang, onTranslated);
-		}
 
-		function onTranslated(translated) {
+		translator.translate(quoteKey, config.defaultLang, function (translated) {
 			composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + data.body;
 			bodyEl.val(composer.posts[data.uuid].body);
 			focusElements(postContainer);
 			preview.render(postContainer);
-		}
+		});
 	};
 
 	composer.newReply = function (data) {
