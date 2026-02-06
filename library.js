@@ -48,9 +48,7 @@ plugin.addPrefetchTags = async function (hookData) {
 	const { req } = hookData;
 	if (req.uid > 0) {
 		const prefetch = [
-			'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
-			'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
-			'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
+			'/assets/templates/composer.js',
 			`/assets/language/${meta.config.defaultLang || 'en-GB'}/topic.json`,
 			`/assets/language/${meta.config.defaultLang || 'en-GB'}/modules.json`,
 			`/assets/language/${meta.config.defaultLang || 'en-GB'}/tags.json`,
