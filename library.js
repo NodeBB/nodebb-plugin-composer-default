@@ -44,25 +44,6 @@ plugin.addAdminNavigation = async function (header) {
 	return header;
 };
 
-plugin.addPrefetchTags = async function (hookData) {
-	const { req } = hookData;
-	if (req.uid > 0) {
-		const prefetch = [
-			'/assets/templates/composer.js',
-			`/assets/language/${meta.config.defaultLang || 'en-GB'}/topic.json`,
-			`/assets/language/${meta.config.defaultLang || 'en-GB'}/modules.json`,
-			`/assets/language/${meta.config.defaultLang || 'en-GB'}/tags.json`,
-		];
-
-		hookData.links = hookData.links.concat(prefetch.map(path => ({
-			rel: 'prefetch',
-			href: `${nconf.get('relative_path') + path}?${meta.config['cache-buster']}`,
-		})));
-	}
-
-	return hookData;
-};
-
 plugin.getFormattingOptions = async function () {
 	const defaultVisibility = {
 		mobile: true,

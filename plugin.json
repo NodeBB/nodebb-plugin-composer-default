@@ -6,8 +6,7 @@
 		{ "hook": "static:app.load", "method": "init" },
 		{ "hook": "filter:config.get", "method": "appendConfig" },
 		{ "hook": "filter:composer.build", "method": "filterComposerBuild" },
-		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
-		{ "hook": "filter:meta.getLinkTags", "method": "addPrefetchTags" }
+		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
 	],
 	"scss": [
 		"./static/scss/composer.scss"
