@@ -120,8 +120,7 @@ plugin.getFormattingOptions = async function () {
 };
 
 plugin.filterComposerBuild = async function (hookData) {
-	const { req } = hookData;
-	const { res } = hookData;
+	const { req, res } = hookData;
 
 	if (req.query.p) {
 		try {
