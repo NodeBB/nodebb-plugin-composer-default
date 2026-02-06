@@ -45,19 +45,22 @@ plugin.addAdminNavigation = async function (header) {
 };
 
 plugin.addPrefetchTags = async function (hookData) {
-	const prefetch = [
-		'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
-		'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
-		'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
-		`/assets/language/${meta.config.defaultLang || 'en-GB'}/topic.json`,
-		`/assets/language/${meta.config.defaultLang || 'en-GB'}/modules.json`,
-		`/assets/language/${meta.config.defaultLang || 'en-GB'}/tags.json`,
-	];
+	const { req } = hookData;
+	if (req.uid > 0) {
+		const prefetch = [
+			'/assets/src/modules/composer.js', '/assets/src/modules/composer/uploads.js', '/assets/src/modules/composer/drafts.js',
+			'/assets/src/modules/composer/tags.js', '/assets/src/modules/composer/categoryList.js', '/assets/src/modules/composer/resize.js',
+			'/assets/src/modules/composer/autocomplete.js', '/assets/templates/composer.tpl',
+			`/assets/language/${meta.config.defaultLang || 'en-GB'}/topic.json`,
+			`/assets/language/${meta.config.defaultLang || 'en-GB'}/modules.json`,
+			`/assets/language/${meta.config.defaultLang || 'en-GB'}/tags.json`,
+		];
 
-	hookData.links = hookData.links.concat(prefetch.map(path => ({
-		rel: 'prefetch',
-		href: `${nconf.get('relative_path') + path}?${meta.config['cache-buster']}`,
-	})));
+		hookData.links = hookData.links.concat(prefetch.map(path => ({
+			rel: 'prefetch',
+			href: `${nconf.get('relative_path') + path}?${meta.config['cache-buster']}`,
+		})));
+	}
 
 	return hookData;
 };
