@@ -444,18 +444,19 @@ define('composer', [
 		var isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
 		const isScheduled = postData.timestamp > Date.now();
 
-		// see
-		// https://github.com/NodeBB/NodeBB/issues/2994 and
-		// https://github.com/NodeBB/NodeBB/issues/1951
-		// remove when 1951 is resolved
-
-		var title = postData.title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
 		postData.category = await getSelectedCategory(postData);
 		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
 		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : '';
-		var data = {
-			topicTitle: title,
-			titleLength: title.length,
+
+		let data = {
+			topicTitle: postData.title,
+			titleLength: postData.title.length,
+			titleLabel: translator.compile(
+				isEditing ?
+					'topic:composer.editing-in' :
+					'topic:composer.replying-to',
+				`"${postData.title}"`
+			),
 			body: utils.escapeHTML(translator.escape(postData.body) || topicTemplate),
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
