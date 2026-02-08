@@ -566,20 +566,23 @@ define('composer', [
 		var returnPath = window.location.pathname.slice(1) + window.location.search;
 
 		// Remove relative path from returnPath
-		if (returnPath.startsWith(config.relative_path.slice(1))) {
-			returnPath = returnPath.slice(config.relative_path.length);
+		if (config.relative_path && returnPath.startsWith(config.relative_path.slice(1))) {
+			returnPath = returnPath.slice(config.relative_path.length - 1);
+			if (returnPath.startsWith('/')) {
+				returnPath = returnPath.slice(1);
+			}
 		}
 
 		// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
 		window.history.replaceState({
 			url: null,
 			returnPath: returnPath,
-		}, returnPath, config.relative_path + '/' + returnPath);
+		}, '', `${config.relative_path}/${returnPath}`);
 
 		// Update address bar in case f5 is pressed
 		window.history.pushState({
 			url: path,
-		}, path, `${config.relative_path}/${returnPath}`);
+		}, '', `${config.relative_path}/${returnPath}`);
 	}
 
 	function handleRemotePid(postContainer) {

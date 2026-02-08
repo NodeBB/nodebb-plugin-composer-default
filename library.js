@@ -103,8 +103,9 @@ plugin.filterComposerBuild = async function (hookData) {
 
 	if (req.query.p) {
 		try {
-			const a = url.parse(req.query.p, true, true);
-			return helpers.redirect(res, `/${(a.path || '').replace(/^\/*/, '')}`);
+			const a = new URL(req.query.p, 'http://localhost.com');
+			const path = (a.pathname + a.search).replace(/^\/+/, '');
+			return helpers.redirect(res, `/${path}`);
 		} catch (e) {
 			return helpers.redirect(res, '/');
 		}
