@@ -1,6 +1,5 @@
 'use strict';
 
-const url = require('url');
 
 const nconf = require.main.require('nconf');
 const validator = require('validator');
