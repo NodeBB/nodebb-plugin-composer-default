@@ -63,6 +63,7 @@ define('composer/preview', ['hooks'], function (hooks) {
 		}
 
 		function togglePreview(show) {
+			const isMobile = ['xs', 'sm'].includes(preview.env);
 			if (isMobile) {
 				previewContainer.classList.toggle('hide', false);
 				writeContainer.classList.toggle('maximized', false);

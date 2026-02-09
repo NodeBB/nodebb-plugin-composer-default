@@ -40,7 +40,7 @@ define('composer', [
 		localStorage.removeItem('category:' + data.data.cid + ':bookmark:clicked');
 	});
 
-	$(window).on('popstate', function () {
+	window.addEventListener('popstate', function () {
 		var env = utils.findBootstrapEnvironment();
 		if (composer.active && (env === 'xs' || env === 'sm')) {
 			if (!composer.posts[composer.active].modified) {
@@ -74,29 +74,17 @@ define('composer', [
 		var env = utils.findBootstrapEnvironment();
 		var isMobile = env === 'xs' || env === 'sm';
 
-		if (preview.toggle) {
-			if (preview.env !== env && isMobile) {
-				preview.env = env;
-				preview.toggle(false);
-			}
+		if (preview.toggle && preview.env !== env) {
 			preview.env = env;
+			preview.toggle(!isMobile);
 		}
 
 		if (composer.active !== undefined) {
 			resize.reposition($('.composer[data-uuid="' + composer.active + '"]'));
 
-			if (!isMobile && window.location.pathname.startsWith(config.relative_path + '/compose')) {
-				/*
-				 * If this conditional is met, we're no longer in mobile/tablet
-				 * resolution but we've somehow managed to have a mobile
-				 * composer load, so let's go back to the topic
-				 */
+			if (!isMobile && window.history.state && window.history.state.composerBackState) {
 				history.back();
-			} else if (isMobile && !window.location.pathname.startsWith(config.relative_path + '/compose')) {
-				/*
-				 * In this case, we're in mobile/tablet resolution but the composer
-				 * that loaded was a regular composer, so let's fix the address bar
-				 */
+			} else if (isMobile) {
 				mobileHistoryAppend();
 			}
 		}
@@ -562,27 +550,22 @@ define('composer', [
 	}
 
 	function mobileHistoryAppend() {
-		var path = 'compose?p=' + window.location.pathname;
-		var returnPath = window.location.pathname.slice(1) + window.location.search;
+		// add a fake entry to the browser history so that the user can
+		// press back to return to where they were before opening the composer
+		// popstate listener in this file closes the composer on mobile,
+		// browser automatically removes the fake entry when user presses back
+		if (window.history.state && !window.history.state.composerBackState) {
+			// modify current state so that ajaxify.go doesn't
+			// trigger when user presses back from composer
+			window.history.replaceState({
+				url: null,
+				returnPath: history.state.url,
+			}, ''); // 3rd param optional url, we dont change it
 
-		// Remove relative path from returnPath
-		if (config.relative_path && returnPath.startsWith(config.relative_path.slice(1))) {
-			returnPath = returnPath.slice(config.relative_path.length - 1);
-			if (returnPath.startsWith('/')) {
-				returnPath = returnPath.slice(1);
-			}
+			window.history.pushState({
+				composerBackState: true,
+			}, ''); // 3rd param optional url, we dont change it
 		}
-
-		// Add in return path to be caught by ajaxify when post is completed, or if back is pressed
-		window.history.replaceState({
-			url: null,
-			returnPath: returnPath,
-		}, '', `${config.relative_path}/${returnPath}`);
-
-		// Update address bar in case f5 is pressed
-		window.history.pushState({
-			url: path,
-		}, '', `${config.relative_path}/${returnPath}`);
 	}
 
 	function handleRemotePid(postContainer) {
