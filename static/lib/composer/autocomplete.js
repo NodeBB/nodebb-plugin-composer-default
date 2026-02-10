@@ -33,10 +33,13 @@ define('composer/autocomplete', [
 			element: element,
 			strategies: [],
 			options: {
+				placement: 'bottom',
 				style: {
 					'z-index': 20000,
+					'max-height': '250px',
+					overflow: 'auto',
 				},
-				className: dropdownClass + ' dropdown-menu textcomplete-dropdown',
+				className: dropdownClass + ' dropdown-menu textcomplete-dropdown ghost-scrollbar',
 			},
 		};
 
