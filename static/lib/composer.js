@@ -127,7 +127,15 @@ define('composer', [
 
 		if (existingUUID) {
 			taskbar.updateActive(existingUUID);
-			return composer.load(existingUUID);
+			if (post.body) {
+				const postContainer = $('.composer[data-uuid="' + existingUUID + '"]');
+				const bodyEl = postContainer.find('textarea');
+				const prevText = bodyEl.val();
+				composer.posts[existingUUID].body = (prevText.length ? prevText + '\n\n' : '') + post.body;
+				bodyEl.val(composer.posts[existingUUID].body);
+				preview.render(postContainer);
+			}
+			return;
 		}
 
 		var actionText = '[[topic:composer.new-topic]]';
