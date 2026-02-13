@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-composer-default",
-  "version": "10.3.15",
+  "version": "10.3.16",
   "description": "Default composer for NodeBB",
   "main": "library.js",
   "repository": {
