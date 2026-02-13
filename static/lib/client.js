@@ -43,12 +43,21 @@ $(document).ready(function () {
 		data.title = data.title || data.topicName;
 		if (config['composer-default'].composeRouteEnabled !== 'on') {
 			require(['composer'], function (composer) {
-				composer.newReply({
-					tid: data.tid,
-					toPid: data.pid,
-					title: data.title,
-					body: data.body,
-				});
+				if (data.tid) {
+					composer.newReply({
+						tid: data.tid,
+						toPid: data.pid,
+						title: data.title,
+						body: data.body,
+					});
+				} else {
+					composer.newTopic({
+						cid: data.cid,
+						title: data.title || '',
+						body: data.body || '',
+						tags: data.tags || [],
+					});
+				}
 			});
 		} else {
 			ajaxify.go(
