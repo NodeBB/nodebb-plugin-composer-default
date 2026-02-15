@@ -135,7 +135,7 @@ define('composer', [
 				bodyEl.val(composer.posts[existingUUID].body);
 				preview.render(postContainer);
 			}
-			return;
+			return composer.load(existingUUID);
 		}
 
 		var actionText = '[[topic:composer.new-topic]]';
