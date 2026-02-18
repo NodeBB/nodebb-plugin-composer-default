@@ -21,7 +21,9 @@ define('composer/tags', ['alerts'], function (alerts) {
 			confirmKeys: [13, 44],
 			trimValue: true,
 		});
-		var input = postContainer.find('.bootstrap-tagsinput input');
+		const tagsinput = postContainer.find('.bootstrap-tagsinput');
+		tagsinput.addClass('tag-list');
+		const input = tagsinput.find('input');
 
 		toggleTagInput(postContainer, postData, ajaxify.data);
 
@@ -29,7 +31,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 			input.autocomplete({
 				delay: 100,
 				position: { my: 'left bottom', at: 'left top', collision: 'flip' },
-				appendTo: postContainer.find('.bootstrap-tagsinput'),
+				appendTo: tagsinput,
 				open: function () {
 					$(this).autocomplete('widget').css('z-index', 20000);
 				},
