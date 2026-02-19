@@ -3,9 +3,10 @@
 define('composer/categoryList', [
 	'categorySelector', 'taskbar', 'api',
 ], function (categorySelector, taskbar, api) {
-	var categoryList = {};
+	const categoryList = {};
 
-	var selector;
+	let selector;
+	let mobileSelector;
 
 	categoryList.init = function (postContainer, postData) {
 		var listContainer = postContainer.find('.category-list-container');
@@ -25,30 +26,34 @@ define('composer/categoryList', [
 			onSelect: function (selectedCategory) {
 				if (postData.hasOwnProperty('cid')) {
 					changeCategory(postContainer, postData, selectedCategory);
+					mobileSelector.selectCategory(selectedCategory.cid, selectedCategory.categoryEl);
 				}
 			},
 		});
 		if (!selector) {
 			return;
 		}
-		if (postData.cid && postData.category) {
-			selector.selectedCategory = { cid: postData.cid, name: postData.category.name };
-		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
-			// separate composer route
-			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
-		}
-
 		// this is the mobile category selector
-		categorySelector.init(
+		mobileSelector = categorySelector.init(
 			postContainer.find('.mobile-navbar [component="category-selector"]'), {
 				privilege: 'topics:create',
 				states: ['watching', 'tracking', 'notwatching', 'ignoring'],
 				onSelect: function (selectedCategory) {
 					if (postData.hasOwnProperty('cid')) {
 						changeCategory(postContainer, postData, selectedCategory);
+						selector.selectCategory(selectedCategory.cid, selectedCategory.categoryEl);
 					}
 				},
 			});
+
+		if (postData.cid && postData.category) {
+			selector.selectedCategory = { cid: postData.cid, name: postData.category.name };
+			mobileSelector.selectedCategory = { cid: postData.cid, name: postData.category.name };
+		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
+			// separate composer route
+			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
+			mobileSelector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
+		}
 
 		toggleDropDirection(postContainer);
 	};

@@ -17,7 +17,7 @@
 
 			<div class="d-flex gap-1 flex-nowrap">
 				<button class="btn btn-sm btn-primary display-scheduler fs-5 {{{ if !canSchedule }}} hidden{{{ end }}}">
-					<i class="fa fa-clock-o"></i>
+					<i class="fa fa-fw fa-clock-o"></i>
 				</button>
 				<button class="btn btn-sm btn-primary composer-submit fs-5" data-action="post" tabindex="-1"><i class="fa fa-fw fa-chevron-right"></i></button>
 			</div>
