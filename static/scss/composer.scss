@@ -19,22 +19,41 @@
 			flex-shrink: 0;
 		}
 
-		button {
-			font-size: 20px;
+		// fix text-truncate in mobile
+		// these are not in selector-dropdown-content.tpl because they are only needed in the mobile composer and not in the category selector used in the topic list
+		.category-dropdown-container {
+			width: 100%;
+			> button {
+				width: 100%;
+				@include text-truncate;
+				text-align: start;
+				> [component="category-selector-selected"] {
+					width: 100%;
+					@include text-truncate;
+					> i:nth-child(1) {
+						flex-shrink: 0;
+						color: var(--bs-btn-color)!important;
+					}
+					> span:nth-child(2) { // show "Select category" text on mobile
+						display: inline!important;
+					}
+					> .category-item {
+						width: 100%;
+						@include text-truncate;
+						span:nth-child(1) {
+							flex-shrink: 0;
+						}
+						span:nth-child(2) {
+							display: block!important;
+							@include text-truncate;
+						}
+					}
+				}
+			}
 		}
 
-		display: flex;
-
-		.category-name-container, .title {
-			text-align: center;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
+		.title {
 			flex-grow: 2;
-			font-size: 16px;
-			line-height: inherit;
-			padding: 9px 5px;
-			margin: 0;
 		}
 	}
 

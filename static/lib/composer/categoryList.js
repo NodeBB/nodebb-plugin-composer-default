@@ -39,22 +39,15 @@ define('composer/categoryList', [
 		}
 
 		// this is the mobile category selector
-		postContainer.find('.category-name')
-			.translateHtml(selector.selectedCategory ? selector.selectedCategory.name : '[[modules:composer.select-category]]')
-			.on('click', function () {
-				categorySelector.modal({
-					privilege: 'topics:create',
-					states: ['watching', 'tracking', 'notwatching', 'ignoring'],
-					openOnLoad: true,
-					showLinks: false,
-					onSubmit: function (selectedCategory) {
-						postContainer.find('.category-name').text(selectedCategory.name);
-						selector.selectCategory(selectedCategory.cid);
-						if (postData.hasOwnProperty('cid')) {
-							changeCategory(postContainer, postData, selectedCategory);
-						}
-					},
-				});
+		categorySelector.init(
+			postContainer.find('.mobile-navbar [component="category-selector"]'), {
+				privilege: 'topics:create',
+				states: ['watching', 'tracking', 'notwatching', 'ignoring'],
+				onSelect: function (selectedCategory) {
+					if (postData.hasOwnProperty('cid')) {
+						changeCategory(postContainer, postData, selectedCategory);
+					}
+				},
 			});
 
 		toggleDropDirection(postContainer);
