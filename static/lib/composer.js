@@ -122,12 +122,10 @@ define('composer', [
 			return;
 		}
 
-		var uuid = utils.generateUUID();
-		var existingUUID = alreadyOpen(post);
-
+		const existingUUID = alreadyOpen(post);
 		if (existingUUID) {
 			taskbar.updateActive(existingUUID);
-			if (post.body) {
+			if (post.body && !post.fromDraft) {
 				const postContainer = $('.composer[data-uuid="' + existingUUID + '"]');
 				const bodyEl = postContainer.find('textarea');
 				const prevText = bodyEl.val();
@@ -137,18 +135,16 @@ define('composer', [
 			}
 			return composer.load(existingUUID);
 		}
-
-		var actionText = '[[topic:composer.new-topic]]';
+		const uuid = utils.generateUUID();
+		let actionText = '[[topic:composer.new-topic]]';
 		if (post.action === 'posts.reply') {
-			actionText = '[[topic:composer.replying-to]]';
+			actionText = translator.compile('topic:composer.replying-to', `"${post.title}"`);
 		} else if (post.action === 'posts.edit') {
-			actionText = '[[topic:composer.editing-in]]';
+			actionText = translator.compile('topic:composer.editing-in', `"${post.title}"`);
 		}
 
-		translator.translate(actionText, function (translatedAction) {
-			taskbar.push('composer', uuid, {
-				title: translatedAction.replace('%1', '"' + post.title + '"'),
-			});
+		taskbar.push('composer', uuid, {
+			title: actionText,
 		});
 
 		composer.posts[uuid] = post;
@@ -188,6 +184,7 @@ define('composer', [
 
 	composer.newTopic = async (data) => {
 		let pushData = {
+			fromDraft: data.fromDraft,
 			save_id: data.save_id,
 			action: 'topics.post',
 			cid: data.cid,
@@ -261,6 +258,7 @@ define('composer', [
 	composer.newReply = function (data) {
 		translator.translate(data.body, config.defaultLang, function (translated) {
 			push({
+				fromDraft: data.fromDraft,
 				save_id: data.save_id,
 				action: 'posts.reply',
 				tid: data.tid,
@@ -279,6 +277,7 @@ define('composer', [
 			if (err) {
 				return alerts.error(err);
 			}
+			postData.fromDraft = data.fromDraft;
 			postData.save_id = data.save_id;
 			postData.action = 'posts.edit';
 			postData.pid = data.pid;

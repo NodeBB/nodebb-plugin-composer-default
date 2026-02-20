@@ -259,6 +259,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		require(['composer'], function (composer) {
 			if (draft.action === 'topics.post') {
 				composer.newTopic({
+					fromDraft: true,
 					save_id: draft.save_id,
 					cid: draft.cid,
 					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
@@ -274,6 +275,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 					}
 
 					composer.newReply({
+						fromDraft: true,
 						save_id: draft.save_id,
 						tid: draft.tid,
 						toPid: draft.toPid,
@@ -283,6 +285,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 				});
 			} else if (draft.action === 'posts.edit') {
 				composer.editPost({
+					fromDraft: true,
 					save_id: draft.save_id,
 					pid: draft.pid,
 					title: draft.title ? utils.escapeHTML(draft.title) : undefined,
