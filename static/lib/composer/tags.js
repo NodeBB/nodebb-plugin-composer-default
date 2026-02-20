@@ -2,13 +2,13 @@
 'use strict';
 
 define('composer/tags', ['alerts'], function (alerts) {
-	var tags = {};
+	const tags = {};
 
-	var minTags;
-	var maxTags;
+	let minTags;
+	let maxTags;
 
 	tags.init = function (postContainer, postData) {
-		var tagEl = postContainer.find('.tags');
+		const tagEl = postContainer.find('.tags');
 		if (!tagEl.length) {
 			return;
 		}
@@ -58,9 +58,9 @@ define('composer/tags', ['alerts'], function (alerts) {
 			addTags(postData.tags, tagEl);
 
 			tagEl.on('beforeItemAdd', function (event) {
-				var reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
-				var cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
-				var different = cleanTag !== event.item;
+				const reachedMaxTags = maxTags && maxTags <= tags.getTags(postContainer.attr('data-uuid')).length;
+				const cleanTag = utils.cleanUpTag(event.item, config.maximumTagLength);
+				const different = cleanTag !== event.item;
 				event.cancel = different ||
 					event.item.length < config.minimumTagLength ||
 					event.item.length > config.maximumTagLength ||
@@ -73,7 +73,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 				} else if (reachedMaxTags) {
 					return alerts.error('[[error:too-many-tags, ' + maxTags + ']]');
 				}
-				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
+				const cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
 				$(window).trigger('action:tag.beforeAdd', {
 					cid,
 					tagEl,
@@ -109,7 +109,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 				if (event.options && event.options.skipAddCheck) {
 					return;
 				}
-				var cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
+				const cid = postData.hasOwnProperty('cid') ? postData.cid : ajaxify.data.cid;
 				socket.emit('topics.isTagAllowed', { tag: event.item, cid: cid || 0 }, function (err, allowed) {
 					if (err) {
 						return alerts.error(err);
@@ -136,7 +136,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 		});
 
 		$('[component="composer/tag/dropdown"]').on('click', 'li', function () {
-			var tag = $(this).attr('data-tag');
+			const tag = $(this).attr('data-tag');
 			if (tag) {
 				addTags([tag], tagEl);
 			}
@@ -153,7 +153,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 	};
 
 	tags.onChangeCategory = function (postContainer, postData, cid, categoryData) {
-		var tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
+		const tagDropdown = postContainer.find('[component="composer/tag/dropdown"]');
 		if (!tagDropdown.length) {
 			return;
 		}
@@ -168,8 +168,8 @@ define('composer/tags', ['alerts'], function (alerts) {
 	};
 
 	function toggleTagInput(postContainer, postData, data) {
-		var tagEl = postContainer.find('.tags');
-		var input = postContainer.find('.bootstrap-tagsinput input');
+		const tagEl = postContainer.find('.tags');
+		const input = postContainer.find('.bootstrap-tagsinput input');
 		if (!input.length) {
 			return;
 		}
@@ -212,7 +212,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 
 	function triggerEnter(input) {
 		// http://stackoverflow.com/a/3276819/583363
-		var e = jQuery.Event('keypress');
+		const e = jQuery.Event('keypress');
 		e.which = 13;
 		e.keyCode = 13;
 		setTimeout(function () {
@@ -222,7 +222,7 @@ define('composer/tags', ['alerts'], function (alerts) {
 
 	function addTags(tags, tagEl) {
 		if (tags && tags.length) {
-			for (var i = 0; i < tags.length; ++i) {
+			for (let i = 0; i < tags.length; ++i) {
 				tagEl.tagsinput('add', tags[i]);
 			}
 		}

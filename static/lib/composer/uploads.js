@@ -8,11 +8,11 @@ define('composer/uploads', [
 	'uploadHelpers',
 	'jquery-form',
 ], function (preview, categoryList, translator, alerts, uploadHelpers) {
-	var uploads = {
+	const uploads = {
 		inProgress: {},
 	};
 
-	var uploadingText = '';
+	let uploadingText = '';
 
 	uploads.initialize = function (post_uuid) {
 		initializeDragAndDrop(post_uuid);
@@ -26,10 +26,10 @@ define('composer/uploads', [
 	};
 
 	function addChangeHandlers(post_uuid) {
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		const postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 
 		postContainer.find('#files').on('change', function (e) {
-			var files = (e.target || {}).files ||
+			const files = (e.target || {}).files ||
 				($(this).val() ? [{ name: $(this).val(), type: utils.fileMimeType($(this).val()) }] : null);
 			if (files) {
 				uploadContentFiles({ files: files, post_uuid: post_uuid, route: '/api/post/upload' });
@@ -38,7 +38,7 @@ define('composer/uploads', [
 	}
 
 	function initializeDragAndDrop(post_uuid) {
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		const postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		uploadHelpers.handleDragDrop({
 			container: postContainer,
 			callback: function (upload) {
@@ -53,7 +53,7 @@ define('composer/uploads', [
 	}
 
 	function initializePaste(post_uuid) {
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		const postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
 		uploadHelpers.handlePaste({
 			container: postContainer,
 			callback: function (upload) {
@@ -77,35 +77,34 @@ define('composer/uploads', [
 	}
 
 	function uploadContentFiles(params) {
-		var files = [...params.files];
-		var post_uuid = params.post_uuid;
-		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
-		var textarea = postContainer.find('textarea');
-		var text = textarea.val();
-		var uploadForm = postContainer.find('#fileForm');
-		var doneUploading = false;
+		const files = [...params.files];
+		const post_uuid = params.post_uuid;
+		const postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+		const textarea = postContainer.find('textarea');
+		let text = textarea.val();
+		const uploadForm = postContainer.find('#fileForm');
+		let doneUploading = false;
 		uploadForm.attr('action', config.relative_path + params.route);
 
-		var cid = categoryList.getSelectedCid();
+		let cid = categoryList.getSelectedCid();
 		if (!cid && ajaxify.data.cid) {
 			cid = ajaxify.data.cid;
 		}
-		var i = 0;
-		var isImage = false;
-		for (i = 0; i < files.length; ++i) {
-			isImage = files[i].type.match(/image./);
+
+		for (let i = 0; i < files.length; ++i) {
+			const isImage = files[i].type.match(/image./);
 			if ((isImage && !app.user.privileges['upload:post:image']) || (!isImage && !app.user.privileges['upload:post:file'])) {
 				return alerts.error('[[error:no-privileges]]');
 			}
 		}
 
-		var filenameMapping = [];
+		const filenameMapping = [];
 		let filesText = '';
-		for (i = 0; i < files.length; ++i) {
+		for (let i = 0; i < files.length; ++i) {
 			// The filename map has datetime and iterator prepended so that they can be properly tracked even if the
 			// filenames are identical.
 			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
-			isImage = files[i].type.match(/image./);
+			const isImage = files[i].type.match(/image./);
 
 			if (!app.user.isAdmin && files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
 				uploadForm[0].reset();
@@ -136,12 +135,12 @@ define('composer/uploads', [
 
 		uploadForm.off('submit').submit(function () {
 			function updateTextArea(filename, text, trim) {
-				var newFilename;
+				let newFilename;
 				if (trim) {
 					newFilename = filename.replace(/^\d+_\d{13}_/, '');
 				}
-				var current = textarea.val();
-				var re = new RegExp(escapeRegExp(filename) + ']\\([^)]+\\)', 'g');
+				const current = textarea.val();
+				const re = new RegExp(escapeRegExp(filename) + ']\\([^)]+\\)', 'g');
 				textarea.val(current.replace(re, (newFilename || filename) + '](' + text + ')'));
 
 				$(window).trigger('action:composer.uploadUpdate', {
@@ -171,7 +170,7 @@ define('composer/uploads', [
 					doneUploading = true;
 					postContainer.find('[data-action="post"]').prop('disabled', false);
 					const errorMsg = onUploadError(xhr, post_uuid);
-					for (var i = 0; i < files.length; ++i) {
+					for (let i = 0; i < files.length; ++i) {
 						updateTextArea(filenameMapping[i], errorMsg, true);
 					}
 					preview.render(postContainer);
@@ -182,7 +181,7 @@ define('composer/uploads', [
 						if (doneUploading) {
 							return;
 						}
-						for (var i = 0; i < files.length; ++i) {
+						for (let i = 0; i < files.length; ++i) {
 							updateTextArea(filenameMapping[i], translated);
 						}
 					});
@@ -192,7 +191,7 @@ define('composer/uploads', [
 					const uploads = res.response.images;
 					doneUploading = true;
 					if (uploads && uploads.length) {
-						for (var i = 0; i < uploads.length; ++i) {
+						for (let i = 0; i < uploads.length; ++i) {
 							uploads[i].filename = filenameMapping[i].replace(/^\d+_\d{13}_/, '');
 							uploads[i].isImage = /image./.test(files[i].type);
 							updateTextArea(filenameMapping[i], uploads[i].url, true);
@@ -221,7 +220,7 @@ define('composer/uploads', [
 	}
 
 	function onUploadError(xhr, post_uuid) {
-		var msg = (xhr.responseJSON &&
+		let msg = (xhr.responseJSON &&
 			(xhr.responseJSON.error || (xhr.responseJSON.status && xhr.responseJSON.status.message))) ||
 			'[[error:parse-error]]';
 

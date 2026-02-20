@@ -3,18 +3,18 @@
 define('composer/formatting', [
 	'composer/preview', 'composer/resize', 'topicThumbs', 'screenfull',
 ], function (preview, resize, topicThumbs, screenfull) {
-	var formatting = {};
+	const formatting = {};
 
-	var formattingDispatchTable = {
+	const formattingDispatchTable = {
 		picture: function () {
-			var postContainer = this;
+			const postContainer = this;
 			postContainer.find('#files')
 				.attr('accept', 'image/*')
 				.click();
 		},
 
 		upload: function () {
-			var postContainer = this;
+			const postContainer = this;
 			postContainer.find('#files')
 				.attr('accept', '')
 				.click();
@@ -22,7 +22,7 @@ define('composer/formatting', [
 
 		thumbs: function () {
 			formatting.exitFullscreen();
-			var postContainer = this;
+			const postContainer = this;
 			require(['composer'], function (composer) {
 				const uuid = postContainer.get(0).getAttribute('data-uuid');
 				const composerObj = composer.posts[uuid];
@@ -39,12 +39,12 @@ define('composer/formatting', [
 		},
 
 		tags: function () {
-			var postContainer = this;
+			const postContainer = this;
 			postContainer.find('.tags-container').toggleClass('hidden');
 		},
 
 		zen: function () {
-			var postContainer = this;
+			const postContainer = this;
 			$(window).one('resize', function () {
 				function onResize() {
 					if (!screenfull.isFullscreen) {
@@ -70,7 +70,7 @@ define('composer/formatting', [
 		},
 	};
 
-	var buttons = [];
+	const buttons = [];
 
 	formatting.exitFullscreen = function () {
 		if (screenfull.isEnabled && screenfull.isFullscreen) {
@@ -82,7 +82,7 @@ define('composer/formatting', [
 		const formattingBarEl = $('.formatting-bar');
 		const fileForm = formattingBarEl.find('.formatting-group #fileForm');
 		buttons.forEach((btn) => {
-			let markup = ``;
+			let markup;
 			if (Array.isArray(btn.dropdownItems) && btn.dropdownItems.length) {
 				markup = generateFormattingDropdown(btn);
 			} else {
@@ -178,8 +178,8 @@ define('composer/formatting', [
 
 	formatting.addHandler = function (postContainer) {
 		postContainer.on('click', '.formatting-bar [data-format]', function (event) {
-			var format = $(this).attr('data-format');
-			var textarea = $(this).parents('[component="composer"]').find('textarea')[0];
+			const format = $(this).attr('data-format');
+			const textarea = $(this).parents('[component="composer"]').find('textarea')[0];
 
 			if (formattingDispatchTable.hasOwnProperty(format)) {
 				formattingDispatchTable[format].call(

@@ -3,7 +3,7 @@
 define('composer/autocomplete', [
 	'composer/preview', 'autocomplete',
 ], function (preview, Autocomplete) {
-	var autocomplete = {
+	const autocomplete = {
 		_active: {},
 	};
 
@@ -15,9 +15,9 @@ define('composer/autocomplete', [
 	});
 
 	autocomplete.init = function (postContainer, post_uuid) {
-		var element = postContainer.find('.write');
-		var dropdownClass = 'composer-autocomplete-dropdown-' + post_uuid;
-		var timer;
+		const element = postContainer.find('.write');
+		const dropdownClass = 'composer-autocomplete-dropdown-' + post_uuid;
+		let timer;
 
 		if (!element.length) {
 			/**
@@ -29,7 +29,7 @@ define('composer/autocomplete', [
 			return;
 		}
 
-		var data = {
+		const data = {
 			element: element,
 			strategies: [],
 			options: {
@@ -46,13 +46,13 @@ define('composer/autocomplete', [
 		element.on('keyup', function () {
 			clearTimeout(timer);
 			timer = setTimeout(function () {
-				var dropdown = document.querySelector('.' + dropdownClass);
+				const dropdown = document.querySelector('.' + dropdownClass);
 				if (dropdown) {
-					var pos = dropdown.getBoundingClientRect();
+					const pos = dropdown.getBoundingClientRect();
 
-					var margin = parseFloat(dropdown.style.marginTop, 10) || 0;
+					const margin = parseFloat(dropdown.style.marginTop, 10) || 0;
 
-					var offset = window.innerHeight + margin - 10 - pos.bottom;
+					const offset = window.innerHeight + margin - 10 - pos.bottom;
 					dropdown.style.marginTop = Math.min(offset, 0) + 'px';
 				}
 			}, 0);

@@ -9,7 +9,7 @@ define('composer/categoryList', [
 	let mobileSelector;
 
 	categoryList.init = function (postContainer, postData) {
-		var listContainer = postContainer.find('.category-list-container');
+		const listContainer = postContainer.find('.category-list-container');
 		if (!listContainer.length) {
 			return;
 		}
@@ -63,7 +63,7 @@ define('composer/categoryList', [
 	}
 
 	categoryList.getSelectedCid = function () {
-		var selectedCategory;
+		let selectedCategory;
 		if (selector) {
 			selectedCategory = selector.getSelectedCategory();
 		}
@@ -80,7 +80,7 @@ define('composer/categoryList', [
 
 	function updateTaskbarByCategory(postContainer, category) {
 		if (category) {
-			var uuid = postContainer.attr('data-uuid');
+			const uuid = postContainer.attr('data-uuid');
 			taskbar.update('composer', uuid, {
 				image: category.backgroundImage,
 				color: category.color,

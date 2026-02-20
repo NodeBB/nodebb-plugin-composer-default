@@ -2,18 +2,18 @@
 'use strict';
 
 define('composer/resize', ['taskbar'], function (taskbar) {
-	var resize = {};
-	var oldRatio = 0;
-	var minimumRatio = 0.3;
-	var snapMargin = 0.05;
-	var smallMin = 768;
+	const resize = {};
+	let oldRatio = 0;
+	const minimumRatio = 0.3;
+	const snapMargin = 0.05;
+	const smallMin = 768;
 
-	var $body = $('body');
-	var $window = $(window);
-	var $headerMenu = $('[component="navbar"]');
+	const $body = $('body');
+	const $window = $(window);
+	const $headerMenu = $('[component="navbar"]');
 	const content = document.getElementById('content');
 
-	var header = $headerMenu[0];
+	const header = $headerMenu[0];
 
 	function getSavedRatio() {
 		return localStorage.getItem('composer:resizeRatio') || 0.5;
@@ -24,7 +24,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	}
 
 	function getBounds() {
-		var headerRect;
+		let headerRect;
 		if (header) {
 			headerRect = header.getBoundingClientRect();
 		} else {
@@ -32,9 +32,9 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 			headerRect = { bottom: 0 };
 		}
 
-		var headerBottom = Math.max(headerRect.bottom, 0);
+		const headerBottom = Math.max(headerRect.bottom, 0);
 
-		var rect = {
+		const rect = {
 			top: 0,
 			left: 0,
 			right: window.innerWidth,
@@ -51,24 +51,24 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	}
 
 	function doResize(postContainer, ratio) {
-		var bounds = getBounds();
-		var elem = postContainer[0];
-		var style = window.getComputedStyle(elem);
+		const bounds = getBounds();
+		const elem = postContainer[0];
+		const style = window.getComputedStyle(elem);
 
 		// Adjust minimumRatio for shorter viewports
-		var minHeight = parseInt(style.getPropertyValue('min-height'), 10);
-		var adjustedMinimum = Math.max(minHeight / window.innerHeight, minimumRatio);
+		const minHeight = parseInt(style.getPropertyValue('min-height'), 10);
+		const adjustedMinimum = Math.max(minHeight / window.innerHeight, minimumRatio);
 
 		if (bounds.width >= smallMin) {
 			const boundedDifference = (bounds.height - bounds.boundedHeight) / bounds.height;
 			ratio = Math.min(Math.max(ratio, adjustedMinimum + boundedDifference), 1);
 
-			var top = ratio * bounds.boundedHeight / bounds.height;
+			const top = ratio * bounds.boundedHeight / bounds.height;
 			elem.style.top = ((1 - top) * 100).toString() + '%';
 
 			// Add some extra space at the bottom of the body so that
 			// the user can still scroll to the last post w/ composer open
-			var rect = elem.getBoundingClientRect();
+			const rect = elem.getBoundingClientRect();
 			content.style.paddingBottom = (rect.bottom - rect.top).toString() + 'px';
 		} else {
 			elem.style.top = 0;
@@ -80,8 +80,8 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 		taskbar.updateActive(postContainer.attr('data-uuid'));
 	}
 
-	var resizeIt = doResize;
-	var raf = window.requestAnimationFrame ||
+	let resizeIt = doResize;
+	const raf = window.requestAnimationFrame ||
 		window.webkitRequestAnimationFrame ||
 		window.mozRequestAnimationFrame;
 
@@ -99,7 +99,7 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	}
 
 	resize.reposition = function (postContainer) {
-		var ratio = getSavedRatio();
+		let ratio = getSavedRatio();
 
 		if (ratio >= 1 - snapMargin) {
 			ratio = 1;
@@ -118,15 +118,15 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 	};
 
 	resize.handleResize = function (postContainer) {
-		var resizeOffset = 0;
-		var resizeBegin = 0;
-		var resizeEnd = 0;
-		var $resizer = postContainer.find('.resizer');
-		var resizer = $resizer[0];
+		let resizeOffset = 0;
+		let resizeBegin = 0;
+		let resizeEnd = 0;
+		const $resizer = postContainer.find('.resizer');
+		const resizer = $resizer[0];
 
 		function resizeStart(e) {
-			var resizeRect = resizer.getBoundingClientRect();
-			var resizeCenterY = (resizeRect.top + resizeRect.bottom) / 2;
+			const resizeRect = resizer.getBoundingClientRect();
+			const resizeCenterY = (resizeRect.top + resizeRect.bottom) / 2;
 
 			resizeOffset = (resizeCenterY - e.clientY) / 2;
 			resizeBegin = e.clientY;
@@ -137,9 +137,9 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 		}
 
 		function resizeAction(e) {
-			var position = e.clientY - resizeOffset;
-			var bounds = getBounds();
-			var ratio = (bounds.height - position) / (bounds.boundedHeight);
+			const position = e.clientY - resizeOffset;
+			const bounds = getBounds();
+			const ratio = (bounds.height - position) / (bounds.boundedHeight);
 
 			resizeIt(postContainer, ratio);
 		}
@@ -153,9 +153,9 @@ define('composer/resize', ['taskbar'], function (taskbar) {
 			$window.off('mouseup', resizeStop);
 			$body.off('touchmove', resizeTouchAction);
 
-			var position = resizeEnd - resizeOffset;
-			var bounds = getBounds();
-			var ratio = (bounds.height - position) / (bounds.boundedHeight);
+			const position = resizeEnd - resizeOffset;
+			const bounds = getBounds();
+			let ratio = (bounds.height - position) / (bounds.boundedHeight);
 
 			if (resizeEnd - resizeBegin === 0 && postContainer.hasClass('maximized')) {
 				postContainer.removeClass('maximized');

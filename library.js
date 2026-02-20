@@ -241,7 +241,7 @@ function generateDiscardRoute(req, topicData) {
 }
 
 async function generateBody(req, postData) {
-	let body = '';
+	let body;
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
@@ -250,8 +250,9 @@ async function generateBody(req, postData) {
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body || req.query.content) {
 		body = validator.escape(String(req.query.body || req.query.content));
+	} else {
+		body = postData ? postData.content : '';
 	}
-	body = postData ? postData.content : '';
 	return translator.escape(body);
 }
 
