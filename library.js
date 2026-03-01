@@ -158,7 +158,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		isMain = true;
 	}
 	globalPrivileges['topics:tag'] = canTagTopics;
-	const cid = parseInt(req.query.cid, 10);
+	const cid = req.query.cid || '';
 	const topicTitle = topicData && topicData.title ?
 		topicData.title :
 		validator.escape(String(req.query.title || ''));
@@ -198,9 +198,9 @@ plugin.filterComposerBuild = async function (hookData) {
 			minimumTagLength: meta.config.minimumTagLength || 3,
 			maximumTagLength: meta.config.maximumTagLength || 15,
 			tagWhitelist: tagWhitelist,
-			selectedCategory: cid ? categoryData : null,
-			minTags: categoryData.minTags,
-			maxTags: categoryData.maxTags,
+			selectedCategory: categoryData || null,
+			minTags: categoryData && categoryData.minTags,
+			maxTags: categoryData && categoryData.maxTags,
 
 			isTopic: !!req.query.cid,
 			isEditing: isEditing,
@@ -282,14 +282,14 @@ async function isModerator(req) {
 }
 
 async function canTag(req) {
-	if (parseInt(req.query.cid, 10)) {
+	if (req.query.cid) {
 		return await privileges.categories.can('topics:tag', req.query.cid, req.uid);
 	}
 	return true;
 }
 
 async function canSchedule(req) {
-	if (parseInt(req.query.cid, 10)) {
+	if (req.query.cid) {
 		return await privileges.categories.can('topics:schedule', req.query.cid, req.uid);
 	}
 	return false;

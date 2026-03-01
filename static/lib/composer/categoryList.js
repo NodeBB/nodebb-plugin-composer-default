@@ -1,8 +1,8 @@
 'use strict';
 
 define('composer/categoryList', [
-	'categorySelector', 'taskbar', 'api',
-], function (categorySelector, taskbar, api) {
+	'categorySelector', 'taskbar', 'api', 'alerts'
+], function (categorySelector, taskbar, api, alerts) {
 	const categoryList = {};
 
 	let selector;
@@ -71,10 +71,10 @@ define('composer/categoryList', [
 	};
 
 	categoryList.updateTaskbar = function (postContainer, postData) {
-		if (parseInt(postData.cid, 10)) {
+		if (postData.cid) {
 			api.get(`/categories/${postData.cid}`, {}).then(function (category) {
 				updateTaskbarByCategory(postContainer, category);
-			});
+			}).catch(alerts.error);
 		}
 	};
 
