@@ -15,7 +15,7 @@ Sockets.push = async function (socket, pid) {
 	}
 
 	const postData = await posts.getPostFields(pid, ['content', 'sourceContent', 'tid', 'uid', 'handle', 'timestamp']);
-	if (!postData && !postData.content) {
+	if (!postData || (!postData.content && !postData.sourceContent)) {
 		throw new Error('[[error:invalid-pid]]');
 	}
 
