@@ -1,6 +1,6 @@
 'use strict';
 
-define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
+define('composer/drafts', ['api', 'hooks', 'alerts'], function (api, hooks, alerts) {
 	const drafts = {};
 	const draftSaveDelay = 1000;
 	drafts.init = function (postContainer, postData) {
@@ -78,7 +78,7 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 		}
 	};
 
-	function saveDraft(postContainer, draftIconEl, postData) {
+	async function saveDraft(postContainer, draftIconEl, postData) {
 		if (canSave(app.user.uid ? 'localStorage' : 'sessionStorage') && postData && postData.save_id && postContainer.length) {
 			const titleEl = postContainer.find('input.title');
 			const title = titleEl && titleEl.length && titleEl.val();
@@ -114,16 +114,17 @@ define('composer/drafts', ['api', 'alerts'], function (api, alerts) {
 				draftData.handle = postContainer.find('input.handle').val();
 			}
 
+			await hooks.fire('filter:composer.drafts.save', { draft: draftData, postData, postContainer });
+
 			// save all draft data into single item as json
 			storage.setItem(postData.save_id, JSON.stringify(draftData));
 
 			$(window).trigger('action:composer.drafts.save', {
-				storage: storage,
-				postData: postData,
-				postContainer: postContainer,
+				storage,
+				postData,
+				postContainer,
 			});
 			draftIconEl.toggleClass('active', true);
-
 		}
 	}
 
