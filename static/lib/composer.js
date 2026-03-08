@@ -880,5 +880,12 @@ define('composer', [
 		}
 	};
 
+	composer.updateFormattingBtnBadgeCount = function (postContainer, formatName, count) {
+		const formatEl = postContainer.find(`[data-format="${formatName}"]`);
+		formatEl.find('.badge')
+			.text(count)
+			.toggleClass('hidden', !count);
+	};
+
 	return composer;
 });
