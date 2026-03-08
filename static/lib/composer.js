@@ -146,7 +146,6 @@ define('composer', [
 		});
 
 		composer.posts[uuid] = post;
-		console.log('perfection', composer.posts[uuid]);
 		composer.load(uuid);
 	}
 
