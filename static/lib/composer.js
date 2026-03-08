@@ -146,6 +146,7 @@ define('composer', [
 		});
 
 		composer.posts[uuid] = post;
+		console.log('perfection', composer.posts[uuid]);
 		composer.load(uuid);
 	}
 
@@ -253,20 +254,24 @@ define('composer', [
 		});
 	};
 
-	composer.newReply = function (data) {
-		translator.translate(data.body, config.defaultLang, function (translated) {
-			push({
-				fromDraft: data.fromDraft,
-				save_id: data.save_id,
-				action: 'posts.reply',
-				tid: data.tid,
-				toPid: data.toPid,
-				title: data.title,
-				body: translated,
-				modified: !!(translated && translated.length),
-				isMain: false,
-			});
-		});
+	composer.newReply = async function (data) {
+		const translated = await translator.translate(data.body, config.defaultLang);
+		let pushData = {
+			fromDraft: data.fromDraft,
+			save_id: data.save_id,
+			action: 'posts.reply',
+			tid: data.tid,
+			toPid: data.toPid,
+			title: data.title,
+			body: translated,
+			modified: !!(translated && translated.length),
+			isMain: false,
+		};
+		({ pushData } = await hooks.fire('filter:composer.reply.push', {
+			data: data,
+			pushData: pushData,
+		}));
+		push(pushData);
 	};
 
 	composer.editPost = function (data) {

@@ -1,6 +1,6 @@
 'use strict';
 
-define('composer/drafts', ['api', 'hooks', 'alerts'], function (api, hooks, alerts) {
+define('composer/drafts', ['api', 'hooks'], function (api, hooks) {
 	const drafts = {};
 	const draftSaveDelay = 1000;
 	drafts.init = function (postContainer, postData) {
@@ -250,51 +250,51 @@ define('composer/drafts', ['api', 'hooks', 'alerts'], function (api, hooks, aler
 		}
 	};
 
-	function openComposer(save_id, draft) {
+	async function openComposer(save_id, draft) {
 		const saveObj = save_id.split(':');
 		const uid = saveObj[1];
 		// Don't open other peoples' drafts
 		if (parseInt(app.user.uid, 10) !== parseInt(uid, 10)) {
 			return;
 		}
-		require(['composer'], function (composer) {
-			if (draft.action === 'topics.post') {
-				composer.newTopic({
-					fromDraft: true,
-					save_id: draft.save_id,
-					cid: draft.cid,
-					handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
-					title: utils.escapeHTML(draft.title),
-					body: draft.text,
-					tags: String(draft.tags || '').split(','),
-					thumbs: draft.thumbs || [],
-				});
-			} else if (draft.action === 'posts.reply') {
-				api.get('/topics/' + draft.tid, {}, function (err, topicObj) {
-					if (err) {
-						return alerts.error(err);
-					}
-
-					composer.newReply({
-						fromDraft: true,
-						save_id: draft.save_id,
-						tid: draft.tid,
-						toPid: draft.toPid,
-						title: topicObj.title,
-						body: draft.text,
-					});
-				});
-			} else if (draft.action === 'posts.edit') {
-				composer.editPost({
-					fromDraft: true,
-					save_id: draft.save_id,
-					pid: draft.pid,
-					title: draft.title ? utils.escapeHTML(draft.title) : undefined,
-					body: draft.text,
-					thumbs: draft.thumbs || [],
-				});
-			}
-		});
+		const composer = await app.require('composer');
+		if (draft.action === 'topics.post') {
+			let composerData = {
+				fromDraft: true,
+				save_id: draft.save_id,
+				cid: draft.cid,
+				handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
+				title: utils.escapeHTML(draft.title),
+				body: draft.text,
+				tags: String(draft.tags || '').split(','),
+				thumbs: draft.thumbs || [],
+			};
+			({ composerData } = await hooks.fire('filter:composer.drafts.open', { draft, composerData }));
+			composer.newTopic(composerData);
+		} else if (draft.action === 'posts.reply') {
+			const topicObj = await api.get('/topics/' + draft.tid, {});
+			let composerData = {
+				fromDraft: true,
+				save_id: draft.save_id,
+				tid: draft.tid,
+				toPid: draft.toPid,
+				title: topicObj.title,
+				body: draft.text,
+			};
+			({ composerData } = await hooks.fire('filter:composer.drafts.open', { draft, composerData }));
+			composer.newReply(composerData);
+		} else if (draft.action === 'posts.edit') {
+			let composerData = {
+				fromDraft: true,
+				save_id: draft.save_id,
+				pid: draft.pid,
+				title: draft.title ? utils.escapeHTML(draft.title) : undefined,
+				body: draft.text,
+				thumbs: draft.thumbs || [],
+			};
+			({ composerData } = await hooks.fire('filter:composer.drafts.open', { draft, composerData }));
+			composer.editPost(composerData);
+		}
 	}
 
 	// Feature detection courtesy of: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
