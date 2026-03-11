@@ -225,8 +225,8 @@ define('composer', [
 		const topicLink = `[${escapedTitle}](${postHref})`;
 
 		const quoteKey = useTopicLink ?
-			'> [[modules:composer.user-said-in, ' + data.username + ', ' + topicLink + ']]\n>\n' :
-			'> [[modules:composer.user-said, ' + data.username + ', ' + postHref + ']]\n>\n';
+			`> ${translator.compile('modules:composer.user-said-in', data.username, topicLink)}\n>\n` :
+			`> ${translator.compile('modules:composer.user-said', data.username, postHref)}\n>\n`;
 
 		if (data.uuid === undefined) {
 			composer.newReply({
