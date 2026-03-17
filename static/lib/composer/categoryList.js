@@ -48,11 +48,15 @@ define('composer/categoryList', [
 
 		if (postData.cid && postData.category) {
 			selector.selectedCategory = { cid: postData.cid, name: postData.category.name };
-			mobileSelector.selectedCategory = { cid: postData.cid, name: postData.category.name };
+			if (mobileSelector) {
+				mobileSelector.selectedCategory = { cid: postData.cid, name: postData.category.name };
+			}
 		} else if (ajaxify.data.template.compose && ajaxify.data.selectedCategory) {
 			// separate composer route
 			selector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
-			mobileSelector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
+			if (mobileSelector) {
+				mobileSelector.selectedCategory = { cid: ajaxify.data.cid, name: ajaxify.data.selectedCategory };
+			}
 		}
 
 		toggleDropDirection(postContainer);
