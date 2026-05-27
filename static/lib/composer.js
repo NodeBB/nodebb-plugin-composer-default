@@ -505,7 +505,7 @@ define('composer', [
 			}
 			composerTemplate = $(composerTemplate);
 
-			composerTemplate.find('.title').each(function () {
+			composerTemplate.find('.title, textarea.write').each(function () {
 				$(this).text(translator.unescape($(this).text()));
 			});
 
