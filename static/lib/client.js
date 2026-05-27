@@ -95,4 +95,20 @@ $(document).ready(function () {
 			composer.enhance(data.container);
 		});
 	});
+
+	$(window).on('action:composer.thumbs.updateCount', function (ev, data) {
+		require(['composer'], function (composer) {
+			const { uuid } = data;
+			const postContainer = $(`[component="composer"][data-uuid="${uuid}"]`);
+			composer.updateThumbCount(uuid, postContainer);
+		});
+	});
+
+	$(window).on('action:composer.updateFormattingBtnBadgeCount', (ev, data) => {
+		require(['composer'], (composer) => {
+			const { uuid, formatName, count } = data;
+			const postContainer = $(`[component="composer"][data-uuid="${uuid}"]`);
+			composer.updateFormattingBtnBadgeCount(postContainer, formatName, count);
+		});
+	});
 });
