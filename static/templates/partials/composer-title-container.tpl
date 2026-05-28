@@ -31,7 +31,7 @@
 			<div component="composer/submit/options/container" data-submit-options="{submitOptions.length}" class="btn-group btn-group-sm {{{ if !(submitOptions.length || canSchedule) }}}hidden{{{ end }}}">
 				<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-caret-down"></i>
-					<span class="sr-only">[[topic:composer.additional-options]]</span>
+					<span class="visually-hidden">[[topic:composer.additional-options]]</span>
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end p-1" role="menu">
 					<li><a class="dropdown-item rounded-1 display-scheduler {{{ if !canSchedule }}}hidden{{{ end }}}" role="menuitem">[[topic:composer.post-later]]</a></li>
