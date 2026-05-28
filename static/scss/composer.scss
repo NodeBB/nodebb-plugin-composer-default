@@ -1,3 +1,8 @@
+@use "fontawesome/scss/mixins" as fa-mixins;
+@use "fontawesome/scss/functions" as fa-functions;
+@use "fontawesome/scss/variables" as fa-vars;
+
+
 .composer {
 	background-color: var(--bs-body-bg);
 	color: var(--bs-body-color);
@@ -224,7 +229,7 @@
 
 				i {
 					&:before {
-						content: fa-content($fa-var-chevron-down);
+						content: fa-functions.fa-content(fa-vars.$var-chevron-down);
 					}
 				}
 			}
@@ -237,7 +242,7 @@
 		opacity: 0;
 
 		&::before {
-			content: fa-content($fa-var-save);
+			content: fa-functions.fa-content(fa-vars.$var-save);
 		}
 
 		&.active {
