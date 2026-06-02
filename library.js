@@ -1,20 +1,20 @@
 'use strict';
 
 
-const nconf = require.main.require('nconf');
+const nconf = nodebb.require('nconf');
 const validator = require('validator');
 
-const plugins = require.main.require('./src/plugins');
-const topics = require.main.require('./src/topics');
-const categories = require.main.require('./src/categories');
-const posts = require.main.require('./src/posts');
-const user = require.main.require('./src/user');
-const meta = require.main.require('./src/meta');
-const privileges = require.main.require('./src/privileges');
-const translator = require.main.require('./src/translator');
-const utils = require.main.require('./src/utils');
-const helpers = require.main.require('./src/controllers/helpers');
-const SocketPlugins = require.main.require('./src/socket.io/plugins');
+const plugins = nodebb.require('./src/plugins');
+const topics = nodebb.require('./src/topics');
+const categories = nodebb.require('./src/categories');
+const posts = nodebb.require('./src/posts');
+const user = nodebb.require('./src/user');
+const meta = nodebb.require('./src/meta');
+const privileges = nodebb.require('./src/privileges');
+const translator = nodebb.require('./src/translator');
+const utils = nodebb.require('./src/utils');
+const helpers = nodebb.require('./src/controllers/helpers');
+const SocketPlugins = nodebb.require('./src/socket.io/plugins');
 const socketMethods = require('./websockets');
 
 const plugin = module.exports;
@@ -23,7 +23,7 @@ plugin.socketMethods = socketMethods;
 
 plugin.init = async function (data) {
 	const { router } = data;
-	const routeHelpers = require.main.require('./src/routes/helpers');
+	const routeHelpers = nodebb.require('./src/routes/helpers');
 	const controllers = require('./controllers');
 	SocketPlugins.composer = socketMethods;
 	routeHelpers.setupAdminPageRoute(router, '/admin/plugins/composer-default', controllers.renderAdminPage);

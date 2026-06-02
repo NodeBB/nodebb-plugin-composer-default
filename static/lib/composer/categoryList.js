@@ -1,7 +1,7 @@
 'use strict';
 
 define('composer/categoryList', [
-	'categorySelector', 'taskbar', 'api', 'alerts'
+	'categorySelector', 'taskbar', 'api', 'alerts',
 ], function (categorySelector, taskbar, api, alerts) {
 	const categoryList = {};
 
