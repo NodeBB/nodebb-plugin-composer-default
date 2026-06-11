@@ -13,9 +13,9 @@
 
 	<div data-component="composer/title" class="position-relative flex-1" style="min-width: 0;">
 		{{{ if isTopicOrMain }}}
-		<input class="title form-control h-100 rounded-1 shadow-none" type="text" placeholder="[[topic:composer.title-placeholder]]" value="{topicTitle}" />
+		<input class="title form-control h-100 rounded-1 shadow-none" type="text" placeholder="[[topic:composer.title-placeholder]]" value="{{escapeTxHtml(topicTitle)}}" />
 		{{{ else }}}
-		<span class="{{{ if !template.compose }}}d-none d-md-block{{{ else }}}d-block{{{ end }}} title h-100 text-truncate">{titleLabel}</span>
+		<span class="{{{ if !template.compose }}}d-none d-md-block{{{ else }}}d-block{{{ end }}} title h-100 text-truncate">{{escapeTxHtml(titleLabel)}}</span>
 		{{{ end }}}
 		<div id="quick-search-container" class="quick-search-container mt-2 dropdown-menu d-block p-2 hidden">
 			<div class="text-center loading-indicator"><i class="fa fa-spinner fa-spin"></i></div>

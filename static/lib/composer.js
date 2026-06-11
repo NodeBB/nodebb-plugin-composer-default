@@ -445,16 +445,15 @@ define('composer', [
 		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
 		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : '';
 
+		const titleLabel = isEditing ?
+			await translator.translateKey('topic:composer.editing-in', [`"${postData.title}"`]) :
+			await translator.translateKey('topic:composer.replying-to', [`"${postData.title}"`]);
+
 		let data = {
 			topicTitle: postData.title,
 			titleLength: postData.title.length,
-			titleLabel: translator.compile(
-				isEditing ?
-					'topic:composer.editing-in' :
-					'topic:composer.replying-to',
-				`"${postData.title}"`
-			),
-			body: utils.escapeHTML(translator.escape(postData.body) || topicTemplate),
+			titleLabel: titleLabel,
+			body: postData.body || topicTemplate,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
