@@ -66,14 +66,14 @@ define('composer/drafts', ['api', 'hooks'], function (api, hooks) {
 			}
 			$(window).trigger('action:composer.drafts.get', {
 				save_id: save_id,
-				draft: draft,
+				draft: { ...draft },
 				storage: storage,
 			});
 			return draft;
 		} catch (e) {
 			console.warn(`[composer/drafts] Could not get draft ${save_id}, removing`);
-			drafts.removeFromDraftList('available');
-			drafts.removeFromDraftList('open');
+			drafts.removeFromDraftList('available', save_id);
+			drafts.removeFromDraftList('open', save_id);
 			return null;
 		}
 	};
@@ -263,8 +263,8 @@ define('composer/drafts', ['api', 'hooks'], function (api, hooks) {
 				fromDraft: true,
 				save_id: draft.save_id,
 				cid: draft.cid,
-				handle: app.user && app.user.uid ? undefined : utils.escapeHTML(draft.handle),
-				title: utils.escapeHTML(draft.title),
+				handle: app.user && app.user.uid ? undefined : draft.handle,
+				title: draft.title,
 				body: draft.text,
 				tags: String(draft.tags || '').split(','),
 				thumbs: draft.thumbs || [],
@@ -288,7 +288,7 @@ define('composer/drafts', ['api', 'hooks'], function (api, hooks) {
 				fromDraft: true,
 				save_id: draft.save_id,
 				pid: draft.pid,
-				title: draft.title ? utils.escapeHTML(draft.title) : undefined,
+				title: draft.title || undefined,
 				body: draft.text,
 				thumbs: draft.thumbs || [],
 			};
