@@ -115,6 +115,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	await checkPrivileges(req, res);
 
 	const [
+		{ userLang },
 		isMainPost,
 		postData,
 		topicData,
@@ -127,6 +128,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		canTagTopics,
 		canScheduleTopics,
 	] = await Promise.all([
+		user.getSettings(req.uid),
 		posts.isMain(req.query.pid),
 		getPostData(req),
 		getTopicData(req),
@@ -162,6 +164,13 @@ plugin.filterComposerBuild = async function (hookData) {
 	const topicTitle = topicData && topicData.title ?
 		topicData.title :
 		validator.escape(String(req.query.title || ''));
+
+	const titleLabel = await translator.translateKey(translator.compile(
+		isEditing ?
+			'topic:composer.editing-in' :
+			'topic:composer.replying-to',
+		`"${topicTitle}"`
+	), userLang);
 	return {
 		req: req,
 		res: res,
@@ -180,12 +189,7 @@ plugin.filterComposerBuild = async function (hookData) {
 			// can't use title property as that is used for page title
 			topicTitle: topicTitle,
 			titleLength: topicTitle ? topicTitle.length : 0,
-			titleLabel: translator.compile(
-				isEditing ?
-					'topic:composer.editing-in' :
-					'topic:composer.replying-to',
-				`"${topicTitle}"`
-			),
+			titleLabel: titleLabel,
 
 			topic: topicData,
 			thumb: topicData ? topicData.thumb : '',
