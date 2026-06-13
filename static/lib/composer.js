@@ -203,7 +203,7 @@ define('composer', [
 		push(pushData);
 	};
 
-	composer.addQuote = function (data) {
+	composer.addQuote = async function (data) {
 		// tid, toPid, selectedPid, title, username, text, uuid
 		data.uuid = data.uuid || composer.active;
 
@@ -227,13 +227,14 @@ define('composer', [
 		const quoteKey = useTopicLink ?
 			`> ${translator.compile('modules:composer.user-said-in', data.username, topicLink)}\n>\n` :
 			`> ${translator.compile('modules:composer.user-said', data.username, postHref)}\n>\n`;
+		const quoteText = await translator.translate(quoteKey, config.defaultLang);
 
 		if (data.uuid === undefined) {
 			composer.newReply({
 				tid: data.tid,
 				toPid: data.toPid,
 				title: data.title,
-				body: quoteKey + data.body,
+				body: quoteText + data.body,
 			});
 			return;
 		} else if (data.uuid !== composer.active) {
@@ -245,16 +246,13 @@ define('composer', [
 		const bodyEl = postContainer.find('textarea');
 		const prevText = bodyEl.val();
 
-		translator.translate(quoteKey, config.defaultLang, function (translated) {
-			composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + data.body;
-			bodyEl.val(composer.posts[data.uuid].body);
-			focusElements(postContainer);
-			preview.render(postContainer);
-		});
+		composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + quoteText + data.body;
+		bodyEl.val(composer.posts[data.uuid].body);
+		focusElements(postContainer);
+		preview.render(postContainer);
 	};
 
 	composer.newReply = async function (data) {
-		const translated = await translator.translate(data.body, config.defaultLang);
 		let pushData = {
 			fromDraft: data.fromDraft,
 			save_id: data.save_id,
@@ -262,8 +260,8 @@ define('composer', [
 			tid: data.tid,
 			toPid: data.toPid,
 			title: data.title,
-			body: translated,
-			modified: !!(translated && translated.length),
+			body: data.body,
+			modified: !!(data.body && data.body.length),
 			isMain: false,
 		};
 		({ pushData } = await hooks.fire('filter:composer.reply.push', {
@@ -445,14 +443,10 @@ define('composer', [
 		const privileges = postData.category ? postData.category.privileges : ajaxify.data.privileges;
 		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : '';
 
-		const titleLabel = isEditing ?
-			await translator.translateKey('topic:composer.editing-in', [`"${postData.title}"`]) :
-			await translator.translateKey('topic:composer.replying-to', [`"${postData.title}"`]);
-
 		let data = {
+			action: postData.action,
 			topicTitle: postData.title,
 			titleLength: postData.title.length,
-			titleLabel: titleLabel,
 			body: postData.body || topicTemplate,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
@@ -503,10 +497,6 @@ define('composer', [
 				return;
 			}
 			composerTemplate = $(composerTemplate);
-
-			composerTemplate.find('.title, textarea.write').each(function () {
-				$(this).text(translator.unescape($(this).text()));
-			});
 
 			composerTemplate.attr('data-uuid', post_uuid);
 
