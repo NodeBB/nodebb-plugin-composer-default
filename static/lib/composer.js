@@ -227,7 +227,7 @@ define('composer', [
 		const quoteKey = useTopicLink ?
 			`> ${translator.compile('modules:composer.user-said-in', data.username, topicLink)}\n>\n` :
 			`> ${translator.compile('modules:composer.user-said', data.username, postHref)}\n>\n`;
-		const quoteText = await translator.translate(quoteKey, config.defaultLang);
+		const quoteText = await translator.translateKey(quoteKey, config.defaultLang);
 
 		if (data.uuid === undefined) {
 			composer.newReply({
