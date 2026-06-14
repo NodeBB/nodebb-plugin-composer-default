@@ -6,7 +6,7 @@
 			{{{ else }}}
 			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
 			{{{ if ./dropdownItems.length }}}
-			<li class="dropdown dropdown-left bottom-sheet" title="{./title}">
+			<li class="dropdown dropdown-left bottom-sheet" title="{tx(./title)}">
 				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{./title}">
 					<i class="{./className}"></i>
 				</button>
@@ -14,7 +14,7 @@
 				{{{ each ./dropdownItems }}}
 					<li>
 						<a href="#" data-format="{./name}" class="dropdown-item rounded-1 position-relative" role="menuitem">
-							<i class="{./className} text-secondary"></i> {./text}
+							<i class="{./className} text-secondary"></i> {tx(./text)}
 							{{{ if ./badge }}}
 							<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
 							{{{ end }}}
@@ -24,8 +24,8 @@
 				</ul>
 			</li>
 			{{{ else }}}
-			<li title="{./title}">
-				<button data-format="{./name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="{./title}">
+			<li title="{tx(./title)}">
+				<button data-format="{./name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="{tx(./title)}">
 					<i class="{./className}"></i>
 					{{{ if ./badge }}}
 					<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
