@@ -2,7 +2,6 @@
 
 
 const nconf = nodebb.require('nconf');
-const validator = require('validator');
 
 const plugins = nodebb.require('./src/plugins');
 const topics = nodebb.require('./src/topics');
