@@ -161,7 +161,7 @@ plugin.filterComposerBuild = async function (hookData) {
 	const cid = req.query.cid || '';
 	const topicTitle = topicData && topicData.title ?
 		topicData.title :
-		validator.escape(String(req.query.title || ''));
+		String(req.query.title || '');
 
 	return {
 		req: req,
@@ -226,7 +226,7 @@ async function checkPrivileges(req, res) {
 
 function generateDiscardRoute(req, topicData) {
 	if (req.query.cid) {
-		return `${nconf.get('relative_path')}/category/${validator.escape(String(req.query.cid))}`;
+		return `${nconf.get('relative_path')}/category/${req.query.cid}`;
 	} else if ((req.query.tid || req.query.pid)) {
 		if (topicData) {
 			return `${nconf.get('relative_path')}/topic/${topicData.slug}`;
@@ -244,7 +244,7 @@ async function generateBody(req, postData) {
 		body = `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body || req.query.content) {
-		body = validator.escape(String(req.query.body || req.query.content));
+		body = req.query.body || req.query.content;
 	} else {
 		body = postData ? postData.content : '';
 	}
