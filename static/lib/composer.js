@@ -106,7 +106,9 @@ define('composer', [
 
 		// Find a match
 		for (const uuid of Object.keys(composer.posts)) {
-			if (composer.posts[uuid].hasOwnProperty(type) && id === String(composer.posts[uuid][type])) {
+			const openPost = composer.posts[uuid];
+			// make sure dom element exists too
+			if (openPost.hasOwnProperty(type) && id === String(openPost[type]) && $(`.composer[data-uuid="${uuid}"]`).length) {
 				return uuid;
 			}
 		}
@@ -124,7 +126,7 @@ define('composer', [
 		if (existingUUID) {
 			taskbar.updateActive(existingUUID);
 			if (post.body && !post.fromDraft) {
-				const postContainer = $('.composer[data-uuid="' + existingUUID + '"]');
+				const postContainer = $(`.composer[data-uuid="${existingUUID}"]`);
 				const bodyEl = postContainer.find('textarea');
 				const prevText = bodyEl.val();
 				composer.posts[existingUUID].body = (prevText.length ? prevText + '\n\n' : '') + post.body;
