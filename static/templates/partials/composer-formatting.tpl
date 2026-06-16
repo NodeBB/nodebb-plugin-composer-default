@@ -4,9 +4,9 @@
 			{{{ if ./spacer }}}
 			<li class="small spacer"></li>
 			{{{ else }}}
-			{{{ if (./visibility.desktop && ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply))) }}}
+			{{{ if ((isTopicOrMain && ./visibility.main) || (!isTopicOrMain && ./visibility.reply)) }}}
 			{{{ if ./dropdownItems.length }}}
-			<li class="dropdown dropdown-left bottom-sheet" title="{tx(./title)}">
+			<li class="dropdown dropdown-left bottom-sheet {./visibility.class}" title="{tx(./title)}">
 				<button class="btn btn-sm btn-link text-reset" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{./title}">
 					<i class="{./className}"></i>
 				</button>
@@ -24,7 +24,7 @@
 				</ul>
 			</li>
 			{{{ else }}}
-			<li title="{tx(./title)}">
+			<li title="{tx(./title)}" class="{./visibility.class}">
 				<button data-format="{./name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="{tx(./title)}">
 					<i class="{./className}"></i>
 					{{{ if ./badge }}}
@@ -35,22 +35,6 @@
 			{{{ end }}}
 			{{{ end }}}
 			{{{ end }}}
-		{{{ end }}}
-
-		{{{ if canUploadImage }}}
-		<li title="[[modules:composer.upload-picture]]">
-			<button data-format="picture" class="img-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-picture]]">
-				<i class="fa fa-file-image-o"></i>
-			</button>
-		</li>
-		{{{ end }}}
-
-		{{{ if canUploadFile }}}
-		<li title="[[modules:composer.upload-file]]">
-			<button data-format="upload" class="file-upload-btn btn btn-sm btn-link text-reset" aria-label="[[modules:composer.upload-file]]">
-				<i class="fa fa-file-o"></i>
-			</button>
-		</li>
 		{{{ end }}}
 
 		<form id="fileForm" method="post" enctype="multipart/form-data">

@@ -485,7 +485,7 @@ define('composer', [
 			app.toggleNavbar(false);
 		}
 
-		postData.mobile = composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm';
+		postData.mobile = data.mobile;
 
 		({ postData, createData: data } = await hooks.fire('filter:composer.create', {
 			postData: postData,

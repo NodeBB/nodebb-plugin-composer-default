@@ -42,27 +42,20 @@ plugin.addAdminNavigation = async function (header) {
 	return header;
 };
 
-plugin.getFormattingOptions = async function () {
+plugin.getFormattingOptions = async function (uid) {
 	const defaultVisibility = {
-		mobile: true,
-		desktop: true,
+		// use d-none d-lg-block, visible on desktop
+		// use d-block d-lg-none, visible on mobile
+		class: 'd-block',
 
 		// op or reply
 		main: true,
 		reply: true,
 	};
 	let payload = {
+		uid,
 		defaultVisibility,
 		options: [
-			{
-				name: 'tags',
-				title: '[[global:tags.tags]]',
-				className: 'fa fa-tags',
-				visibility: {
-					...defaultVisibility,
-					desktop: false,
-				},
-			},
 			{
 				name: 'zen',
 				title: '[[modules:composer.zen-mode]]',
@@ -71,16 +64,36 @@ plugin.getFormattingOptions = async function () {
 			},
 		],
 	};
-	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
+	const [canUploadImage, canUploadFile] = await privileges.global.can(
+		['upload:post:image', 'upload:post:file'], uid
+	);
+	if (canUploadImage) {
+		if (meta.config.allowTopicsThumbnail) {
+			payload.options.push({
+				name: 'thumbs',
+				title: '[[topic:composer.thumb-title]]',
+				className: 'fa fa-address-card-o',
+				badge: true,
+				visibility: {
+					...defaultVisibility,
+					reply: false,
+				},
+			});
+		}
 		payload.options.push({
-			name: 'thumbs',
-			title: '[[topic:composer.thumb-title]]',
-			className: 'fa fa-address-card-o',
-			badge: true,
-			visibility: {
-				...defaultVisibility,
-				reply: false,
-			},
+			name: 'picture',
+			title: '[[modules:composer.upload-picture]]',
+			className: 'fa fa-file-image-o',
+			visibility: defaultVisibility,
+		});
+	}
+
+	if (canUploadFile) {
+		payload.options.push({
+			name: 'upload',
+			title: '[[modules:composer.upload-file]]',
+			className: 'fa fa-file-o',
+			visibility: defaultVisibility,
 		});
 	}
 
@@ -134,7 +147,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		]),
 		user.isAdministrator(req.uid),
 		isModerator(req),
-		plugin.getFormattingOptions(),
+		plugin.getFormattingOptions(req.uid),
 		getTagWhitelist(req.query, req.uid),
 		privileges.global.get(req.uid),
 		canTag(req),
