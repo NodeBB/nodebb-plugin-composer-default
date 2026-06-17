@@ -10,7 +10,7 @@ const posts = nodebb.require('./src/posts');
 const user = nodebb.require('./src/user');
 const meta = nodebb.require('./src/meta');
 const privileges = nodebb.require('./src/privileges');
-const translator = nodebb.require('./src/translator');
+const tx = nodebb.require('./src/translator');
 const utils = nodebb.require('./src/utils');
 const helpers = nodebb.require('./src/controllers/helpers');
 const SocketPlugins = nodebb.require('./src/socket.io/plugins');
@@ -253,7 +253,7 @@ async function generateBody(req, postData) {
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
-		const translated = await translator.translate(`[[modules:composer.user-said, ${username}]]`);
+		const translated = await tx.translateKey('modules:composer.user-said', [tx.escape(username)]);
 		body = `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body || req.query.content) {

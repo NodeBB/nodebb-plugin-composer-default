@@ -22,7 +22,7 @@ define('composer', [
 	'messages',
 	'search',
 	'screenfull',
-], function (taskbar, translator, uploads, formatting, drafts, tags,
+], function (taskbar, tx, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, postQueue, scrollStop,
 	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
 	const composer = {
@@ -138,9 +138,9 @@ define('composer', [
 		const uuid = utils.generateUUID();
 		let actionText = '[[topic:composer.new-topic]]';
 		if (post.action === 'posts.reply') {
-			actionText = translator.compile('topic:composer.replying-to', `"${post.title}"`);
+			actionText = tx.compile('topic:composer.replying-to', `"${tx.escape(post.title)}"`);
 		} else if (post.action === 'posts.edit') {
-			actionText = translator.compile('topic:composer.editing-in', `"${post.title}"`);
+			actionText = tx.compile('topic:composer.editing-in', `"${tx.escape(post.title)}"`);
 		}
 
 		taskbar.push('composer', uuid, {
@@ -226,10 +226,11 @@ define('composer', [
 		const postHref = `${config.relative_path}/post/${encodeURIComponent(data.selectedPid || data.toPid)}`;
 		const topicLink = `[${escapedTitle}](${postHref})`;
 
-		const quoteKey = useTopicLink ?
-			`> ${translator.compile('modules:composer.user-said-in', data.username, topicLink)}\n>\n` :
-			`> ${translator.compile('modules:composer.user-said', data.username, postHref)}\n>\n`;
-		const quoteText = await translator.translateKey(quoteKey, config.defaultLang);
+		const txQuoteText = useTopicLink ?
+			await tx.translateKey('modules:composer.user-said-in', [tx.escape(data.username), topicLink]) :
+			await tx.translateKey('modules:composer.user-said', [tx.escape(data.username), postHref]);
+
+		const quoteText = `> ${txQuoteText}\n>\n`;
 
 		if (data.uuid === undefined) {
 			composer.newReply({

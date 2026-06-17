@@ -20,7 +20,7 @@ define('composer/uploads', [
 
 		addChangeHandlers(post_uuid);
 
-		translator.translate('[[modules:composer.uploading, ' + 0 + '%]]', function (translated) {
+		translator.translateKey('modules:composer.uploading', [0]).then((translated) => {
 			uploadingText = translated;
 		});
 	};
@@ -177,7 +177,7 @@ define('composer/uploads', [
 				},
 
 				uploadProgress: function (event, position, total, percent) {
-					translator.translate('[[modules:composer.uploading, ' + percent + '%]]', function (translated) {
+					translator.translateKey('modules:composer.uploading', [percent]).then(function (translated) {
 						if (doneUploading) {
 							return;
 						}
