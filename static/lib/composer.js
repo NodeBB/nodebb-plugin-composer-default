@@ -16,7 +16,7 @@ define('composer', [
 	'scrollStop',
 	'topicThumbs',
 	'api',
-	'bootbox',
+	'modals',
 	'alerts',
 	'hooks',
 	'messages',
@@ -24,7 +24,7 @@ define('composer', [
 	'screenfull',
 ], function (taskbar, tx, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, postQueue, scrollStop,
-	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
+	topicThumbs, api, modals, alerts, hooks, messagesModule, search, screenfull) {
 	const composer = {
 		active: undefined,
 		posts: {},
@@ -52,7 +52,7 @@ define('composer', [
 				return;
 			}
 
-			composer.discardConfirm = bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+			composer.discardConfirm = modals.confirm('[[modules:composer.discard]]', function (confirm) {
 				if (confirm) {
 					composer.discard(composer.active);
 				} else {
@@ -371,7 +371,7 @@ define('composer', [
 			formatting.exitFullscreen();
 
 			const btn = $(this).prop('disabled', true);
-			bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+			modals.confirm('[[modules:composer.discard]]', function (confirm) {
 				if (confirm) {
 					composer.discard(post_uuid);
 					removeComposerHistory();
@@ -584,7 +584,7 @@ define('composer', [
 		helpBtn.on('click', async function () {
 			const html = await socket.emit('plugins.composer.renderHelp');
 			if (html && html.length > 0) {
-				bootbox.dialog({
+				modals.dialog({
 					size: 'large',
 					message: html,
 					onEscape: true,
