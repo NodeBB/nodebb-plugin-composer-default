@@ -249,7 +249,6 @@ function generateDiscardRoute(req, topicData) {
 
 async function generateBody(req, postData) {
 	let body;
-	console.log('generate body', req.query, postData);
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
