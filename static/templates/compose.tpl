@@ -1,5 +1,5 @@
 <div component="composer" class="composer pb-3 h-100 {{{ if resizable }}} resizable{{{ end }}}{{{ if !isTopicOrMain }}} reply{{{ end }}}"{{{ if !disabled }}} style="visibility: inherit;"{{{ end }}}>
-	<div class="composer-container d-flex flex-column gap-1 h-100">
+	<div class="composer-container d-flex flex-column gap-1 h-100 position-relative">
 		<form id="compose-form" method="post">
 			{{{ if pid }}}
 			<input type="hidden" name="pid" value="{pid}" />
@@ -23,5 +23,7 @@
 		{{{ if isTopicOrMain }}}
 		<!-- IMPORT partials/composer-tags.tpl -->
 		{{{ end }}}
+
+		<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
 	</div>
 </div>

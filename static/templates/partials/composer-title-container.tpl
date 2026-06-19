@@ -15,7 +15,15 @@
 		{{{ if isTopicOrMain }}}
 		<input class="title form-control h-100 rounded-1 shadow-none" type="text" placeholder="[[topic:composer.title-placeholder]]" value="{topicTitle}" />
 		{{{ else }}}
-		<span class="{{{ if !template.compose }}}d-none d-md-block{{{ else }}}d-block{{{ end }}} title h-100 text-truncate">{titleLabel}</span>
+		<span class="{{{ if !template.compose }}}d-none d-md-block{{{ else }}}d-block{{{ end }}} title h-100 text-truncate">
+			{{{ if (./action == "posts.reply") }}}
+			{{tx("topic:composer.replying-to", txEscape(quote(./topicTitle)))}}
+			{{{ end }}}
+
+			{{{ if (./action == "posts.edit") }}}
+			{{tx("topic:composer.editing-in", txEscape(quote(./topicTitle)))}}
+			{{{ end }}}
+		</span>
 		{{{ end }}}
 		<div id="quick-search-container" class="quick-search-container mt-2 dropdown-menu d-block p-2 hidden">
 			<div class="text-center loading-indicator"><i class="fa fa-spinner fa-spin"></i></div>
@@ -37,7 +45,7 @@
 					<li><a class="dropdown-item rounded-1 display-scheduler {{{ if !canSchedule }}}hidden{{{ end }}}" role="menuitem">[[topic:composer.post-later]]</a></li>
 					<li><a class="dropdown-item rounded-1 cancel-scheduling hidden" role="menuitem">[[modules:composer.cancel-scheduling]]</a></li>
 					{{{ each submitOptions }}}
-					<li><a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{./text}</a></li>
+					<li><a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{{./text}}</a></li>
 					{{{ end }}}
 				</ul>
 			</div>

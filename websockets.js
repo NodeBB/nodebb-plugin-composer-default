@@ -64,8 +64,8 @@ Sockets.renderHelp = async function () {
 	return helpText;
 };
 
-Sockets.getFormattingOptions = async function () {
-	return await require('./library').getFormattingOptions();
+Sockets.getFormattingOptions = async function (socket) {
+	return await require('./library').getFormattingOptions(socket.uid);
 };
 
 Sockets.shouldQueue = async function (socket, data) {

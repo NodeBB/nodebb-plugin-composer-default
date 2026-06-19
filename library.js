@@ -2,7 +2,6 @@
 
 
 const nconf = nodebb.require('nconf');
-const validator = require('validator');
 
 const plugins = nodebb.require('./src/plugins');
 const topics = nodebb.require('./src/topics');
@@ -11,7 +10,7 @@ const posts = nodebb.require('./src/posts');
 const user = nodebb.require('./src/user');
 const meta = nodebb.require('./src/meta');
 const privileges = nodebb.require('./src/privileges');
-const translator = nodebb.require('./src/translator');
+const tx = nodebb.require('./src/translator');
 const utils = nodebb.require('./src/utils');
 const helpers = nodebb.require('./src/controllers/helpers');
 const SocketPlugins = nodebb.require('./src/socket.io/plugins');
@@ -43,27 +42,20 @@ plugin.addAdminNavigation = async function (header) {
 	return header;
 };
 
-plugin.getFormattingOptions = async function () {
+plugin.getFormattingOptions = async function (uid) {
 	const defaultVisibility = {
-		mobile: true,
-		desktop: true,
+		// use d-none d-lg-block, visible on desktop
+		// use d-block d-lg-none, visible on mobile
+		class: 'd-block',
 
 		// op or reply
 		main: true,
 		reply: true,
 	};
 	let payload = {
+		uid,
 		defaultVisibility,
 		options: [
-			{
-				name: 'tags',
-				title: '[[global:tags.tags]]',
-				className: 'fa fa-tags',
-				visibility: {
-					...defaultVisibility,
-					desktop: false,
-				},
-			},
 			{
 				name: 'zen',
 				title: '[[modules:composer.zen-mode]]',
@@ -72,16 +64,36 @@ plugin.getFormattingOptions = async function () {
 			},
 		],
 	};
-	if (parseInt(meta.config.allowTopicsThumbnail, 10) === 1) {
+	const [canUploadImage, canUploadFile] = await privileges.global.can(
+		['upload:post:image', 'upload:post:file'], uid
+	);
+	if (canUploadImage) {
+		if (meta.config.allowTopicsThumbnail) {
+			payload.options.push({
+				name: 'thumbs',
+				title: '[[topic:composer.thumb-title]]',
+				className: 'fa fa-address-card-o',
+				badge: true,
+				visibility: {
+					...defaultVisibility,
+					reply: false,
+				},
+			});
+		}
 		payload.options.push({
-			name: 'thumbs',
-			title: '[[topic:composer.thumb-title]]',
-			className: 'fa fa-address-card-o',
-			badge: true,
-			visibility: {
-				...defaultVisibility,
-				reply: false,
-			},
+			name: 'picture',
+			title: '[[modules:composer.upload-picture]]',
+			className: 'fa fa-file-image-o',
+			visibility: defaultVisibility,
+		});
+	}
+
+	if (canUploadFile) {
+		payload.options.push({
+			name: 'upload',
+			title: '[[modules:composer.upload-file]]',
+			className: 'fa fa-file-o',
+			visibility: defaultVisibility,
 		});
 	}
 
@@ -135,7 +147,7 @@ plugin.filterComposerBuild = async function (hookData) {
 		]),
 		user.isAdministrator(req.uid),
 		isModerator(req),
-		plugin.getFormattingOptions(),
+		plugin.getFormattingOptions(req.uid),
 		getTagWhitelist(req.query, req.uid),
 		privileges.global.get(req.uid),
 		canTag(req),
@@ -161,7 +173,8 @@ plugin.filterComposerBuild = async function (hookData) {
 	const cid = req.query.cid || '';
 	const topicTitle = topicData && topicData.title ?
 		topicData.title :
-		validator.escape(String(req.query.title || ''));
+		String(req.query.title || '');
+
 	return {
 		req: req,
 		res: res,
@@ -180,12 +193,6 @@ plugin.filterComposerBuild = async function (hookData) {
 			// can't use title property as that is used for page title
 			topicTitle: topicTitle,
 			titleLength: topicTitle ? topicTitle.length : 0,
-			titleLabel: translator.compile(
-				isEditing ?
-					'topic:composer.editing-in' :
-					'topic:composer.replying-to',
-				`"${topicTitle}"`
-			),
 
 			topic: topicData,
 			thumb: topicData ? topicData.thumb : '',
@@ -231,7 +238,7 @@ async function checkPrivileges(req, res) {
 
 function generateDiscardRoute(req, topicData) {
 	if (req.query.cid) {
-		return `${nconf.get('relative_path')}/category/${validator.escape(String(req.query.cid))}`;
+		return `${nconf.get('relative_path')}/category/${req.query.cid}`;
 	} else if ((req.query.tid || req.query.pid)) {
 		if (topicData) {
 			return `${nconf.get('relative_path')}/topic/${topicData.slug}`;
@@ -245,15 +252,15 @@ async function generateBody(req, postData) {
 	// Quoted reply
 	if (req.query.toPid && parseInt(req.query.quoted, 10) === 1 && postData) {
 		const username = await user.getUserField(postData.uid, 'username');
-		const translated = await translator.translate(`[[modules:composer.user-said, ${username}]]`);
+		const translated = await tx.translateKey('modules:composer.user-said', [tx.escape(username)]);
 		body = `${translated}\n` +
 			`> ${postData ? `${postData.content.replace(/\n/g, '\n> ')}\n\n` : ''}`;
 	} else if (req.query.body || req.query.content) {
-		body = validator.escape(String(req.query.body || req.query.content));
+		body = req.query.body || req.query.content;
 	} else {
 		body = postData ? postData.content : '';
 	}
-	return translator.escape(body);
+	return body;
 }
 
 async function getPostData(req) {

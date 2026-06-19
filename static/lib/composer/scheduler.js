@@ -1,8 +1,8 @@
 'use strict';
 
-define('composer/scheduler', ['benchpress', 'bootbox', 'alerts', 'translator'], function (
+define('composer/scheduler', ['benchpress', 'modals', 'alerts', 'translator'], function (
 	Benchpress,
-	bootbox,
+	modals,
 	alerts,
 	translator
 ) {
@@ -91,7 +91,7 @@ define('composer/scheduler', ['benchpress', 'bootbox', 'alerts', 'translator'], 
 
 	async function openModal() {
 		const html = await Benchpress.render('modals/topic-scheduler');
-		bootbox.dialog({
+		modals.dialog({
 			message: html,
 			title: '[[modules:composer.schedule-for]]',
 			className: 'topic-scheduler',

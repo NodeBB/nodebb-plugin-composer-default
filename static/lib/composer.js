@@ -16,15 +16,15 @@ define('composer', [
 	'scrollStop',
 	'topicThumbs',
 	'api',
-	'bootbox',
+	'modals',
 	'alerts',
 	'hooks',
 	'messages',
 	'search',
 	'screenfull',
-], function (taskbar, translator, uploads, formatting, drafts, tags,
+], function (taskbar, tx, uploads, formatting, drafts, tags,
 	categoryList, preview, resize, autocomplete, scheduler, postQueue, scrollStop,
-	topicThumbs, api, bootbox, alerts, hooks, messagesModule, search, screenfull) {
+	topicThumbs, api, modals, alerts, hooks, messagesModule, search, screenfull) {
 	const composer = {
 		active: undefined,
 		posts: {},
@@ -52,7 +52,7 @@ define('composer', [
 				return;
 			}
 
-			composer.discardConfirm = bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+			composer.discardConfirm = modals.confirm('[[modules:composer.discard]]', function (confirm) {
 				if (confirm) {
 					composer.discard(composer.active);
 				} else {
@@ -106,7 +106,9 @@ define('composer', [
 
 		// Find a match
 		for (const uuid of Object.keys(composer.posts)) {
-			if (composer.posts[uuid].hasOwnProperty(type) && id === String(composer.posts[uuid][type])) {
+			const openPost = composer.posts[uuid];
+			// make sure dom element exists too
+			if (openPost.hasOwnProperty(type) && id === String(openPost[type]) && $(`.composer[data-uuid="${uuid}"]`).length) {
 				return uuid;
 			}
 		}
@@ -124,7 +126,7 @@ define('composer', [
 		if (existingUUID) {
 			taskbar.updateActive(existingUUID);
 			if (post.body && !post.fromDraft) {
-				const postContainer = $('.composer[data-uuid="' + existingUUID + '"]');
+				const postContainer = $(`.composer[data-uuid="${existingUUID}"]`);
 				const bodyEl = postContainer.find('textarea');
 				const prevText = bodyEl.val();
 				composer.posts[existingUUID].body = (prevText.length ? prevText + '\n\n' : '') + post.body;
@@ -136,9 +138,9 @@ define('composer', [
 		const uuid = utils.generateUUID();
 		let actionText = '[[topic:composer.new-topic]]';
 		if (post.action === 'posts.reply') {
-			actionText = translator.compile('topic:composer.replying-to', `"${post.title}"`);
+			actionText = tx.compile('topic:composer.replying-to', `"${tx.escape(post.title)}"`);
 		} else if (post.action === 'posts.edit') {
-			actionText = translator.compile('topic:composer.editing-in', `"${post.title}"`);
+			actionText = tx.compile('topic:composer.editing-in', `"${tx.escape(post.title)}"`);
 		}
 
 		taskbar.push('composer', uuid, {
@@ -203,7 +205,7 @@ define('composer', [
 		push(pushData);
 	};
 
-	composer.addQuote = function (data) {
+	composer.addQuote = async function (data) {
 		// tid, toPid, selectedPid, title, username, text, uuid
 		data.uuid = data.uuid || composer.active;
 
@@ -224,16 +226,18 @@ define('composer', [
 		const postHref = `${config.relative_path}/post/${encodeURIComponent(data.selectedPid || data.toPid)}`;
 		const topicLink = `[${escapedTitle}](${postHref})`;
 
-		const quoteKey = useTopicLink ?
-			`> ${translator.compile('modules:composer.user-said-in', data.username, topicLink)}\n>\n` :
-			`> ${translator.compile('modules:composer.user-said', data.username, postHref)}\n>\n`;
+		const txQuoteText = useTopicLink ?
+			await tx.translateKey('modules:composer.user-said-in', [tx.escape(data.username), topicLink]) :
+			await tx.translateKey('modules:composer.user-said', [tx.escape(data.username), postHref]);
+
+		const quoteText = `> ${txQuoteText}\n>\n`;
 
 		if (data.uuid === undefined) {
 			composer.newReply({
 				tid: data.tid,
 				toPid: data.toPid,
 				title: data.title,
-				body: quoteKey + data.body,
+				body: quoteText + data.body,
 			});
 			return;
 		} else if (data.uuid !== composer.active) {
@@ -245,16 +249,13 @@ define('composer', [
 		const bodyEl = postContainer.find('textarea');
 		const prevText = bodyEl.val();
 
-		translator.translate(quoteKey, config.defaultLang, function (translated) {
-			composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + translated + data.body;
-			bodyEl.val(composer.posts[data.uuid].body);
-			focusElements(postContainer);
-			preview.render(postContainer);
-		});
+		composer.posts[data.uuid].body = (prevText.length ? prevText + '\n\n' : '') + quoteText + data.body;
+		bodyEl.val(composer.posts[data.uuid].body);
+		focusElements(postContainer);
+		preview.render(postContainer);
 	};
 
 	composer.newReply = async function (data) {
-		const translated = await translator.translate(data.body, config.defaultLang);
 		let pushData = {
 			fromDraft: data.fromDraft,
 			save_id: data.save_id,
@@ -262,8 +263,8 @@ define('composer', [
 			tid: data.tid,
 			toPid: data.toPid,
 			title: data.title,
-			body: translated,
-			modified: !!(translated && translated.length),
+			body: data.body,
+			modified: !!(data.body && data.body.length),
 			isMain: false,
 		};
 		({ pushData } = await hooks.fire('filter:composer.reply.push', {
@@ -370,7 +371,7 @@ define('composer', [
 			formatting.exitFullscreen();
 
 			const btn = $(this).prop('disabled', true);
-			bootbox.confirm('[[modules:composer.discard]]', function (confirm) {
+			modals.confirm('[[modules:composer.discard]]', function (confirm) {
 				if (confirm) {
 					composer.discard(post_uuid);
 					removeComposerHistory();
@@ -446,15 +447,10 @@ define('composer', [
 		const topicTemplate = isTopic && postData.category ? postData.category.topicTemplate : '';
 
 		let data = {
+			action: postData.action,
 			topicTitle: postData.title,
 			titleLength: postData.title.length,
-			titleLabel: translator.compile(
-				isEditing ?
-					'topic:composer.editing-in' :
-					'topic:composer.replying-to',
-				`"${postData.title}"`
-			),
-			body: utils.escapeHTML(translator.escape(postData.body) || topicTemplate),
+			body: postData.body || topicTemplate,
 			mobile: composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm',
 			resizable: true,
 			thumb: postData.thumb,
@@ -492,7 +488,7 @@ define('composer', [
 			app.toggleNavbar(false);
 		}
 
-		postData.mobile = composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm';
+		postData.mobile = data.mobile;
 
 		({ postData, createData: data } = await hooks.fire('filter:composer.create', {
 			postData: postData,
@@ -504,10 +500,6 @@ define('composer', [
 				return;
 			}
 			composerTemplate = $(composerTemplate);
-
-			composerTemplate.find('.title, textarea.write').each(function () {
-				$(this).text(translator.unescape($(this).text()));
-			});
 
 			composerTemplate.attr('data-uuid', post_uuid);
 
@@ -592,7 +584,7 @@ define('composer', [
 		helpBtn.on('click', async function () {
 			const html = await socket.emit('plugins.composer.renderHelp');
 			if (html && html.length > 0) {
-				bootbox.dialog({
+				modals.dialog({
 					size: 'large',
 					message: html,
 					onEscape: true,
