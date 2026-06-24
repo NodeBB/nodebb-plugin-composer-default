@@ -42,10 +42,16 @@
 					<span class="visually-hidden">[[topic:composer.additional-options]]</span>
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end p-1" role="menu">
-					<li><a class="dropdown-item rounded-1 display-scheduler {{{ if !canSchedule }}}hidden{{{ end }}}" role="menuitem">[[topic:composer.post-later]]</a></li>
-					<li><a class="dropdown-item rounded-1 cancel-scheduling hidden" role="menuitem">[[modules:composer.cancel-scheduling]]</a></li>
+					<li>
+						<a class="dropdown-item rounded-1 display-scheduler {{{ if !canSchedule }}}hidden{{{ end }}}" role="menuitem">[[topic:composer.post-later]]</a>
+					</li>
+					<li>
+						<a class="dropdown-item rounded-1 cancel-scheduling hidden" role="menuitem">[[modules:composer.cancel-scheduling]]</a>
+					</li>
 					{{{ each submitOptions }}}
-					<li><a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{{./text}}</a></li>
+					<li>
+						<a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{{./text}}</a>
+					</li>
 					{{{ end }}}
 				</ul>
 			</div>

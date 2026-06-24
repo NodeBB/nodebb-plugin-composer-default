@@ -21,8 +21,6 @@ define('composer/scheduler', ['benchpress', 'modals', 'alerts', 'translator'], f
 
 	const dropdownDisplayBtn = {
 		el: null,
-		defaultText: '',
-		activeText: '',
 	};
 
 	const submitBtn = {
@@ -39,11 +37,6 @@ define('composer/scheduler', ['benchpress', 'modals', 'alerts', 'translator'], f
 	scheduler.init = function ($postContainer, posts) {
 		state.timestamp = 0;
 		state.posts = posts;
-
-		translator.translateKeys(['[[topic:composer.post-later]]', '[[modules:composer.change-schedule-date]]']).then((translated) => {
-			dropdownDisplayBtn.defaultText = translated[0];
-			dropdownDisplayBtn.activeText = translated[1];
-		});
 
 		displayBtnCons = $postContainer[0].querySelectorAll('.display-scheduler');
 		displayBtns = $postContainer[0].querySelectorAll('.display-scheduler i');
@@ -179,14 +172,16 @@ define('composer/scheduler', ['benchpress', 'modals', 'alerts', 'translator'], f
 		state.timestamp = 0;
 	}
 
-	function toggleItems(active = true) {
+	async function toggleItems(active = true) {
 		displayBtns.forEach(btn => btn.classList.toggle('active', active));
 		if (submitBtn.icon) {
 			submitBtn.icon.classList.toggle('fa-check', !active);
 			submitBtn.icon.classList.toggle('fa-clock-o', active);
 		}
 		if (dropdownDisplayBtn.el) {
-			dropdownDisplayBtn.el.textContent = active ? dropdownDisplayBtn.activeText : dropdownDisplayBtn.defaultText;
+			dropdownDisplayBtn.el.textContent = active ?
+				await translator.translateKey('[[modules:composer.change-schedule-date]]') :
+				await translator.translateKey('[[topic:composer.post-later]]');
 			cancelBtn.classList.toggle('hidden', !active);
 		}
 		// Toggle submit button text
