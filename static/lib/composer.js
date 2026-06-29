@@ -686,15 +686,15 @@ define('composer', [
 
 		if (uploads.inProgress[post_uuid] && uploads.inProgress[post_uuid].length) {
 			return composerAlert(post_uuid, '[[error:still-uploading]]');
-		} else if (checkTitle && payload.titleLen < parseInt(config.minimumTitleLength, 10)) {
+		} else if (!app.user.isAdmin && checkTitle && payload.titleLen < parseInt(config.minimumTitleLength, 10)) {
 			return composerAlert(post_uuid, '[[error:title-too-short, ' + config.minimumTitleLength + ']]');
-		} else if (checkTitle && payload.titleLen > parseInt(config.maximumTitleLength, 10)) {
+		} else if (!app.user.isAdmin && checkTitle && payload.titleLen > parseInt(config.maximumTitleLength, 10)) {
 			return composerAlert(post_uuid, '[[error:title-too-long, ' + config.maximumTitleLength + ']]');
 		} else if (action === 'topics.post' && !isCategorySelected) {
 			return composerAlert(post_uuid, '[[error:category-not-selected]]');
-		} else if (payload.bodyLen < parseInt(config.minimumPostLength, 10)) {
+		} else if (!app.user.isAdmin && payload.bodyLen < parseInt(config.minimumPostLength, 10)) {
 			return composerAlert(post_uuid, '[[error:content-too-short, ' + config.minimumPostLength + ']]');
-		} else if (payload.bodyLen > parseInt(config.maximumPostLength, 10)) {
+		} else if (!app.user.isAdmin && payload.bodyLen > parseInt(config.maximumPostLength, 10)) {
 			return composerAlert(post_uuid, '[[error:content-too-long, ' + config.maximumPostLength + ']]');
 		} else if (checkTitle && !tags.isEnoughTags(post_uuid)) {
 			return composerAlert(post_uuid, '[[error:not-enough-tags, ' + tags.minTagCount() + ']]');
