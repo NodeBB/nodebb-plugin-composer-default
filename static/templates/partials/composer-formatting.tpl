@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between gap-2 align-items-center formatting-bar m-0">
-	<ul class="list-unstyled mb-0 d-flex formatting-group gap-2 overflow-auto">
+	<ul class="list-unstyled mb-0 d-flex formatting-group gap-2 overflow-auto ghost-scrollbar" style="min-width: 0;">
 		{{{ each formatting }}}
 			{{{ if ./spacer }}}
 			<li class="small spacer"></li>
