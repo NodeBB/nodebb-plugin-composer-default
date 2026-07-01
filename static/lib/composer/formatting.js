@@ -117,7 +117,7 @@ define('composer/formatting', [
 	function generateBadgetHtml(btn) {
 		let badgeHtml = '';
 		if (btn.badge) {
-			badgeHtml = `<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>`;
+			badgeHtml = `<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>`;
 		}
 		return badgeHtml;
 	}

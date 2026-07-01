@@ -16,7 +16,7 @@
 						<a href="#" data-format="{./name}" class="dropdown-item rounded-1 position-relative" role="menuitem">
 							<i class="{./className} text-secondary"></i> {tx(./text)}
 							{{{ if ./badge }}}
-							<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
+							<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
 							{{{ end }}}
 						</a>
 					</li>
@@ -28,7 +28,7 @@
 				<button data-format="{./name}" class="btn btn-sm btn-link text-reset position-relative" aria-label="{tx(./title)}">
 					<i class="{./className}"></i>
 					{{{ if ./badge }}}
-					<span class="px-1 position-absolute top-0 start-100 translate-middle badge rounded text-bg-info"></span>
+					<span class="px-1 position-absolute top-0 start-100 translate-middle-x badge rounded text-bg-info"></span>
 					{{{ end }}}
 				</button>
 			</li>
