@@ -24,6 +24,6 @@
 		<!-- IMPORT partials/composer-tags.tpl -->
 		{{{ end }}}
 
-		<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
+		<div class="imagedrop"><div>{{tx("topic:composer.drag-and-drop-images")}}</div></div>
 	</div>
 </div>

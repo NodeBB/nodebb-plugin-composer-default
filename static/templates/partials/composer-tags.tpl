@@ -3,7 +3,7 @@
 		<div class="dropdown dropup me-2 {{{ if !tagWhitelist.length }}}hidden{{{ end }}}" component="composer/tag/dropdown">
 			<button class="btn btn-sm btn-link text-body dropdown-toggle" data-bs-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
 				<span class="visible-sm-inline visible-md-inline visible-lg-inline"><i class="fa fa-tags"></i></span>
-				[[tags:select-tags]]
+				{{tx("tags:select-tags")}}
 			</button>
 
 			<ul class="dropdown-menu p-1" role="menu">
@@ -12,6 +12,6 @@
 				{{{ end }}}
 			</ul>
 		</div>
-		<input class="tags" type="text" class="" placeholder="[[tags:enter-tags-here, {minimumTagLength}, {maximumTagLength}]]" />
+		<input class="tags" type="text" class="" placeholder="{{tx("tags:enter-tags-here", minimumTagLength, maximumTagLength)}}" />
 	</div>
 </div>

@@ -12,7 +12,7 @@
 			<!-- IMPORT partials/composer-tags.tpl -->
 			{{{ end }}}
 
-			<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
+			<div class="imagedrop"><div>{{tx("topic:composer.drag-and-drop-images")}}</div></div>
 
 			<div class="resizer position-absolute w-100 bottom-100 pe-3 border-bottom">
 				<div class="trigger text-center">
