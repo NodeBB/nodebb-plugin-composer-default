@@ -17,7 +17,7 @@
 			<div class="resizer position-absolute w-100 bottom-100 pe-3 border-bottom">
 				<div class="trigger text-center">
 					<div class="handle d-inline-block px-2 py-1 border bg-body">
-						<i class="fa fa-fw fa-up-down"></i>
+						<i class="fa-solid fa-arrows-up-down"></i>
 					</div>
 				</div>
 			</div>
