@@ -50,7 +50,7 @@
 					</li>
 					{{{ each submitOptions }}}
 					<li>
-						<a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{{tx(./text)}}</a>
+						<a class="dropdown-item rounded-1" href="#" data-action="{./action}" role="menuitem">{{{if ./icon }}}<i class="{{./icon}}"></i> {{{ end }}}{{tx(./text)}}</a>
 					</li>
 					{{{ end }}}
 				</ul>
