@@ -7,6 +7,7 @@ const plugins = nodebb.require('./src/plugins');
 const topics = nodebb.require('./src/topics');
 const categories = nodebb.require('./src/categories');
 const posts = nodebb.require('./src/posts');
+const postsAPI = nodebb.require('./src/api/posts');
 const user = nodebb.require('./src/user');
 const meta = nodebb.require('./src/meta');
 const privileges = nodebb.require('./src/privileges');
@@ -224,15 +225,33 @@ plugin.filterComposerBuild = async function (hookData) {
 	};
 };
 
-async function checkPrivileges(req, res) {
-	const notAllowed = (
-		(req.query.cid && !await privileges.categories.can('topics:create', req.query.cid, req.uid)) ||
-		(req.query.tid && !await privileges.topics.can('topics:reply', req.query.tid, req.uid)) ||
-		(req.query.pid && !await privileges.posts.can('posts:edit', req.query.pid, req.uid))
-	);
+async function checkPrivileges(req) {
+	if (req.query.cid) {
+		const categoryPrivileges = await privileges.categories.get(req.query.cid, req.uid);
+		if (categoryPrivileges.disabled || !categoryPrivileges['topics:create']) {
+			throw new Error('[[error:no-privileges]]');
+		}
+	}
 
-	if (notAllowed) {
-		await helpers.notAllowed(req, res);
+	if (req.query.tid) {
+		const topicPrivileges = await privileges.topics.get(req.query.tid, req.uid);
+		if (topicPrivileges.disabled || !topicPrivileges['topics:reply']) {
+			throw new Error('[[error:no-privileges]]');
+		}
+	}
+
+	if (req.query.pid) {
+		const canEdit = await privileges.posts.canEdit(req.query.pid, req.uid);
+		if (!canEdit.flag) {
+			throw new Error(canEdit.message);
+		}
+	}
+
+	if (req.query.toPid) {
+		const post = await postsAPI.getRaw({ uid: req.uid }, { pid: req.query.toPid });
+		if (!post) {
+			throw new Error('[[error:no-privileges]]');
+		}
 	}
 }
 

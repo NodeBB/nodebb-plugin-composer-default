@@ -9,8 +9,8 @@ const plugins = nodebb.require('./src/plugins');
 const Sockets = module.exports;
 
 Sockets.push = async function (socket, pid) {
-	const canRead = await privileges.posts.can('topics:read', pid, socket.uid);
-	if (!canRead) {
+	const [postPrivileges] = await privileges.posts.get([pid], socket.uid);
+	if (!postPrivileges.read || !postPrivileges['topics:read'] || postPrivileges.disabled) {
 		throw new Error('[[error:no-privileges]]');
 	}
 
