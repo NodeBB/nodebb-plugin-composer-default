@@ -139,9 +139,11 @@ define('composer/uploads', [
 				if (trim) {
 					newFilename = filename.replace(/^\d+_\d{13}_/, '');
 				}
+				const cursorPosition = textarea.getCursorPosition();
 				const current = textarea.val();
 				const re = new RegExp(escapeRegExp(filename) + ']\\([^)]+\\)', 'g');
 				textarea.val(current.replace(re, (newFilename || filename) + '](' + text + ')'));
+				textarea[0].setSelectionRange(cursorPosition, cursorPosition);
 
 				$(window).trigger('action:composer.uploadUpdate', {
 					post_uuid: post_uuid,
