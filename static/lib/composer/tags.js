@@ -194,12 +194,15 @@ define('composer/tags', ['alerts'], function (alerts) {
 			input.removeAttr('readonly');
 			input.attr('placeholder', postContainer.find('input.tags').attr('placeholder'));
 		}
-		postContainer.find('.tags-container').toggleClass('haswhitelist', !!(data.tagWhitelist && data.tagWhitelist.length));
-		postContainer.find('.tags-container').toggleClass('hidden', (
-			data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) ||
+		const tagsContainer = postContainer.find('.tags-container');
+		const canTag = data.privileges && data.privileges.hasOwnProperty('topics:tag') && data.privileges['topics:tag'];
+
+		tagsContainer.toggleClass('haswhitelist', !!(data.tagWhitelist && data.tagWhitelist.length));
+		tagsContainer.toggleClass('hidden',
+			!canTag ||
 			(maxTags === 0 && !postData && !postData.tags && !postData.tags.length));
 
-		if (data.privileges && data.privileges.hasOwnProperty('topics:tag') && !data.privileges['topics:tag']) {
+		if (!canTag) {
 			tagEl.tagsinput('removeAll');
 		}
 
