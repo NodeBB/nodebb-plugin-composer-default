@@ -9,7 +9,15 @@
 	</div>
 	{{{ end }}}
 	{{{ if !isTopicOrMain }}}
-	<h4 class="title text-center text-bg-primary text-truncate fs-6 mb-0 px-2">{titleLabel}</h4>
+	<h4 class="title text-center text-bg-primary text-truncate fs-6 mb-0 px-2">
+		{{{ if (./action == "posts.reply") }}}
+		{{tx("topic:composer.replying-to", txEscape(quote(./topicTitle)))}}
+		{{{ end }}}
+
+		{{{ if (./action == "posts.edit") }}}
+		{{tx("topic:composer.editing-in", txEscape(quote(./topicTitle)))}}
+		{{{ end }}}
+	</h4>
 	{{{ end }}}
 
 	<div class="d-flex gap-1 flex-nowrap">
