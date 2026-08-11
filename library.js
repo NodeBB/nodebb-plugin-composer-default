@@ -84,7 +84,7 @@ plugin.getFormattingOptions = async function (uid) {
 		payload.options.push({
 			name: 'picture',
 			title: '[[modules:composer.upload-picture]]',
-			className: 'fa fa-file-image-o',
+			className: 'fa fa-camera',
 			visibility: defaultVisibility,
 		});
 	}
@@ -93,7 +93,7 @@ plugin.getFormattingOptions = async function (uid) {
 		payload.options.push({
 			name: 'upload',
 			title: '[[modules:composer.upload-file]]',
-			className: 'fa fa-file-o',
+			className: 'fa fa-paperclip',
 			visibility: defaultVisibility,
 		});
 	}

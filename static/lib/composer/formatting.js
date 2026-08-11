@@ -10,6 +10,7 @@ define('composer/formatting', [
 			const postContainer = this;
 			postContainer.find('#files')
 				.attr('accept', 'image/*')
+				.removeAttr('multiple')
 				.click();
 		},
 
@@ -17,6 +18,7 @@ define('composer/formatting', [
 			const postContainer = this;
 			postContainer.find('#files')
 				.attr('accept', '')
+				.attr('multiple', 'multiple')
 				.click();
 		},
 
