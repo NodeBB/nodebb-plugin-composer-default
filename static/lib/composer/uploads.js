@@ -139,9 +139,28 @@ define('composer/uploads', [
 				if (trim) {
 					newFilename = filename.replace(/^\d+_\d{13}_/, '');
 				}
-				const current = textarea.val();
+				const el = textarea[0];
 				const re = new RegExp(escapeRegExp(filename) + ']\\([^)]+\\)', 'g');
-				textarea.val(current.replace(re, (newFilename || filename) + '](' + text + ')'));
+				const replacement = (newFilename || filename) + '](' + text + ')';
+				const scrollTop = el.scrollTop;
+
+				if (el.setRangeText) {
+					// Replace each placeholder in place instead of rewriting the whole value, so a caret
+					// or selection the user has in the textarea survives the progress updates.
+					// 'preserve' shifts the selection by the length delta of the replaced range.
+					const matches = [];
+					let match;
+					while ((match = re.exec(el.value)) !== null) {
+						matches.push(match);
+					}
+					// Walk backwards so earlier match indices stay valid as the value changes.
+					for (let i = matches.length - 1; i >= 0; i--) {
+						el.setRangeText(replacement, matches[i].index, matches[i].index + matches[i][0].length, 'preserve');
+					}
+				} else {
+					el.value = el.value.replace(re, replacement);
+				}
+				el.scrollTop = scrollTop;
 
 				$(window).trigger('action:composer.uploadUpdate', {
 					post_uuid: post_uuid,
@@ -198,8 +217,15 @@ define('composer/uploads', [
 						}
 					}
 					preview.render(postContainer);
-					textarea.prop('selectionEnd', cursorPosition + textarea.val().length - textLen);
-					textarea.focus();
+					// If the user moved into the textarea while uploading, updateTextArea already kept
+					// their caret in the right place, so leave it alone. Otherwise place it after the
+					// inserted markdown. Both endpoints have to be set, or the new selectionEnd and the
+					// stale selectionStart span the inserted text as a selection.
+					if (document.activeElement !== textarea[0]) {
+						const pos = cursorPosition + textarea.val().length - textLen;
+						textarea[0].setSelectionRange(pos, pos);
+						textarea.focus();
+					}
 					postContainer.find('[data-action="post"]').prop('disabled', false);
 					$(window).trigger('action:composer.upload', {
 						post_uuid: post_uuid,
