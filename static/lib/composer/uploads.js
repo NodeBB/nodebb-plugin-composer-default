@@ -103,7 +103,10 @@ define('composer/uploads', [
 		for (let i = 0; i < files.length; ++i) {
 			// The filename map has datetime and iterator prepended so that they can be properly tracked even if the
 			// filenames are identical.
-			filenameMapping.push(i + '_' + Date.now() + '_' + (params.fileNames ? params.fileNames[i] : files[i].name));
+			// params.fileNames are the names the files are uploaded under (pasted files get a uuid prefixed to
+			// avoid collisions), so they are only a fallback for blobs that carry no name of their own.
+			const displayName = files[i].name || (params.fileNames ? params.fileNames[i] : '');
+			filenameMapping.push(i + '_' + Date.now() + '_' + displayName);
 			const isImage = files[i].type.match(/image./);
 
 			if (!app.user.isAdmin && files[i].size > parseInt(config.maximumFileSize, 10) * 1024) {
