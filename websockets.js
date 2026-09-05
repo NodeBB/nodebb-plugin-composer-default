@@ -3,32 +3,29 @@
 const meta = nodebb.require('./src/meta');
 const privileges = nodebb.require('./src/privileges');
 const posts = nodebb.require('./src/posts');
+const postsAPI = nodebb.require('./src/api/posts');
 const topics = nodebb.require('./src/topics');
 const plugins = nodebb.require('./src/plugins');
 
 const Sockets = module.exports;
 
 Sockets.push = async function (socket, pid) {
-	const [postPrivileges] = await privileges.posts.get([pid], socket.uid);
-	if (!postPrivileges.read || !postPrivileges['topics:read'] || postPrivileges.disabled) {
-		throw new Error('[[error:no-privileges]]');
-	}
-
-	const postData = await posts.getPostFields(pid, [
-		'content', 'sourceContent', 'tid', 'uid', 'handle', 'timestamp',
+	const [postData, canEdit] = await Promise.all([
+		postsAPI.get({ uid: socket.uid }, { pid }),
+		privileges.posts.canEdit(pid, socket.uid),
 	]);
 	if (!postData || !postData.tid) {
-		throw new Error('[[error:invalid-pid]]');
+		throw new Error('[[error:no-post]]');
+	}
+	if (!canEdit.flag) {
+		throw new Error(canEdit.message);
 	}
 
-	const [topic, isMain] = await Promise.all([
-		topics.getTopicDataByPid(pid),
-		posts.isMain(pid),
-	]);
-
+	const topic = await topics.getTopicData(postData.tid);
 	if (!topic) {
 		throw new Error('[[error:no-topic]]');
 	}
+	const isMain = String(topic.mainPid) === String(postData.pid);
 
 	const result = await plugins.hooks.fire('filter:composer.push', {
 		pid: pid,
