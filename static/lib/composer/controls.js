@@ -3,6 +3,36 @@
 define('composer/controls', ['composer/preview'], function (preview) {
 	const controls = {};
 
+	// Replaces the text between `start` and `end` with `text`. Prefers the
+	// browser's native insertion command so that the change is recorded in the
+	// textarea's undo history (Ctrl/Cmd+Z), and falls back to a direct value
+	// update when that is unavailable.
+	function replaceRange(textarea, start, end, text) {
+		textarea.focus();
+		textarea.setSelectionRange(start, end);
+
+		if (text && typeof document.execCommand === 'function') {
+			let inserted;
+			try {
+				inserted = document.execCommand('insertText', false, text);
+			} catch (e) {
+				inserted = false;
+			}
+			if (inserted && textarea.value.slice(start, start + text.length) === text) {
+				return;
+			}
+			// the command may have been ignored; make sure the selection was not changed
+			textarea.setSelectionRange(start, end);
+		}
+
+		if (typeof textarea.setRangeText === 'function') {
+			textarea.setRangeText(text, start, end, 'end');
+		} else {
+			const currentVal = textarea.value;
+			textarea.value = currentVal.slice(0, start) + text + currentVal.slice(end);
+		}
+	}
+
 	/** ********************************************** */
 	/* Rich Textarea Controls                        */
 	/** ********************************************** */
@@ -19,14 +49,13 @@ define('composer/controls', ['composer/preview'], function (preview) {
 			return;
 		}
 
-		const $textarea = $(payload.textarea);
-		const currentVal = $textarea.val();
-		const postContainer = $textarea.parents('[component="composer"]');
+		const postContainer = $(payload.textarea).parents('[component="composer"]');
 
-		$textarea.val(
-			currentVal.slice(0, payload.textarea.selectionStart) +
-			payload.value +
-			currentVal.slice(payload.textarea.selectionStart)
+		replaceRange(
+			payload.textarea,
+			payload.textarea.selectionStart,
+			payload.textarea.selectionStart,
+			payload.value
 		);
 
 		preview.render(postContainer);
@@ -45,14 +74,13 @@ define('composer/controls', ['composer/preview'], function (preview) {
 			return;
 		}
 
-		const $textarea = $(payload.textarea);
-		const currentVal = $textarea.val();
-		const postContainer = $textarea.parents('[component="composer"]');
+		const postContainer = $(payload.textarea).parents('[component="composer"]');
 
-		$textarea.val(
-			currentVal.slice(0, payload.textarea.selectionStart) +
-			payload.value +
-			currentVal.slice(payload.textarea.selectionEnd)
+		replaceRange(
+			payload.textarea,
+			payload.textarea.selectionStart,
+			payload.textarea.selectionEnd,
+			payload.value
 		);
 
 		preview.render(postContainer);
@@ -76,25 +104,18 @@ define('composer/controls', ['composer/preview'], function (preview) {
 			trailing = leading;
 		}
 
-		const $textarea = $(textarea);
-		const currentVal = $textarea.val();
+		const start = textarea.selectionStart;
+		const end = textarea.selectionEnd;
+		const selection = textarea.value.slice(start, end);
 
-		let matches = /^(\s*)([\s\S]*?)(\s*)$/.exec(currentVal.slice(textarea.selectionStart, textarea.selectionEnd));
+		let matches = /^(\s*)([\s\S]*?)(\s*)$/.exec(selection);
 
 		if (!matches[2]) {
 			// selection is entirely whitespace
-			matches = [null, '', currentVal.slice(textarea.selectionStart, textarea.selectionEnd), ''];
+			matches = [null, '', selection, ''];
 		}
 
-		$textarea.val(
-			currentVal.slice(0, textarea.selectionStart) +
-			matches[1] +
-			leading +
-			matches[2] +
-			trailing +
-			matches[3] +
-			currentVal.slice(textarea.selectionEnd)
-		);
+		replaceRange(textarea, start, end, matches[1] + leading + matches[2] + trailing + matches[3]);
 
 		return [matches[1].length, matches[3].length];
 	};
