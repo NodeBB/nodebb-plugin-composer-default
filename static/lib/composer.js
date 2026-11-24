@@ -11,6 +11,7 @@ define('composer', [
 	'composer/preview',
 	'composer/resize',
 	'composer/autocomplete',
+	'composer/autoformat',
 	'composer/scheduler',
 	'composer/post-queue',
 	'scrollStop',
@@ -23,7 +24,7 @@ define('composer', [
 	'search',
 	'screenfull',
 ], function (taskbar, tx, uploads, formatting, drafts, tags,
-	categoryList, preview, resize, autocomplete, scheduler, postQueue, scrollStop,
+	categoryList, preview, resize, autocomplete, autoformat, scheduler, postQueue, scrollStop,
 	topicThumbs, api, modals, alerts, hooks, messagesModule, search, screenfull) {
 	const composer = {
 		active: undefined,
@@ -335,6 +336,7 @@ define('composer', [
 
 		formatting.addHandler(postContainer);
 		formatting.addComposerButtons();
+		autoformat.init(postContainer);
 		preview.handleToggler(postContainer);
 		postQueue.showAlert(postContainer, postData);
 		uploads.initialize(post_uuid);

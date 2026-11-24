@@ -32,6 +32,8 @@
     "screenfull": "^5.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@stylistic/eslint-plugin": "^6.0.0",
     "eslint": "^10.0.0",
     "eslint-config-nodebb": "^2.0.2"
   }
