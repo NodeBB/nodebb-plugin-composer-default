@@ -8,6 +8,20 @@ define('composer/autoformat', ['hooks'], function (hooks) {
 		'(': ['(', ')'],
 	};
 
+	// Replace [start, end] of the textarea with `replacement`, place the
+	// cursor after the inserted text, and notify the composer (live
+	// preview). Uses setRangeText where available so the native undo
+	// stack is preserved.
+	autoformat.replaceRange = function (textarea, start, end, replacement) {
+		if (typeof textarea.setRangeText === 'function') {
+			textarea.setRangeText(replacement, start, end, 'end');
+		} else {
+			textarea.value = textarea.value.slice(0, start) + replacement + textarea.value.slice(end);
+			textarea.setSelectionRange(start + replacement.length, start + replacement.length);
+		}
+		textarea.dispatchEvent(new Event('input', { bubbles: true }));
+	};
+
 	autoformat.init = function (postContainer) {
 		const textarea = postContainer.find('textarea')[0];
 		textarea.addEventListener('keydown', (e) => {
@@ -39,17 +53,15 @@ define('composer/autoformat', ['hooks'], function (hooks) {
 			}
 
 			e.preventDefault();
-			const replacement = open + value.slice(start, end) + close;
+			autoformat.replaceRange(textarea, start, end, open + value.slice(start, end) + close);
+		});
 
-			// setRangeText preserves the native undo stack; 'end' places the
-			// cursor just after the closing character
-			if (typeof textarea.setRangeText === 'function') {
-				textarea.setRangeText(replacement, start, end, 'end');
-			} else {
-				textarea.value = value.slice(0, start) + replacement + value.slice(end);
-				textarea.setSelectionRange(start + replacement.length, start + replacement.length);
-			}
-			textarea.dispatchEvent(new Event('input', { bubbles: true }));
+		// Extension point for paste handling (e.g. markdown list continuation
+		// for multi-line pastes). Handlers that want to own the paste must
+		// call event.preventDefault() and insert the transformed text
+		// themselves (see autoformat.replaceRange).
+		textarea.addEventListener('paste', (e) => {
+			hooks.fire('action:composer.paste', { textarea, event: e, postContainer });
 		});
 	};
 
